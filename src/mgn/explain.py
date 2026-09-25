@@ -118,6 +118,8 @@ def main():
     p.add_argument("--n-per-type", type=int, default=35)
     p.add_argument("--n-clean", type=int, default=25)
     p.add_argument("--records", type=Path, default=RESULTS / "test" / "records.pkl")
+    p.add_argument("--ref-records", type=Path, default=RESULTS / "valid" / "records.pkl",
+                   help="validation records: the clean-frame reference level is set there, not on test")
     a = p.parse_args()
 
     with open(a.records, "rb") as f:
@@ -125,7 +127,9 @@ def main():
     assert d["meta"]["split"] == "test" and d["meta"]["protocol"] == "v2", d["meta"]
     records = d["records"]
     picks = select(records, a.n_per_type, a.n_clean, np.random.default_rng(0))
-    clean_ref = np.percentile([r["frame_gnn"] for r in records if not r["label"]], 95)
+    ref = pickle.load(open(a.ref_records, "rb"))
+    assert ref["meta"]["split"] == "valid" and ref["meta"]["ckpt_sha256"] == d["meta"]["ckpt_sha256"]
+    clean_ref = np.percentile([r["frame_gnn"] for r in ref["records"] if not r["label"]], 95)
     dev = device()
     gnn = load_model(a.ckpt, dev)
     test = load_split("test", max(r["traj"] for r in picks) + 1)  # indexed by absolute sim id

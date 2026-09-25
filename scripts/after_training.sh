@@ -4,17 +4,24 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 PID=${1:?training PID}
+FREEZE=$(git rev-parse HEAD)  # the protocol is frozen at this commit; any src/ change during the chain aborts it
+echo "protocol frozen at $FREEZE"
 while kill -0 "$PID" 2>/dev/null; do sleep 60; done
 grep -E "val one-step|final|Traceback" runs/mgn_train.log | tail -3
 grep -q "final val" runs/mgn_train.log || { echo "training did not finish cleanly"; exit 1; }
-run() { echo "== $* ($(date +%H:%M))"; caffeinate -i uv run python "$@"; }
+run() {
+  git diff --quiet "$FREEZE" -- src || { echo "src/ changed since $FREEZE: protocol no longer frozen, aborting"; exit 1; }
+  echo "== $* ($(date +%H:%M))"; caffeinate -i uv run python "$@"
+}
 
 # 0. archive the 2-sim smoke outputs and pilot records so nobody quotes them
 mkdir -p results/smoke_2sim
 git mv -k results/auroc_vs_severity.png results/metrics.csv results/metrics.md results/vlm_confusion.png \
   results/vlm_metrics.md results/vlm_results.json results/records_noise1e-3.pkl results/records_nonoise.pkl results/smoke_2sim/
 git rm -q --cached --ignore-unmatch results/.DS_Store
-git commit -qm "Archive 2-sim smoke outputs and pilot records under results/smoke_2sim" || true
+git commit -qm "Archive 2-sim smoke outputs and pilot records under results/smoke_2sim
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" || true
 
 # Gate B: final one-step error vs constant velocity on fixed validation frames (sims 20-49)
 run -c "
