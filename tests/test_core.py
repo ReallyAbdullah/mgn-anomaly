@@ -24,14 +24,15 @@ def test_tfrecord_example_roundtrip():
 
 
 def _toy_traj(rng):
-    """Two tets sharing a face, plus two actuator nodes; 60 frames of smooth motion."""
-    mesh_pos = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 1], [.2, .2, 1.01], [.3, .3, 1.02]],
-                        np.float32) * 0.02
-    cells = np.array([[0, 1, 2, 3], [1, 2, 3, 4]])
-    if signed_volumes(mesh_pos, cells)[1] < 0:
-        cells[1] = [2, 1, 3, 4]
-    node_type = np.array([0, 0, 0, 0, 0, 1, 1])
-    drift = np.linspace(0, 1, 400)[:, None, None] * rng.normal(size=(1, 7, 3)).astype(np.float32) * 1e-3
+    """Two plate tets sharing a face, plus a one-tet actuator touching the plate; 400 frames of smooth motion."""
+    mesh_pos = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 1],
+                         [0, 0, -.02], [1, 0, -1], [0, 1, -1], [.3, .3, -2]], np.float32) * 0.02
+    cells = np.array([[0, 1, 2, 3], [1, 2, 3, 4], [5, 6, 7, 8]])
+    for c in range(3):
+        if signed_volumes(mesh_pos, cells)[c] < 0:
+            cells[c, [0, 1]] = cells[c, [1, 0]]
+    node_type = np.array([0, 0, 0, 0, 0, 1, 1, 1, 1])
+    drift = np.linspace(0, 1, 400)[:, None, None] * rng.normal(size=(1, 9, 3)).astype(np.float32) * 1e-3
     return dict(mesh_pos=mesh_pos, cells=cells, node_type=node_type, world_pos=(mesh_pos + drift).astype(np.float32),
                 mesh_edges=mesh_edges(cells))
 
@@ -40,15 +41,15 @@ def test_model_permutation_equivariant():
     rng = np.random.default_rng(0)
     traj = _toy_traj(rng)
     g = build_graph(traj, *traj["world_pos"][9:12])
-    perm = rng.permutation(7)
+    perm = rng.permutation(9)
     inv = np.argsort(perm)
     gp = dict(g, x=g["x"][perm], mesh_edges=inv[g["mesh_edges"]], world_edges=inv[g["world_edges"]])
     model = MeshGraphNet(steps=2, hidden=16).eval()
     t = lambda d: {k: torch.from_numpy(np.ascontiguousarray(v)) for k, v in d.items()}
     out, outp = model(t(g)), model(t(gp))
-    assert out.shape == (7, 3)
+    assert out.shape == (9, 3)
     torch.testing.assert_close(outp, out[perm], atol=1e-5, rtol=1e-5)
-    assert len(collate([g, g])["x"]) == 14
+    assert len(collate([g, g])["x"]) == 18
 
 
 @pytest.mark.parametrize("kind", TYPES)
@@ -78,3 +79,39 @@ def test_geometric_detectors():
     plate = traj["node_type"] == 0  # the toy actuator nodes have no mesh neighbours
     np.testing.assert_allclose(laplacian_scores(traj, shifted, [50])[:, plate],
                                laplacian_scores(traj, traj["world_pos"], [50])[:, plate], atol=1e-5)
+
+
+def test_choose_frames_protocol():
+    from mgn.evaluate import choose_frames
+    fmask = np.zeros(400, bool)
+    fmask[100:110] = True
+    frames, labels, phase = choose_frames(fmask, np.random.default_rng(0))
+    np.testing.assert_array_equal(frames[labels], np.arange(100, 110))  # every event frame is scored
+    assert phase[0] == "onset" and (phase[1:10] == "sustained").all()
+    clean = frames[~labels]
+    assert len(clean) == 10 and len(set(clean)) == 10
+    assert ((clean < 97) | (clean > 112)).all(), "clean frames must sit outside the +-3 guard band"
+    assert ((clean >= 60) & (clean <= 149)).all(), "clean frames must come from the same loading phase"
+
+
+def test_severity_scaling():
+    from mgn.inject import SEVERITY, step_scale
+    rng = np.random.default_rng(3)
+    traj = _toy_traj(rng)
+    a = step_scale(traj)
+    for kind in ("hourglass", "instability"):
+        peak = {s: np.abs(inject(traj, kind, s, np.random.default_rng(0), t0=50)[0] - traj["world_pos"]).max()
+                for s in SEVERITY}
+        assert np.isclose(peak[2] / peak[1], SEVERITY[2] / SEVERITY[1], rtol=1e-3)
+    wp, mask, _ = inject(traj, "instability", 1, np.random.default_rng(0), t0=50)
+    np.testing.assert_allclose(np.linalg.norm(wp[57] - traj["world_pos"][57], axis=1)[mask].max(), a, rtol=1e-3)
+
+
+def test_no_ci_below_min_sims():
+    from mgn.evaluate import cell_rows
+    rng = np.random.default_rng(0)
+    records = [dict(traj=i, type="frozen", sev=1, label=bool(j % 2), phase="onset" if j % 2 else "clean",
+                    frame_gnn=rng.random() + j % 2, frame_constvel=rng.random())
+               for i in range(5) for j in range(4)]
+    rows = cell_rows(records, ["gnn", "constvel"], "frozen", 1)
+    assert all(np.isnan(r["lo"]) for r in rows) and rows[0]["frame_auroc"] > 0.9

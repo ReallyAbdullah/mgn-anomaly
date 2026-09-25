@@ -1,4 +1,4 @@
-"""VLM explanations of flagged frames, scored for faithfulness against the injected ground truth.
+"""VLM explanations of simulation frames, scored for correctness (type, exact location) against the injected ground truth.
 
 Deterministic first, LLM last: the VLM sees the render, the GNN residual heatmap and (in the `full` condition)
 diagnostics computed from the mesh. Ablation: `visual` (images only) vs `full` (images + diagnostics).
@@ -57,8 +57,7 @@ def diagnostics(traj, wp, t, res, rend, frame_ratio, clean_ref):
              speed_ratio=speed[hot].mean() / (np.median(speed[normal]) + 1e-12),
              hotspot=grid_cell(rend.project(wp[t][hot])))
     text = (f"Diagnostics: residual {d['residual_ratio']:.1f}x the simulation's typical level (95% of clean frames stay "
-            f"below {clean_ref:.1f}x, with 0 inverted elements); hotspot in the "
-            f"{d['hotspot']} cell; {d['flagged_nodes']} nodes above 5x median residual; {d['inverted']} inverted "
+            f"below {clean_ref:.1f}x, with 0 inverted elements); {d['flagged_nodes']} nodes above 5x median residual; {d['inverted']} inverted "
             f"elements; hotspot-to-actuator distance {d['gap_mm']:.1f} mm; hotspot speed {d['speed_ratio']:.2f}x the "
             f"median plate node speed.")
     return d, text
@@ -75,12 +74,11 @@ def parse(text):
 
 
 def select(records, n_per_type, n_clean, rng):
-    """Anomalous frames the GNN detector flags (score above the 95th percentile of clean frames), plus clean frames."""
-    thr = np.percentile([r["frame_gnn"] for r in records if not r["label"]], 95)
-    anom = [r for r in records if r["label"] and r["frame_gnn"] > thr]
+    """Stratified random frames, NOT filtered on detection (filtering would bias accuracy upward);
+    whether the GNN flagged each frame is recorded so both subsets can be reported."""
     picks = []
     for kind in TYPES:
-        pool = [r for r in anom if r["type"] == kind]
+        pool = [r for r in records if r["label"] and r["type"] == kind]
         picks += [pool[i] for i in rng.choice(len(pool), min(n_per_type, len(pool)), replace=False)]
     clean = [r for r in records if not r["label"]]
     picks += [clean[i] for i in rng.choice(len(clean), n_clean, replace=False)]
@@ -91,8 +89,8 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--model", default="mlx-community/Qwen3-VL-8B-Instruct-4bit")
     p.add_argument("--ckpt", default=str(RUNS / "mgn" / "model.pt"))
-    p.add_argument("--n-per-type", type=int, default=20)
-    p.add_argument("--n-clean", type=int, default=20)
+    p.add_argument("--n-per-type", type=int, default=35)
+    p.add_argument("--n-clean", type=int, default=25)
     a = p.parse_args()
 
     from mlx_vlm import generate, load
@@ -100,7 +98,7 @@ def main():
     from mlx_vlm.utils import load_config
 
     with open(RESULTS / "records.pkl", "rb") as f:
-        records = pickle.load(f)
+        records = pickle.load(f)["records"]
     picks = select(records, a.n_per_type, a.n_clean, np.random.default_rng(0))
     clean_ref = np.percentile([r["frame_gnn"] for r in records if not r["label"]], 95)
     dev = device()
@@ -137,7 +135,7 @@ def main():
         diag, stats = diagnostics(tr, wp, t, res, rend, r["frame_gnn"], clean_ref)
         truth = r["type"] if r["label"] else "none"
         cell = grid_cell(rend.project(wp[t][mask])) if r["label"] else None
-        row = dict(image=path.name, truth=truth, sev=r["sev"], cell=cell, diag=diag)
+        row = dict(image=path.name, truth=truth, sev=r["sev"], cell=cell, diag=diag, flagged=bool(r["frame_gnn"] > clean_ref))
         for cond, s in (("visual", ""), ("full", stats)):
             prompt = PROMPT.format(stats=s, labels=", ".join(LABELS), cells=", ".join(CELLS))
             d, raw = ask(prompt, str(path))
@@ -170,7 +168,8 @@ def score(results):
             "diagnostics-only decision tree (5-fold CV)": diagnostics_baseline(results),
             "majority class / majority cell": [dict(anomaly_type=max(set(y), key=y.count), location=majority_cell)] * len(y)}
     lines = [f"n = {len(y)} frames; uniform-random type accuracy = {1 / len(LABELS):.0%}\n",
-             "| arm | valid JSON | type accuracy | macro-F1 | exact location cell |", "|---|---|---|---|---|"]
+             "| arm | valid JSON | type accuracy | macro-F1 | exact location cell | type acc. on GNN-flagged frames |",
+             "|---|---|---|---|---|---|"]
     fig, axes = plt.subplots(1, 3, figsize=(16, 4.6))
     for k, (name, preds) in enumerate(arms.items()):
         pred = [(p or {}).get("anomaly_type", "invalid") for p in preds]
@@ -178,7 +177,9 @@ def score(results):
         acc = np.mean([a == b for a, b in zip(y, pred)])
         f1 = f1_score(y, pred, labels=LABELS, average="macro", zero_division=0)
         loc = [p is not None and p.get("location") == r["cell"] for r, p in zip(results, preds) if r["cell"]]
-        lines.append(f"| {name} | {valid:.0%} | {acc:.0%} | {f1:.2f} | {np.mean(loc):.0%} |")
+        flag = [a == b for a, b, r in zip(y, pred, results) if r["flagged"]]
+        lines.append(f"| {name} | {valid:.0%} | {acc:.0%} | {f1:.2f} | {np.mean(loc):.0%} | "
+                     f"{np.mean(flag):.0%} (n={len(flag)}) |")
         if k < 3:
             ax = axes[k]
             cm = confusion_matrix(y, pred, labels=LABELS + ["invalid"])[:len(LABELS)]

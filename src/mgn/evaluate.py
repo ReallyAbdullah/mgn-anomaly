@@ -1,16 +1,24 @@
 """Build the injected-anomaly benchmark, run all detectors, and report AUROC with bootstrap CIs.
 
-Protocol, per test trajectory x anomaly type x severity (one corrupted copy each):
-  - up to 4 anomalous frames (incl. onset) and 4 clean frames from the same copy, outside a +-3-frame guard band
-    (frames right after an event are fed corrupted inputs, so they are neither clearly clean nor anomalous);
+Protocol v2, per simulation x anomaly type x severity (one corrupted copy each):
+  - every anomalous frame, labelled `onset` (first frame of the event) or `sustained` (the rest);
+  - as many clean frames (min. 4) from the same copy, drawn from within 40 frames of the event (so clean and
+    anomalous frames share the same phase of the loading) but outside a +-3-frame guard band (frames right after an
+    event are fed corrupted inputs, so they are neither clearly clean nor anomalous);
   - residual detectors are calibrated per node by its median residual over every 10th frame (unsupervised:
     the copy is mostly clean). CLIP scores are already relative to a clean reference bank.
 """
 import argparse
+import hashlib
+import os
 import pickle
+import subprocess
+
+from pathlib import Path
 
 import matplotlib
 import numpy as np
+import torch
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
@@ -20,6 +28,9 @@ from mgn.detect import (ClipDetector, constvel_scores, frame_score, gnn_scores, 
 from mgn.inject import SEVERITY, TYPES, inject
 from mgn.render import SIZE, Renderer, grid_cell
 from mgn.train import RUNS, device, load_model, load_split
+
+PROTOCOL = "v2"
+MIN_SIMS_FOR_CI = 20
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
@@ -33,15 +44,17 @@ def seed(i, kind, sev):
     return i * 100 + TYPES.index(kind) * 10 + sev
 
 
-def choose_frames(fmask, rng):
+def choose_frames(fmask, rng, window=40):
+    """All event frames (phase onset/sustained) + time-matched clean frames outside a +-3 guard band."""
     ev = np.flatnonzero(fmask[:T_MAX])
     ev = ev[ev >= 2]
-    anom = ev[np.unique(np.linspace(0, len(ev) - 1, min(4, len(ev))).astype(int))]
-    ok = np.ones(T_MAX, bool)
-    ok[:2] = False
+    ok = np.zeros(T_MAX, bool)
+    ok[max(ev[0] - window, 2):ev[-1] + window + 1] = True
     ok[max(ev[0] - 3, 0):ev[-1] + 4] = False
-    clean = rng.choice(np.flatnonzero(ok), 4, replace=False)
-    return np.concatenate([anom, clean]), np.r_[np.ones(len(anom)), np.zeros(4)].astype(bool)
+    cand = np.flatnonzero(ok)
+    clean = np.sort(rng.choice(cand, min(max(4, len(ev)), len(cand)), replace=False))
+    phase = np.array(["onset"] + ["sustained"] * (len(ev) - 1) + ["clean"] * len(clean))
+    return np.concatenate([ev, clean]), phase != "clean", phase
 
 
 def node_auroc(scores, mask):
@@ -49,9 +62,10 @@ def node_auroc(scores, mask):
 
 
 def run(a):
-    dev = device()
+    dev = device(a.device)
     model = load_model(a.ckpt, dev)
-    test = load_split("test", a.n_traj)
+    sims = list(range(a.start, a.stop))
+    test = load_split(a.split, a.stop)[a.start:]
     clip = None
     if not a.no_clip:
         clip = ClipDetector(dev)
@@ -62,14 +76,14 @@ def run(a):
         clip.fit(refs)
 
     records = []
-    for i, tr in enumerate(tqdm(test, desc="trajectories")):
+    for i, tr in zip(sims, tqdm(test, desc=f"{a.split} sims")):
         normal = tr["node_type"] == NORMAL
         rend = Renderer(tr) if clip else None
         for kind in TYPES:
             for sev in SEVERITY:
                 rng = np.random.default_rng(seed(i, kind, sev))
                 wp, mask, fmask = inject(tr, kind, sev, rng)
-                frames, labels = choose_frames(fmask, rng)
+                frames, labels, phase = choose_frames(fmask, rng)
                 node = {"gnn": gnn_scores(model, tr, wp, list(frames) + list(CALIB), dev),
                         "constvel": constvel_scores(wp, np.r_[frames, CALIB]),
                         "laplacian": laplacian_scores(tr, wp, np.r_[frames, CALIB]),
@@ -90,7 +104,7 @@ def run(a):
                     node["clip_knn"] = np.stack([clip.node_scores(m, rend.project(wp[t]), SIZE)
                                                  for m, t in zip(maps, frames)])
                 for j, (t, lab) in enumerate(zip(frames, labels)):
-                    rec = dict(traj=i, type=kind, sev=sev, t=int(t), label=bool(lab),
+                    rec = dict(traj=i, type=kind, sev=sev, t=int(t), label=bool(lab), phase=str(phase[j]),
                                **{f"frame_{d}": float(v[j]) for d, v in fs.items()})
                     if lab:
                         for d, v in node.items():
@@ -100,10 +114,13 @@ def run(a):
                             shift = rend.project(wp[t][mask]) - rend.project(tr["world_pos"][t][mask])
                             rec["px"] = float(np.linalg.norm(shift, axis=1).max())  # visible size in the render
                     records.append(rec)
-    RESULTS.mkdir(exist_ok=True)
-    with open(RESULTS / "records.pkl", "wb") as f:
-        pickle.dump(records, f)
-    return records
+    meta = dict(protocol=PROTOCOL, split=a.split, sims=sims, ckpt=a.ckpt, clip=clip is not None,
+                ckpt_sha256=hashlib.sha256(open(a.ckpt, "rb").read()).hexdigest(),
+                commit=subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip())
+    a.out.mkdir(parents=True, exist_ok=True)
+    with open(a.out / "records.pkl", "wb") as f:
+        pickle.dump(dict(meta=meta, records=records), f)
+    return meta, records
 
 
 def bootstrap(stat, groups, n=500, seed=0):
@@ -126,37 +143,55 @@ def tpr_at_fpr(y, s, fpr=0.05):
     return (s[y] > thr).mean()
 
 
-def report(records):
+def cell_rows(records, dets, kind, sev, phase=None):
+    """Metrics for one type x severity; phase restricts the positives to onset or sustained frames."""
+    R = [r for r in records if r["type"] == kind and r["sev"] == sev and (phase is None or r["phase"] in (phase, "clean"))]
+    y = np.array([r["label"] for r in R])
+    g = np.array([r["traj"] for r in R])
+    if y.all() or not y.any():
+        return []
+    ci = len(np.unique(g)) >= MIN_SIMS_FOR_CI
+    boot = (lambda stat: bootstrap(stat, g)) if ci else (lambda stat: (stat(np.arange(len(g))), np.nan, np.nan))
+    S = {d: np.array([r[f"frame_{d}"] for r in R]) for d in dets}
+    rows = []
+    for d in dets:
+        s = S[d]
+        auc, lo, hi = boot(lambda i: roc_auc_score(y[i], s[i]))
+        nodes = [r[f"node_{d}"] for r in R if r["label"] and f"node_{d}" in r]
+        row = dict(type=kind, sev=sev, phase=phase or "all", detector=d, frame_auroc=auc, lo=lo, hi=hi,
+                   tpr5=tpr_at_fpr(y, s), node_auroc=np.mean(nodes) if nodes else np.nan,
+                   delta=np.nan, dlo=np.nan, dhi=np.nan)
+        if d != "gnn" and "gnn" in S:  # paired bootstrap of the AUROC difference, GNN minus this detector
+            row["delta"], row["dlo"], row["dhi"] = boot(
+                lambda i: roc_auc_score(y[i], S["gnn"][i]) - roc_auc_score(y[i], s[i]))
+        rows.append(row)
+    return rows
+
+
+def report(meta, records, out):
     dets = [d for d in DETECTORS if f"frame_{d}" in records[0]]
     rows, pixels = [], {}
     for kind in TYPES:
         for sev in SEVERITY:
+            for phase in (None, "onset", "sustained"):
+                rows += cell_rows(records, dets, kind, sev, phase)
             R = [r for r in records if r["type"] == kind and r["sev"] == sev]
-            y = np.array([r["label"] for r in R])
-            g = np.array([r["traj"] for r in R])
-            S = {d: np.array([r[f"frame_{d}"] for r in R]) for d in dets}
-            for d in dets:
-                s = S[d]
-                auc, lo, hi = bootstrap(lambda i: roc_auc_score(y[i], s[i]), g)
-                nodes = [r[f"node_{d}"] for r in R if r["label"] and f"node_{d}" in r]
-                row = dict(type=kind, sev=sev, detector=d, frame_auroc=auc, lo=lo, hi=hi, tpr5=tpr_at_fpr(y, s),
-                           node_auroc=np.mean(nodes) if nodes else np.nan, delta=np.nan, dlo=np.nan, dhi=np.nan)
-                if d != "gnn":  # paired bootstrap of the AUROC difference, GNN minus this detector
-                    row["delta"], row["dlo"], row["dhi"] = bootstrap(
-                        lambda i: roc_auc_score(y[i], S["gnn"][i]) - roc_auc_score(y[i], s[i]), g)
-                rows.append(row)
             px = [r["px"] for r in R if "px" in r]
             pixels[kind, sev] = np.median(px) if px else np.nan
-    with open(RESULTS / "metrics.csv", "w") as f:
-        f.write("type,severity,detector,frame_auroc,ci_lo,ci_hi,tpr_at_5fpr,node_auroc,gnn_minus_det,d_lo,d_hi,"
+    with open(out / "metrics.csv", "w") as f:
+        f.write(f"# {meta}\n")
+        f.write("type,severity,phase,detector,frame_auroc,ci_lo,ci_hi,tpr_at_5fpr,node_auroc,gnn_minus_det,d_lo,d_hi,"
                 "median_px\n")
         for r in rows:
-            f.write(f"{r['type']},{r['sev']},{r['detector']},{r['frame_auroc']:.4f},{r['lo']:.4f},{r['hi']:.4f},"
+            f.write(f"{r['type']},{r['sev']},{r['phase']},{r['detector']},{r['frame_auroc']:.4f},{r['lo']:.4f},{r['hi']:.4f},"
                     f"{r['tpr5']:.4f},{r['node_auroc']:.4f},{r['delta']:.4f},{r['dlo']:.4f},{r['dhi']:.4f},"
                     f"{pixels[r['type'], r['sev']]:.2f}\n")
 
     # markdown table: frame AUROC per type (rows) x detector (cols), one block per severity
-    lines = []
+    rows_all = [r for r in rows if r["phase"] == "all"]
+    lines = [f"{len(meta['sims'])} {meta['split']} sims, protocol {meta['protocol']}, checkpoint "
+             f"{meta['ckpt_sha256'][:12]}, commit {meta['commit']}" + ("" if len(meta["sims"]) >= MIN_SIMS_FOR_CI
+                                                                        else " — too few sims, no CIs")]
     for sev in SEVERITY:
         lines.append(f"\n**Severity {sev}** ({SEVERITY[sev]:g}x RMS step displacement) — frame AUROC [95% CI] / node AUROC; px = median visible shift in the 448 px render\n")
         lines.append("| anomaly | px | " + " | ".join(dets) + " | GNN − constvel |")
@@ -164,19 +199,29 @@ def report(records):
         for kind in TYPES:
             cells = []
             for d in dets:
-                r = next(r for r in rows if r["type"] == kind and r["sev"] == sev and r["detector"] == d)
+                r = next(r for r in rows_all if r["type"] == kind and r["sev"] == sev and r["detector"] == d)
                 node = "" if np.isnan(r["node_auroc"]) else f" / {r['node_auroc']:.2f}"
                 cells.append(f"{r['frame_auroc']:.2f} [{r['lo']:.2f}–{r['hi']:.2f}]{node}")
-            dc = next(r for r in rows if r["type"] == kind and r["sev"] == sev and r["detector"] == "constvel")
+            dc = next(r for r in rows_all if r["type"] == kind and r["sev"] == sev and r["detector"] == "constvel")
             lines.append(f"| {kind} | {pixels[kind, sev]:.1f} | " + " | ".join(cells)
                          + f" | {dc['delta']:+.2f} [{dc['dlo']:+.2f}, {dc['dhi']:+.2f}] |")
-    (RESULTS / "metrics.md").write_text("\n".join(lines) + "\n")
+    # onset vs. sustained: where does learned physics help?
+    lines.append("\n**Frame AUROC by event phase** (onset = first anomalous frame, sustained = the rest; clean frames shared)\n")
+    lines.append("| anomaly | severity | phase | " + " | ".join(dets) + " |")
+    lines.append("|---|---|---|" + "---|" * len(dets))
+    for kind in TYPES:
+        for sev in SEVERITY:
+            for phase in ("onset", "sustained"):
+                rr = {r["detector"]: r for r in rows if r["type"] == kind and r["sev"] == sev and r["phase"] == phase}
+                if rr:
+                    lines.append(f"| {kind} | {sev} | {phase} | " + " | ".join(f"{rr[d]['frame_auroc']:.2f}" for d in dets) + " |")
+    (out / "metrics.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
 
     fig, axes = plt.subplots(1, len(TYPES), figsize=(4 * len(TYPES), 3.4), sharey=True)
     for ax, kind in zip(axes, TYPES):
         for d in dets:
-            rr = [r for r in rows if r["type"] == kind and r["detector"] == d]
+            rr = [r for r in rows_all if r["type"] == kind and r["detector"] == d]
             x = [SEVERITY[r["sev"]] for r in rr]
             ax.plot(x, [r["frame_auroc"] for r in rr], marker="o", label=d)
             ax.fill_between(x, [r["lo"] for r in rr], [r["hi"] for r in rr], alpha=0.15)
@@ -187,22 +232,29 @@ def report(records):
     axes[0].set_ylabel("frame AUROC")
     axes[-1].legend(fontsize=8, loc="lower right")
     fig.tight_layout()
-    fig.savefig(RESULTS / "auroc_vs_severity.png", dpi=150)
+    fig.savefig(out / "auroc_vs_severity.png", dpi=150)
 
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--ckpt", default=str(RUNS / "mgn" / "model.pt"))
-    p.add_argument("--n-traj", type=int, default=40)
+    p.add_argument("--split", default="test", choices=["valid", "test"])
+    p.add_argument("--start", type=int, default=8, help="test sims 0-7 were used for pilots; start after them")
+    p.add_argument("--stop", type=int, default=100)
+    p.add_argument("--device")
+    p.add_argument("--out", type=Path, default=RESULTS)
     p.add_argument("--no-clip", action="store_true")
     p.add_argument("--report-only", action="store_true")
     a = p.parse_args()
+    if a.device == "cpu":
+        torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", 4)))
     if a.report_only:
-        with open(RESULTS / "records.pkl", "rb") as f:
-            records = pickle.load(f)
+        with open(a.out / "records.pkl", "rb") as f:
+            d = pickle.load(f)
+        meta, records = d["meta"], d["records"]
     else:
-        records = run(a)
-    report(records)
+        meta, records = run(a)
+    report(meta, records, a.out)
 
 
 if __name__ == "__main__":

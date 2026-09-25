@@ -50,9 +50,11 @@ def load_model(path, dev):
 
 
 @torch.no_grad()
-def evaluate(model, val, dev, rng=np.random.default_rng(0)):
-    """One-step next-position RMSE on NORMAL nodes vs. the constant-velocity baseline (= zero acceleration)."""
+def evaluate(model, val, dev):
+    """One-step next-position RMSE on NORMAL nodes vs. the constant-velocity baseline (= zero acceleration),
+    on the same fixed frames at every call."""
     model.eval()
+    rng = np.random.default_rng(0)
     idx = [(i, t) for i in range(len(val)) for t in 1 + rng.choice(T_MAX - 1, 20, replace=False)]
     se = base = n = 0.0
     for j in range(0, len(idx), 8):
@@ -104,8 +106,10 @@ def main():
     t0, last, losses = time.time(), time.time(), []
 
     def save():
-        torch.save(dict(model=model.state_dict(), opt=opt.state_dict(), sched=sched.state_dict(), step=step, cfg=cfg),
-                   out / "model.pt")
+        meta = dict(noise=a.noise, n_train=a.n_train, batch=a.batch, lr=a.lr, iters=a.iters, seed=0)
+        torch.save(dict(model=model.state_dict(), opt=opt.state_dict(), sched=sched.state_dict(), step=step, cfg=cfg,
+                        meta=meta), out / "model.pt.tmp")
+        (out / "model.pt.tmp").replace(out / "model.pt")  # atomic: readers never see a half-written checkpoint
 
     while step < a.iters and time.time() - t0 < a.hours * 3600:
         idx = [(rng.integers(len(train)), rng.integers(1, T_MAX)) for _ in range(a.batch)]

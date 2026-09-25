@@ -5,7 +5,9 @@ uniformly: a frame is anomalous iff any node deviates from the clean trajectory.
 ever corrupted; actuator and clamped nodes keep their prescribed kinematics.
 """
 import numpy as np
+import pyvista as pv
 from scipy.sparse import coo_matrix
+from scipy.spatial import cKDTree
 
 from mgn.data import NORMAL, OBSTACLE
 
@@ -53,6 +55,7 @@ def inject(traj, kind, severity, rng, t0=None):
     normal = nt == NORMAL
     adj = adjacency(traj)
     a = SEVERITY[severity] * step_scale(traj)
+    t0_given = t0 is not None
     t0 = int(rng.integers(40, 300)) if t0 is None else t0
     k = 5  # event duration in frames (except frozen/instability, see below)
 
@@ -66,17 +69,32 @@ def inject(traj, kind, severity, rng, t0=None):
         wp[t0:t0 + k, mask] += a * sign[mask, None] * direction
 
     elif kind == "penetration":
-        # plate nodes nearest the actuator pushed further into it (contact constraint violated)
+        # plate nodes at the contact pushed through the actuator surface; severity = penetration depth
         obs = np.flatnonzero(nt == OBSTACLE)
         plate = np.flatnonzero(normal)
-        gap = np.linalg.norm(wp[t0][plate][:, None] - wp[t0][obs][None], axis=-1)
-        close = plate[np.argsort(gap.min(1))[:10]]
+        if not t0_given:  # only start once the actuator actually touches the plate
+            gaps = np.array([cKDTree(wp[t][obs]).query(wp[t][plate])[0].min() for t in range(40, 300)])
+            contact = np.flatnonzero(gaps < 2e-3) + 40
+            t0 = int(rng.choice(contact)) if len(contact) else int(np.argmin(gaps)) + 40
+        obs_cells = traj["cells"][(nt[traj["cells"]] == OBSTACLE).all(1)]
+
+        def actuator_surface(pos):
+            return pv.UnstructuredGrid(np.c_[np.full(len(obs_cells), 4), obs_cells].ravel(),
+                                       np.full(len(obs_cells), pv.CellType.TETRA), pos.astype(np.float64)
+                                       ).extract_surface(algorithm="dataset_surface").compute_normals(
+                                           cell_normals=True, point_normals=False, auto_orient_normals=True)
+
+        _, cp = actuator_surface(wp[t0]).find_closest_cell(wp[t0][plate].astype(np.float64), return_closest_point=True)
+        dist = np.linalg.norm(cp - wp[t0][plate], axis=1)
+        order = np.argsort(dist)[:10]
+        close = plate[order[dist[order] <= max(1e-3, dist[order[0]])]]  # nodes touching the actuator (<1 mm)
         mask = np.zeros(len(nt), bool)
         mask[close] = True
         for t in range(t0, t0 + k):
-            nearest = obs[np.argmin(np.linalg.norm(wp[t][close][:, None] - wp[t][obs][None], axis=-1), axis=1)]
-            direction = wp[t, nearest] - wp[t, close]
-            wp[t, close] += a * direction / np.linalg.norm(direction, axis=1, keepdims=True).clip(1e-9)
+            # closest point on the actuator surface, then `a` further inward along the surface normal
+            surf = actuator_surface(wp[t])
+            cid, closest = surf.find_closest_cell(wp[t][close].astype(np.float64), return_closest_point=True)
+            wp[t, close] = closest - a * surf.cell_data["Normals"][cid]
 
     elif kind == "inversion":
         # move one vertex of a plate tet through its opposite face -> negative Jacobian (inverted element)
@@ -85,7 +103,7 @@ def inject(traj, kind, severity, rng, t0=None):
         cand = np.flatnonzero((cells == center).any(1) & normal[cells].all(1))
         cell = cells[rng.choice(cand)]
         others = cell[cell != center]
-        frac = {1: 0.6, 2: 1.0, 3: 1.5}[severity]  # >0.5 of the reflection distance inverts the tet
+        frac = {1: 0.3, 2: 0.6, 3: 1.5}[severity]  # >0.5 of the reflection distance inverts the tet; 0.3 = distorted only
         mask = np.zeros(len(nt), bool)
         mask[center] = True
         for t in range(t0, t0 + k):
@@ -100,8 +118,9 @@ def inject(traj, kind, severity, rng, t0=None):
         mask = depth >= 0
         k = 8
         noise = rng.normal(size=(mask.sum(), 3))
-        for j in range(k):
-            wp[t0 + j, mask] += a * 0.3 * 1.6 ** j * (-1) ** j * noise
+        noise /= np.linalg.norm(noise, axis=1, keepdims=True)
+        for j in range(k):  # grows 1.6x per frame, sign-alternating, peaking at `a` in the last frame
+            wp[t0 + j, mask] += a * 1.6 ** (j - k + 1) * (-1) ** j * noise
 
     elif kind == "frozen":
         # a region stops following the deformation (lost constraint / BC error); severity = duration
