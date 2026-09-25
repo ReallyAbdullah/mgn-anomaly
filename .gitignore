@@ -1,0 +1,10 @@
+data/
+runs/
+results/renders/
+.venv/
+__pycache__/
+*.pt
+data_convert.log
+results/vlm/
+results/records.pkl
+results/render_*.png
