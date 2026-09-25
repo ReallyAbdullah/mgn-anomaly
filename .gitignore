@@ -8,3 +8,4 @@ data_convert.log
 results/vlm/
 results/records.pkl
 results/render_*.png
+.DS_Store
