@@ -85,6 +85,24 @@ def select(records, n_per_type, n_clean, rng):
     return picks
 
 
+def make_asker(model_id):
+    """Load the VLM once; returns ask(prompt, image_path) -> (parsed JSON or None, raw text), one retry on bad JSON."""
+    from mlx_vlm import generate, load
+    from mlx_vlm.prompt_utils import apply_chat_template
+    from mlx_vlm.utils import load_config
+    vlm, processor = load(model_id)
+    config = load_config(model_id)
+
+    def ask(prompt, image):
+        for extra in ("", "\nReturn ONLY valid JSON."):
+            chat = apply_chat_template(processor, config, prompt + extra, num_images=1)
+            text = generate(vlm, processor, chat, [image], max_tokens=300, temperature=0.0, verbose=False).text
+            if (d := parse(text)) is not None:
+                return d, text
+        return None, text
+    return ask
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--model", default="mlx-community/Qwen3-VL-8B-Instruct-4bit")
@@ -93,10 +111,6 @@ def main():
     p.add_argument("--n-clean", type=int, default=25)
     a = p.parse_args()
 
-    from mlx_vlm import generate, load
-    from mlx_vlm.prompt_utils import apply_chat_template
-    from mlx_vlm.utils import load_config
-
     with open(RESULTS / "records.pkl", "rb") as f:
         records = pickle.load(f)["records"]
     picks = select(records, a.n_per_type, a.n_clean, np.random.default_rng(0))
@@ -104,19 +118,9 @@ def main():
     dev = device()
     gnn = load_model(a.ckpt, dev)
     test = load_split("test", max(r["traj"] for r in picks) + 1)
-    vlm, processor = load(a.model)
-    config = load_config(a.model)
+    ask = make_asker(a.model)
     out_dir = RESULTS / "vlm"
     out_dir.mkdir(parents=True, exist_ok=True)
-
-    def ask(prompt, image):
-        chat = apply_chat_template(processor, config, prompt, num_images=1)
-        for attempt in range(2):
-            text = generate(vlm, processor, chat, [image], max_tokens=300, temperature=0.0, verbose=False).text
-            if (d := parse(text)) is not None:
-                return d, text
-            chat = apply_chat_template(processor, config, prompt + "\nReturn ONLY valid JSON.", num_images=1)
-        return None, text
 
     results = []
     for k, r in enumerate(picks):
