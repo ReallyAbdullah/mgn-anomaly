@@ -46,13 +46,31 @@ held-out sims ──inject 5 failure modes x 3 severities──> corrupted sims
 | Injected anomaly | Crash-simulation failure it mimics | How |
 |---|---|---|
 | hourglass | hourglassing / zero-energy modes in under-integrated elements | checkerboard offsets (alternating by hop parity) on a 2-hop patch |
-| penetration | contact failure | the 10 plate nodes nearest the actuator pushed into it |
-| inversion | element inversion (negative Jacobian) | one tet vertex pushed through its opposite face |
-| instability | numerical blow-up | local oscillation growing 1.6x per frame |
+| penetration | contact failure | plate nodes touching the actuator (<1 mm) moved to the closest point on its surface, then pushed inward by the severity depth (checked: 100/100/92% of them end up inside the actuator) |
+| inversion | element inversion (negative Jacobian) | one tet vertex moved towards its opposite face (severity 1 distorts without flipping; 2 and 3 invert) |
+| instability | numerical blow-up | local sign-alternating oscillation growing 1.6x per frame for 8 frames, peaking at the severity amplitude |
 | frozen | constraint / boundary-condition error | a region holds its position while the plate keeps deforming |
 
 Severities are 1x, 10x and 100x the simulation's RMS per-step node displacement (≈0.3 mm). Inversion is geometric
-(0.6x, 1x, 1.5x the reflection distance), and for frozen the severity is the duration (3, 10, 30 frames).
+(0.3x, 0.6x, 1.5x the reflection distance), and for frozen the severity is the duration (3, 10, 30 frames).
+Penetration events start only once the actuator is in contact with the plate.
+
+## Evaluation protocol (frozen before the final test run)
+
+Everything below is fixed on validation simulations before test simulations 8–99 are scored, once:
+
+- **Data.** Validation sims 0–19 serve as CLIP reference renders and training-time validation. Sims 20–99 are used
+  for tuning and gates. Test sims 0–7 were used in pilot runs and are excluded, leaving 92 test sims.
+- **Frames (protocol v2).** Every anomalous frame is scored and labelled `onset` (first frame) or `sustained`. Clean
+  frames are drawn from the same copy within ±40 frames of the event, outside a ±3-frame guard band, so clean and
+  anomalous frames come from the same loading phase.
+- **Statistics.** 95% bootstrap CIs over simulations, and none are reported with fewer than 20 sims. Paired
+  bootstrap for GNN-minus-baseline differences. TPR at 5% FPR. AUROC is reported per event phase.
+- **Gates.** A: σ is chosen on validation (pre-registered criterion). B: the surrogate's one-step error vs
+  constant velocity. C: the GNN must beat the best baseline (chosen per cell on validation) with a paired CI that
+  excludes 0 before any claim of benefit.
+- **Provenance.** Every records file stores the checkpoint SHA-256, the simulation IDs, the protocol version and the
+  git commit.
 
 ## Results
 
@@ -76,16 +94,21 @@ RESULTS_PLACEHOLDER
   equilibrium. Inverted elements, frozen regions and hourglass patterns then leave a residual in *every* frame, since
   the observed simulation never relaxes back.
 
-  The noise level sets a trade-off between that sensitivity and the error floor on clean data. Pilot study (40 train
-  simulations, ~9k steps each, 8 test simulations, frame AUROC, GNN vs constant velocity):
+  The noise level sets a trade-off between that sensitivity and the error floor on clean data. For reference, the
+  constant-velocity extrapolation's own one-step RMSE on clean frames is about 3e-6, so a noise-trained surrogate is
+  15–70× *worse* than "do nothing" on clean data. It is a denoiser, not a better simulator.
+
+  Pilot study (frame AUROC, GNN vs constant velocity, 8 test simulations that are excluded from the final
+  evaluation). **This table is confounded and will be regenerated:** the σ=0 row is a 250-simulation, 10k-step run,
+  while the others are 40-simulation, ~9k-step runs, and only the σ=3e-4 row used per-node calibration.
 
   | training noise σ | clean one-step RMSE | hourglass (100x) | inversion (100x) | frozen (10 frames) |
   |---|---|---|---|---|
-  | 0 (clean only)   | ≈ const-velocity | 0.73 vs 0.78 | 0.65 vs 0.69 | 0.64 vs 0.69 |
-  | 3e-4 (chosen)    | 9.4e-5 | **0.91** vs 0.75 | **0.79** vs 0.71 | **0.80** vs 0.63 |
+  | 0 (clean only; 250 sims) | ≈ const-velocity | 0.73 vs 0.78 | 0.65 vs 0.69 | 0.64 vs 0.69 |
+  | 3e-4 (chosen)    | 9.4e-5 (const-vel: 3e-6) | **0.91** vs 0.75 | **0.79** vs 0.71 | **0.80** vs 0.63 |
   | 1e-3             | 2.2e-4 | 0.85 vs 0.78 | 0.76 vs 0.69 | 0.71 vs 0.69 |
 
-  (The σ=3e-4 row also uses per-node residual calibration. The constant-velocity numbers barely moved with it.)
+  Choosing σ on test simulations was a mistake. It is being re-checked on validation simulations (Gate A below).
 - **Steady-actuator regime only.** In every trajectory the actuator speeds up about 9x around frame 360. We train and
   score on frames under 350.
 - **MPS shape bucketing.** Batches are padded to fixed node and edge buckets. Without this, every new graph size
