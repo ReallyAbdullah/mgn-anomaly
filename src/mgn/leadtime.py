@@ -1,6 +1,7 @@
 """Detection lead time / latency with causal calibration (what an online simulation monitor would see).
 
-- blowup: grows 1.3x/frame from 0.1x to a 100x cap, which it reaches at frame T = t0 + BLOWUP_GROW - 1.
+- blowup: grows 1.3x/frame from the simulation's clean-acceleration floor to a 100x-step-displacement cap, first reached
+  at frame T (read from the data).
   Lead time = T - first alarm at or after onset (positive = warned before the cap). Censored if no alarm by T.
 - frozen (severity 3, 30 frames): latency = first alarm after onset - onset. Censored if no alarm in the event.
 Alarm thresholds are the 95th percentile of each detector's clean-frame scores on *validation* sims
@@ -14,7 +15,7 @@ import numpy as np
 from tqdm import tqdm
 
 from mgn.evaluate import RESULTS, score_copy, seed
-from mgn.inject import BLOWUP_GROW, inject
+from mgn.inject import inject
 from mgn.train import RUNS, device, load_model, load_split
 
 DETS = ["gnn_causal", "constvel_causal", "laplacian_causal", "jacobian"]  # causally calibrated or memoryless only
@@ -30,10 +31,11 @@ def run(a):
             rng = np.random.default_rng(seed(i, "frozen", sev) + (7 if kind == "blowup" else 0))
             wp, _, fmask = inject(tr, kind, sev, rng)
             t0 = int(np.flatnonzero(fmask)[0])
-            end = t0 + BLOWUP_GROW - 1 if kind == "blowup" else int(np.flatnonzero(fmask)[-1])
+            dev_ = np.abs(wp - tr["world_pos"]).max(axis=(1, 2))
+            end = int(np.flatnonzero(dev_ >= 0.999 * dev_.max())[0]) if kind == "blowup" else int(np.flatnonzero(fmask)[-1])
             frames = np.arange(max(t0 - 15, 2), end + 1)
             fs, _ = score_copy(model, tr, wp, frames, dev)
-            events.append(dict(sim=i, kind=kind, t0=t0, end=end, frames=frames.tolist(),
+            events.append(dict(sim=i, kind=kind, t0=t0, end=end, ramp=end - t0, frames=frames.tolist(),
                                scores={d: fs[d].tolist() for d in DETS}))
     return events
 

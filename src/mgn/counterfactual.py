@@ -16,7 +16,7 @@ from PIL import Image
 from mgn.data import NORMAL, T_MAX
 from mgn.detect import gnn_scores
 from mgn.evaluate import RESULTS, seed
-from mgn.explain import CELLS, LABELS, PROMPT, diagnostics, make_asker
+from mgn.explain import CELLS, LABELS, PROMPT, clean_clim, diagnostics, make_asker
 from mgn.inject import inject
 from mgn.render import Renderer
 from mgn.train import RUNS, device, load_model, load_split
@@ -57,13 +57,15 @@ def main():
     pairs = []
     for i, tr in zip(range(a.start, a.stop), load_split(a.split, a.stop)[a.start:]):
         t = T_MAX - 20  # late in the loading: the plate is strongly bent, the hardest "clean" case
-        wp_b, mask, _ = inject(tr, "hourglass", 2, np.random.default_rng(seed(i, "hourglass", 2)), t0=t - 2)
+        wp_b, mask, _ = inject(tr, "hourglass", 3, np.random.default_rng(seed(i, "hourglass", 3)), t0=t - 2)
         rend, normal = Renderer(tr), tr["node_type"] == NORMAL
-        pair = dict(sim=i, t=t)
+        clim = clean_clim(gnn, tr, dev)
+        shift = rend.project(wp_b[t][mask]) - rend.project(tr["world_pos"][t][mask])
+        pair = dict(sim=i, t=t, px=float(np.linalg.norm(shift, axis=1).max()))  # B must be visibly different
         for tag, wp in (("A", tr["world_pos"]), ("B", wp_b)):
             res = gnn_scores(gnn, tr, wp, [t], dev)[0]
             plain = rend.render(wp[t])
-            heat = rend.render(wp[t], scalars=np.where(normal, res, 0), clim=(0, np.percentile(res[normal], 99.5)))
+            heat = rend.render(wp[t], scalars=np.where(normal, res, 0), clim=clim)
             Image.fromarray(plain).save(out_dir / f"{i:03d}{tag}_render.png")
             Image.fromarray(np.hstack([plain, heat])).save(out_dir / f"{i:03d}{tag}_panels.png")
             _, stats = diagnostics(tr, wp, t, res, rend, float("nan"), float("nan"))
@@ -79,7 +81,8 @@ def main():
         pairs.append(pair)
         print(i, {k: v["pred"] for k, v in pair.items() if isinstance(v, dict)}, flush=True)
 
-    lines = [f"n = {len(pairs)} pairs (A = clean frame {T_MAX - 20}, B = same frame + hourglass severity 2)\n",
+    lines = [f"n = {len(pairs)} pairs (A = clean frame {T_MAX - 20}, B = same frame + hourglass severity 3; median visible shift "
+             f"{np.median([q['px'] for q in pairs]):.0f} px)\n",
              "| arm | P(none \\| A) | P(hourglass \\| B) | pair discrimination | term Jaccard A↔B | shuffled-pair Jaccard | permutation p |",
              "|---|---|---|---|---|---|---|"]
     rng = np.random.default_rng(0)

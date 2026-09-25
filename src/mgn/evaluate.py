@@ -186,16 +186,25 @@ def cell_rows(records, dets, kind, sev, phase=None):
     return rows
 
 
-def best_baselines(metrics_csv):
-    """Per type x severity, the non-GNN detector with the highest overall frame AUROC in a (validation) metrics.csv."""
+CAUSAL_POOL = {"constvel_causal", "laplacian_causal", "jacobian"}  # causal or memoryless baselines
+NONCAUSAL_POOL = {"constvel", "laplacian", "velocity", "jacobian", "clip_knn", "clip_zero"}
+
+
+def best_baselines(metrics_csv, phase="all"):
+    """Per type x severity, the best baseline in a (validation) metrics.csv for each GNN variant, like with like:
+    {(type, sev): {"gnn": best non-causal baseline, "gnn_causal": best causal baseline}}. GNN variants never qualify."""
     best = {}
     for line in open(metrics_csv):
         if line.startswith("#") or line.startswith("type,"):
             continue
-        kind, sev, phase, det, auc = line.split(",")[:5]
-        if phase == "all" and det != "gnn" and float(auc) > best.get((kind, int(sev)), ("", -1))[1]:
-            best[kind, int(sev)] = (det, float(auc))
-    return {k: v[0] for k, v in best.items()}
+        kind, sev, ph, det, auc = line.split(",")[:5]
+        if ph != phase:
+            continue
+        for variant, pool in (("gnn", NONCAUSAL_POOL), ("gnn_causal", CAUSAL_POOL)):
+            cur = best.setdefault((kind, int(sev)), {}).get(variant, ("", -1))
+            if det in pool and float(auc) > cur[1]:
+                best[kind, int(sev)][variant] = (det, float(auc))
+    return {k: {v: d[0] for v, d in vs.items()} for k, vs in best.items()}
 
 
 def report(meta, records, out, best=None):
@@ -236,7 +245,7 @@ def report(meta, records, out, best=None):
             dc = next(r for r in rows_all if r["type"] == kind and r["sev"] == sev and r["detector"] == "constvel")
             tail = ""
             if best:
-                b = next(r for r in rows_all if r["type"] == kind and r["sev"] == sev and r["detector"] == best[kind, sev])
+                b = next(r for r in rows_all if r["type"] == kind and r["sev"] == sev and r["detector"] == best[kind, sev]["gnn"])
                 tail = f" | {b['detector']} | {b['delta']:+.2f} [{b['dlo']:+.2f}, {b['dhi']:+.2f}]"
             lines.append(f"| {kind} | {pixels[kind, sev]:.1f} | " + " | ".join(cells)
                          + f" | {dc['delta']:+.2f} [{dc['dlo']:+.2f}, {dc['dhi']:+.2f}]{tail} |")

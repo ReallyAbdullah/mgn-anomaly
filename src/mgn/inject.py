@@ -9,10 +9,9 @@ import pyvista as pv
 from scipy.sparse import coo_matrix
 from scipy.spatial import cKDTree
 
-from mgn.data import NORMAL, OBSTACLE
+from mgn.data import NORMAL, OBSTACLE, T_MAX
 
 TYPES = ["hourglass", "penetration", "inversion", "instability", "frozen"]
-BLOWUP_GROW = 28  # 0.1 * 1.3**j first reaches the 100x cap at j = 27
 SEVERITY = {1: 1.0, 2: 10.0, 3: 100.0}  # amplitude in multiples of the RMS per-step displacement (~0.3 mm)
 
 
@@ -131,15 +130,22 @@ def inject(traj, kind, severity, rng, t0=None):
         wp[t0 + 1:t0 + k, mask] = wp[t0, mask]
 
     elif kind == "blowup":
-        # lead-time study only (not in TYPES): grows 1.3x/frame from 0.1x to a cap of 100x the step displacement
-        # (reached at frame t0 + BLOWUP_GROW - 1), then holds at the cap for 5 frames
+        # lead-time study only (not in TYPES): starts at this simulation's clean-acceleration floor (RMS second
+        # difference of plate nodes, median over the steady regime) and grows 1.3x/frame to a cap of 100x the step
+        # displacement, then holds at the cap for 5 frames. Onset is chosen so the cap lands before T_MAX.
+        s0 = step_scale(traj)
+        acc = np.linalg.norm(traj["world_pos"][2:T_MAX] - 2 * traj["world_pos"][1:T_MAX - 1] + traj["world_pos"][:T_MAX - 2], axis=-1)
+        start = max(np.median(np.sqrt((acc[8:, normal] ** 2).mean(1))), 1e-9)
+        n_grow = min(int(np.ceil(np.log(100 * s0 / start) / np.log(1.3))) + 1, T_MAX - 50)
+        start = 100 * s0 / 1.3 ** (n_grow - 1)
+        if not t0_given:
+            t0 = int(rng.integers(40, T_MAX - n_grow - 5))
         depth = bfs_depth(adj, _moving_center(traj, t0, rng), 1, normal)
         mask = depth >= 0
-        s0 = step_scale(traj)
         noise = rng.normal(size=(mask.sum(), 3))
         noise /= np.linalg.norm(noise, axis=1, keepdims=True)
-        for j in range(BLOWUP_GROW + 5):
-            wp[t0 + j, mask] += min(0.1 * 1.3 ** j, 100.0) * s0 * (-1) ** j * noise
+        for j in range(n_grow + 5):
+            wp[t0 + j, mask] += min(start * 1.3 ** j, 100 * s0) * (-1) ** j * noise
 
     else:
         raise ValueError(kind)

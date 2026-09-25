@@ -7,6 +7,7 @@ import argparse
 import json
 import pickle
 import re
+from pathlib import Path
 
 import matplotlib
 import numpy as np
@@ -63,6 +64,13 @@ def diagnostics(traj, wp, t, res, rend, frame_ratio, clean_ref):
     return d, text
 
 
+def clean_clim(gnn, traj, dev, frames=(100, 150, 200, 250, 300)):
+    """Fixed heatmap scale per simulation: 3x the 99.5th-percentile plate residual on CLEAN frames of that simulation,
+    so a clean frame looks pale and only real inconsistencies saturate (a per-frame scale makes everything look red)."""
+    res = gnn_scores(gnn, traj, traj["world_pos"], list(frames), dev)
+    return (0.0, 3 * float(np.percentile(res[:, traj["node_type"] == NORMAL], 99.5)))
+
+
 def parse(text):
     m = re.search(r"\{.*\}", text, re.S)
     try:
@@ -109,15 +117,18 @@ def main():
     p.add_argument("--ckpt", default=str(RUNS / "mgn" / "model.pt"))
     p.add_argument("--n-per-type", type=int, default=35)
     p.add_argument("--n-clean", type=int, default=25)
+    p.add_argument("--records", type=Path, default=RESULTS / "test" / "records.pkl")
     a = p.parse_args()
 
-    with open(RESULTS / "records.pkl", "rb") as f:
-        records = pickle.load(f)["records"]
+    with open(a.records, "rb") as f:
+        d = pickle.load(f)
+    assert d["meta"]["split"] == "test" and d["meta"]["protocol"] == "v2", d["meta"]
+    records = d["records"]
     picks = select(records, a.n_per_type, a.n_clean, np.random.default_rng(0))
     clean_ref = np.percentile([r["frame_gnn"] for r in records if not r["label"]], 95)
     dev = device()
     gnn = load_model(a.ckpt, dev)
-    test = load_split("test", max(r["traj"] for r in picks) + 1)
+    test = load_split("test", max(r["traj"] for r in picks) + 1)  # indexed by absolute sim id
     ask = make_asker(a.model)
     out_dir = RESULTS / "vlm"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -133,7 +144,7 @@ def main():
         res = gnn_scores(gnn, tr, wp, [t], dev)[0]
         rend = Renderer(tr)
         normal = tr["node_type"] == NORMAL
-        heat = rend.render(wp[t], scalars=np.where(normal, res, 0), clim=(0, np.percentile(res[normal], 99.5)))
+        heat = rend.render(wp[t], scalars=np.where(normal, res, 0), clim=clean_clim(gnn, tr, dev))
         path = out_dir / f"{k:03d}_{r['type']}_s{r['sev']}_t{t}_{'anom' if r['label'] else 'clean'}.png"
         Image.fromarray(np.hstack([rend.render(wp[t]), heat])).save(path)
         diag, stats = diagnostics(tr, wp, t, res, rend, r["frame_gnn"], clean_ref)
