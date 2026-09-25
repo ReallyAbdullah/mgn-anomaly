@@ -63,6 +63,34 @@ def node_auroc(scores, mask):
     return roc_auc_score(mask, scores)
 
 
+def score_copy(model, tr, wp, frames, dev):
+    """Frame scores {detector: [F]} and node scores {detector: [F, N]} for the residual/rule detectors."""
+    normal = tr["node_type"] == NORMAL
+    node = {"gnn": gnn_scores(model, tr, wp, list(frames) + list(CALIB), dev),
+            "constvel": constvel_scores(wp, np.r_[frames, CALIB]),
+            "laplacian": laplacian_scores(tr, wp, np.r_[frames, CALIB]),
+            "velocity": velocity_scores(wp, frames),
+            "jacobian": jacobian_scores(tr, wp, frames)}
+    fs = {}
+    for d in ("gnn", "constvel", "laplacian"):
+        raw, calib = node[d][:len(frames)], node[d][len(frames):]
+        # per-node calibration (PaDiM-style): residual relative to that node's median residual
+        cal = np.median(calib, axis=0)
+        node[d] = raw / (cal + np.median(cal[normal]))
+        fs[d] = frame_score(node[d], normal)
+        # causal variant: calibrate only on frames at least 4 before the scored one (min. first 3)
+        causal = []
+        for j, t in enumerate(frames):
+            past = CALIB < t - 3
+            c = np.median(calib[past if past.sum() >= 3 else slice(0, 3)], axis=0)
+            causal.append(raw[j] / (c + np.median(c[normal])))
+        node[f"{d}_causal"] = np.stack(causal)
+        fs[f"{d}_causal"] = frame_score(node[f"{d}_causal"], normal)
+    fs["velocity"] = frame_score(node["velocity"], normal)
+    fs["jacobian"] = node["jacobian"][:, normal].sum(1) / 4  # inverted-tet count
+    return fs, node
+
+
 def run(a):
     dev = device(a.device)
     model = load_model(a.ckpt, dev)
@@ -86,28 +114,7 @@ def run(a):
                 rng = np.random.default_rng(seed(i, kind, sev))
                 wp, mask, fmask = inject(tr, kind, sev, rng)
                 frames, labels, phase = choose_frames(fmask, rng)
-                node = {"gnn": gnn_scores(model, tr, wp, list(frames) + list(CALIB), dev),
-                        "constvel": constvel_scores(wp, np.r_[frames, CALIB]),
-                        "laplacian": laplacian_scores(tr, wp, np.r_[frames, CALIB]),
-                        "velocity": velocity_scores(wp, frames),
-                        "jacobian": jacobian_scores(tr, wp, frames)}
-                fs = {}
-                for d in ("gnn", "constvel", "laplacian"):
-                    raw, calib = node[d][:len(frames)], node[d][len(frames):]
-                    # per-node calibration (PaDiM-style): residual relative to that node's median residual
-                    cal = np.median(calib, axis=0)
-                    node[d] = raw / (cal + np.median(cal[normal]))
-                    fs[d] = frame_score(node[d], normal)
-                    # causal variant: calibrate only on frames at least 4 before the scored one (min. first 3)
-                    causal = []
-                    for j, t in enumerate(frames):
-                        past = CALIB < t - 3
-                        c = np.median(calib[past if past.sum() >= 3 else slice(0, 3)], axis=0)
-                        causal.append(raw[j] / (c + np.median(c[normal])))
-                    node[f"{d}_causal"] = np.stack(causal)
-                    fs[f"{d}_causal"] = frame_score(node[f"{d}_causal"], normal)
-                fs["velocity"] = frame_score(node["velocity"], normal)
-                fs["jacobian"] = node["jacobian"][:, normal].sum(1) / 4  # inverted-tet count
+                fs, node = score_copy(model, tr, wp, frames, dev)
                 if clip:
                     images = [rend.render(wp[t]) for t in frames]
                     fs["clip_zero"], maps = clip.score(images)

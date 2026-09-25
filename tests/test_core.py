@@ -115,3 +115,14 @@ def test_no_ci_below_min_sims():
                for i in range(5) for j in range(4)]
     rows = cell_rows(records, ["gnn", "constvel"], "frozen", 1)
     assert all(np.isnan(r["lo"]) for r in rows) and rows[0]["frame_auroc"] > 0.9
+
+
+def test_leadtime_analysis():
+    from mgn.leadtime import DETS, analyse
+    frames = list(range(85, 128))  # t0 = 100, cap reached at end = 127
+    ramp = [0.0 if f < 115 else 10.0 for f in frames]  # alarms from frame 115 -> lead time 12 frames
+    ev = dict(sim=0, kind="blowup", t0=100, end=127, frames=frames, scores={d: ramp for d in DETS})
+    fr = dict(sim=0, kind="frozen", t0=100, end=129, frames=frames, scores={d: [0.0] * len(frames) for d in DETS})
+    res = analyse([ev, fr], {d: 1.0 for d in DETS})
+    assert res["blowup/gnn_causal"]["median"] == 12 and res["blowup/gnn_causal"]["false_alarm_rate"] == 0
+    assert res["frozen/gnn_causal"]["detected"] == 0  # never alarmed -> censored, not counted as detected
