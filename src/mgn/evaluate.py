@@ -6,7 +6,8 @@ Protocol v2, per simulation x anomaly type x severity (one corrupted copy each):
     anomalous frames share the same phase of the loading) but outside a +-3-frame guard band (frames right after an
     event are fed corrupted inputs, so they are neither clearly clean nor anomalous);
   - residual detectors are calibrated per node by its median residual over every 10th frame (unsupervised:
-    the copy is mostly clean). CLIP scores are already relative to a clean reference bank.
+    the copy is mostly clean); `*_causal` variants use only calibration frames before the scored frame, as an online
+    monitor would. CLIP scores are already relative to a clean reference bank.
 """
 import argparse
 import hashlib
@@ -36,7 +37,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 RESULTS = RUNS.parent / "results"
-DETECTORS = ["gnn", "constvel", "laplacian", "velocity", "jacobian", "clip_knn", "clip_zero"]
+DETECTORS = ["gnn", "constvel", "laplacian", "velocity", "jacobian", "clip_knn", "clip_zero",
+             "gnn_causal", "constvel_causal", "laplacian_causal"]
 CALIB = np.arange(5, T_MAX, 10)
 
 
@@ -91,10 +93,19 @@ def run(a):
                         "jacobian": jacobian_scores(tr, wp, frames)}
                 fs = {}
                 for d in ("gnn", "constvel", "laplacian"):
+                    raw, calib = node[d][:len(frames)], node[d][len(frames):]
                     # per-node calibration (PaDiM-style): residual relative to that node's median residual
-                    cal = np.median(node[d][len(frames):], axis=0)
-                    node[d] = node[d][:len(frames)] / (cal + np.median(cal[normal]))
+                    cal = np.median(calib, axis=0)
+                    node[d] = raw / (cal + np.median(cal[normal]))
                     fs[d] = frame_score(node[d], normal)
+                    # causal variant: calibrate only on frames at least 4 before the scored one (min. first 3)
+                    causal = []
+                    for j, t in enumerate(frames):
+                        past = CALIB < t - 3
+                        c = np.median(calib[past if past.sum() >= 3 else slice(0, 3)], axis=0)
+                        causal.append(raw[j] / (c + np.median(c[normal])))
+                    node[f"{d}_causal"] = np.stack(causal)
+                    fs[f"{d}_causal"] = frame_score(node[f"{d}_causal"], normal)
                 fs["velocity"] = frame_score(node["velocity"], normal)
                 fs["jacobian"] = node["jacobian"][:, normal].sum(1) / 4  # inverted-tet count
                 if clip:
@@ -168,7 +179,19 @@ def cell_rows(records, dets, kind, sev, phase=None):
     return rows
 
 
-def report(meta, records, out):
+def best_baselines(metrics_csv):
+    """Per type x severity, the non-GNN detector with the highest overall frame AUROC in a (validation) metrics.csv."""
+    best = {}
+    for line in open(metrics_csv):
+        if line.startswith("#") or line.startswith("type,"):
+            continue
+        kind, sev, phase, det, auc = line.split(",")[:5]
+        if phase == "all" and det != "gnn" and float(auc) > best.get((kind, int(sev)), ("", -1))[1]:
+            best[kind, int(sev)] = (det, float(auc))
+    return {k: v[0] for k, v in best.items()}
+
+
+def report(meta, records, out, best=None):
     dets = [d for d in DETECTORS if f"frame_{d}" in records[0]]
     rows, pixels = [], {}
     for kind in TYPES:
@@ -194,8 +217,9 @@ def report(meta, records, out):
                                                                         else " — too few sims, no CIs")]
     for sev in SEVERITY:
         lines.append(f"\n**Severity {sev}** ({SEVERITY[sev]:g}x RMS step displacement) — frame AUROC [95% CI] / node AUROC; px = median visible shift in the 448 px render\n")
-        lines.append("| anomaly | px | " + " | ".join(dets) + " | GNN − constvel |")
-        lines.append("|---|---|" + "---|" * (len(dets) + 1))
+        extra = " | best baseline (chosen on validation) | GNN − best" if best else ""
+        lines.append("| anomaly | px | " + " | ".join(dets) + " | GNN − constvel" + extra + " |")
+        lines.append("|---|---|" + "---|" * (len(dets) + 1 + 2 * bool(best)))
         for kind in TYPES:
             cells = []
             for d in dets:
@@ -203,8 +227,12 @@ def report(meta, records, out):
                 node = "" if np.isnan(r["node_auroc"]) else f" / {r['node_auroc']:.2f}"
                 cells.append(f"{r['frame_auroc']:.2f} [{r['lo']:.2f}–{r['hi']:.2f}]{node}")
             dc = next(r for r in rows_all if r["type"] == kind and r["sev"] == sev and r["detector"] == "constvel")
+            tail = ""
+            if best:
+                b = next(r for r in rows_all if r["type"] == kind and r["sev"] == sev and r["detector"] == best[kind, sev])
+                tail = f" | {b['detector']} | {b['delta']:+.2f} [{b['dlo']:+.2f}, {b['dhi']:+.2f}]"
             lines.append(f"| {kind} | {pixels[kind, sev]:.1f} | " + " | ".join(cells)
-                         + f" | {dc['delta']:+.2f} [{dc['dlo']:+.2f}, {dc['dhi']:+.2f}] |")
+                         + f" | {dc['delta']:+.2f} [{dc['dlo']:+.2f}, {dc['dhi']:+.2f}]{tail} |")
     # onset vs. sustained: where does learned physics help?
     lines.append("\n**Frame AUROC by event phase** (onset = first anomalous frame, sustained = the rest; clean frames shared)\n")
     lines.append("| anomaly | severity | phase | " + " | ".join(dets) + " |")
@@ -245,6 +273,7 @@ def main():
     p.add_argument("--out", type=Path, default=RESULTS)
     p.add_argument("--no-clip", action="store_true")
     p.add_argument("--report-only", action="store_true")
+    p.add_argument("--best-from", type=Path, help="validation metrics.csv used to pick the best baseline per cell")
     a = p.parse_args()
     if a.device == "cpu":
         torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", 4)))
@@ -254,7 +283,7 @@ def main():
         meta, records = d["meta"], d["records"]
     else:
         meta, records = run(a)
-    report(meta, records, a.out)
+    report(meta, records, a.out, best_baselines(a.best_from) if a.best_from else None)
 
 
 if __name__ == "__main__":
