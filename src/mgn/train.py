@@ -74,7 +74,7 @@ def main():
     p.add_argument("--hidden", type=int, default=128)
     p.add_argument("--batch", type=int, default=2)
     p.add_argument("--lr", type=float, default=1e-4)
-    p.add_argument("--noise", type=float, default=0.0, help="MGN uses 3e-3 for rollout stability; not needed for one-step scoring")
+    p.add_argument("--noise", type=float, default=3e-4, help="teaches the surrogate to pull perturbed states back to equilibrium")
     p.add_argument("--iters", type=int, default=1_000_000)
     p.add_argument("--hours", type=float, default=float("inf"), help="wall-clock budget")
     p.add_argument("--warmup", type=int, default=500, help="steps that only accumulate normalizer stats")

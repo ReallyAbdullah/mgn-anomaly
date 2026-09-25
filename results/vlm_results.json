@@ -1,0 +1,128 @@
+[
+ {
+  "image": "000_hourglass_s3_t183_anom.png",
+  "truth": "hourglass",
+  "sev": 3,
+  "cell": "middle-right",
+  "stats": "Diagnostics: residual 5432.5x the simulation's typical level; hotspot in the middle-center cell; 32 nodes above 5x median residual; 28 inverted elements; hotspot-to-actuator distance 90.6 mm; hotspot speed 1008.74x the median plate node speed.",
+  "visual": {
+   "anomaly_type": "none",
+   "location": "middle-center",
+   "confidence": 0.98,
+   "explanation": "The right panel shows a smooth color gradient from dark to bright near the actuator, indicating localized inconsistency, but the bright region is small and does not suggest a global anomaly. The left panel shows a physically plausible deformation without signs of penetration, inversion, or instability. The bright spot is likely a small numerical artifact or contact pressure zone, not a structural failure mode."
+  },
+  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a smooth color gradient from dark to bright near the actuator, indicating localized inconsistency, but the bright region is small and does not suggest a global anomaly. The left panel shows a physically plausible deformation without signs of penetration, inversion, or instability. The bright spot is likely a small numerical artifact or contact pressure zone, not a structural failure mode.\"\n}",
+  "full": {
+   "anomaly_type": "instability",
+   "location": "middle-center",
+   "confidence": 0.95,
+   "explanation": "The hotspot in the middle-center cell, combined with the extreme speed (1008.74x median) and residual (5432.5x typical), indicates a local numerical blow-up. The bright color in the right panel confirms physical inconsistency at this location, matching the instability classification."
+  },
+  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-center cell, combined with the extreme speed (1008.74x median) and residual (5432.5x typical), indicates a local numerical blow-up. The bright color in the right panel confirms physical inconsistency at this location, matching the instability classification.\"\n}"
+ },
+ {
+  "image": "001_penetration_s1_t167_anom.png",
+  "truth": "penetration",
+  "sev": 1,
+  "cell": "middle-right",
+  "stats": "Diagnostics: residual 0.7x the simulation's typical level; hotspot in the middle-right cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 2.1 mm; hotspot speed 4.57x the median plate node speed.",
+  "visual": {
+   "anomaly_type": "none",
+   "location": "middle-center",
+   "confidence": 0.98,
+   "explanation": "The right panel shows a smooth gradient from dark to bright, indicating the surrogate model's prediction is consistent with the observed deformation. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions in the left panel's mesh deformation."
+  },
+  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a smooth gradient from dark to bright, indicating the surrogate model's prediction is consistent with the observed deformation. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions in the left panel's mesh deformation.\"\n}",
+  "full": {
+   "anomaly_type": "instability",
+   "location": "middle-right",
+   "confidence": 0.95,
+   "explanation": "The hotspot in the middle-right cell, combined with the 4.57x median speed and 2.1mm distance from actuator, indicates violent local motion. The bright color in the surrogate disagreement map confirms a region of physically inconsistent, growing deformation \u2014 a hallmark of numerical instability."
+  },
+  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, combined with the 4.57x median speed and 2.1mm distance from actuator, indicates violent local motion. The bright color in the surrogate disagreement map confirms a region of physically inconsistent, growing deformation \u2014 a hallmark of numerical instability.\"\n}"
+ },
+ {
+  "image": "002_inversion_s1_t110_anom.png",
+  "truth": "inversion",
+  "sev": 1,
+  "cell": "middle-center",
+  "stats": "Diagnostics: residual 850.5x the simulation's typical level; hotspot in the middle-right cell; 8 nodes above 5x median residual; 3 inverted elements; hotspot-to-actuator distance 2.7 mm; hotspot speed 63.40x the median plate node speed.",
+  "visual": {
+   "anomaly_type": "none",
+   "location": "middle-center",
+   "confidence": 0.98,
+   "explanation": "The right panel shows a smooth color gradient from dark to bright, indicating the simulation is physically consistent across the entire domain. The bright region near the center of the plate corresponds to a low-discrepancy area in the surrogate model, not a violation of physical constraints or mesh integrity."
+  },
+  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a smooth color gradient from dark to bright, indicating the simulation is physically consistent across the entire domain. The bright region near the center of the plate corresponds to a low-discrepancy area in the surrogate model, not a violation of physical constraints or mesh integrity.\"\n}",
+  "full": {
+   "anomaly_type": "instability",
+   "location": "middle-right",
+   "confidence": 0.95,
+   "explanation": "The hotspot in the middle-right cell, combined with the extreme speed (63.40x median) and residual (850.5x typical), indicates a local numerical blow-up. The bright color in the right panel confirms this region is physically inconsistent with the learned surrogate, matching the instability anomaly."
+  },
+  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, combined with the extreme speed (63.40x median) and residual (850.5x typical), indicates a local numerical blow-up. The bright color in the right panel confirms this region is physically inconsistent with the learned surrogate, matching the instability anomaly.\"\n}"
+ },
+ {
+  "image": "003_instability_s2_t272_anom.png",
+  "truth": "instability",
+  "sev": 2,
+  "cell": "middle-right",
+  "stats": "Diagnostics: residual 41305.4x the simulation's typical level; hotspot in the middle-right cell; 9 nodes above 5x median residual; 17 inverted elements; hotspot-to-actuator distance 17.0 mm; hotspot speed 167.82x the median plate node speed.",
+  "visual": {
+   "anomaly_type": "none",
+   "location": "middle-center",
+   "confidence": 0.98,
+   "explanation": "The right panel shows a uniform dark color, indicating the entire frame is physically consistent with the learned surrogate. There are no signs of hourglass patterns, penetration, inversion, instability, or freezing in the deformed mesh on the left."
+  },
+  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a uniform dark color, indicating the entire frame is physically consistent with the learned surrogate. There are no signs of hourglass patterns, penetration, inversion, instability, or freezing in the deformed mesh on the left.\"\n}",
+  "full": {
+   "anomaly_type": "instability",
+   "location": "middle-right",
+   "confidence": 0.95,
+   "explanation": "The hotspot in the middle-right cell, combined with the extremely high residual (41305.4x typical) and the node speed 167.82x the median, indicates a local numerical blow-up. The bright spot in the right panel confirms this region is physically inconsistent with the learned surrogate, matching the instability signature."
+  },
+  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, combined with the extremely high residual (41305.4x typical) and the node speed 167.82x the median, indicates a local numerical blow-up. The bright spot in the right panel confirms this region is physically inconsistent with the learned surrogate, matching the instability signature.\"\n}"
+ },
+ {
+  "image": "004_frozen_s3_t172_anom.png",
+  "truth": "frozen",
+  "sev": 3,
+  "cell": "middle-right",
+  "stats": "Diagnostics: residual 251.9x the simulation's typical level; hotspot in the middle-right cell; 37 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 115.2 mm; hotspot speed 0.00x the median plate node speed.",
+  "visual": {
+   "anomaly_type": "none",
+   "location": "middle-center",
+   "confidence": 0.98,
+   "explanation": "The right panel shows a heat map with only a small localized region of high disagreement (yellow-orange), indicating minor inconsistency, not a global anomaly. The left panel shows a physically plausible deformation without signs of penetration, inversion, or instability. The mesh deformation appears smooth and continuous, consistent with expected hyperelastic behavior under actuation."
+  },
+  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a heat map with only a small localized region of high disagreement (yellow-orange), indicating minor inconsistency, not a global anomaly. The left panel shows a physically plausible deformation without signs of penetration, inversion, or instability. The mesh deformation appears smooth and continuous, consistent with expected hyperelastic behavior under actuation.\"\n}",
+  "full": {
+   "anomaly_type": "instability",
+   "location": "middle-right",
+   "confidence": 0.95,
+   "explanation": "The hotspot in the middle-right cell, indicated by bright yellow, shows a region of high physical inconsistency. Combined with the high residual (251.9x typical) and the hotspot's speed being 0.00x median (suggesting it's not moving with the deformation but is a localized error), this points to a local numerical blow-up or instability rather than a contact or inversion issue."
+  },
+  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, indicated by bright yellow, shows a region of high physical inconsistency. Combined with the high residual (251.9x typical) and the hotspot's speed being 0.00x median (suggesting it's not moving with the deformation but is a localized error), this points to a local numerical blow-up or instability rather than a contact or inversion issue.\"\n}"
+ },
+ {
+  "image": "005_hourglass_s2_t286_clean.png",
+  "truth": "none",
+  "sev": 2,
+  "cell": null,
+  "stats": "Diagnostics: residual 0.9x the simulation's typical level; hotspot in the middle-center cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 10.9 mm; hotspot speed 1.40x the median plate node speed.",
+  "visual": {
+   "anomaly_type": "none",
+   "location": "middle-center",
+   "confidence": 0.98,
+   "explanation": "The right panel shows a smooth color gradient from red to yellow, indicating no regions of physical inconsistency. The deformation in the left panel appears physically plausible without signs of inversion, penetration, or instability."
+  },
+  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a smooth color gradient from red to yellow, indicating no regions of physical inconsistency. The deformation in the left panel appears physically plausible without signs of inversion, penetration, or instability.\"\n}",
+  "full": {
+   "anomaly_type": "none",
+   "location": "middle-center",
+   "confidence": 0.98,
+   "explanation": "The right panel shows a hotspot in the middle-center, indicating a local inconsistency, but the left panel's deformed mesh appears physically plausible without signs of penetration, inversion, or instability. The hotspot is localized and does not suggest a global failure mode; it may be a minor numerical artifact within acceptable tolerance given the residual is only 0.9x typical and no inverted elements are present."
+  },
+  "full_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a hotspot in the middle-center, indicating a local inconsistency, but the left panel's deformed mesh appears physically plausible without signs of penetration, inversion, or instability. The hotspot is localized and does not suggest a global failure mode; it may be a minor numerical artifact within acceptable tolerance given the residual is only 0.9x typical and no inverted elements are present.\"\n}"
+ }
+]

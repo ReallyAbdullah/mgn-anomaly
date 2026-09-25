@@ -3,7 +3,7 @@
 Protocol, per test trajectory x anomaly type x severity (one corrupted copy each):
   - up to 4 anomalous frames (incl. onset) and 4 clean frames from the same copy, outside a +-3-frame guard band
     (frames right after an event are fed corrupted inputs, so they are neither clearly clean nor anomalous);
-  - residual detectors are calibrated per copy by the median frame score over every 10th frame (unsupervised:
+  - residual detectors are calibrated per node by its median residual over every 10th frame (unsupervised:
     the copy is mostly clean). CLIP scores are already relative to a clean reference bank.
 """
 import argparse
@@ -74,9 +74,10 @@ def run(a):
                         "velocity": velocity_scores(wp, frames)}
                 fs = {}
                 for d in ("gnn", "constvel"):
-                    s = frame_score(node[d], normal)
-                    fs[d] = s[:len(frames)] / np.median(s[len(frames):])
-                    node[d] = node[d][:len(frames)]
+                    # per-node calibration (PaDiM-style): residual relative to that node's median residual
+                    cal = np.median(node[d][len(frames):], axis=0)
+                    node[d] = node[d][:len(frames)] / (cal + np.median(cal[normal]))
+                    fs[d] = frame_score(node[d], normal)
                 fs["velocity"] = frame_score(node["velocity"], normal)
                 if clip:
                     images = [rend.render(wp[t]) for t in frames]
