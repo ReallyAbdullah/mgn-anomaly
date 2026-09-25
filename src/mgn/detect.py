@@ -3,6 +3,8 @@
 - gnn:       |observed - MeshGraphNet prediction|   (learned physics)
 - constvel:  |observed - constant-velocity extrapolation|   (the same predictor with zero learned acceleration)
 - velocity:  robust z-score of node speed over the trajectory   (trivial statistics)
+- laplacian: |displacement - mean neighbour displacement|   (physics-free spatial smoothness)
+- jacobian:  inverted elements (signed tet volume flips sign vs. rest)   (geometric rule)
 - clip_zero / clip_knn:  image-space detectors on renders (see ClipDetector)
 """
 import numpy as np
@@ -10,6 +12,7 @@ import open_clip
 import torch
 
 from mgn.data import T_MAX, build_graph, collate
+from mgn.inject import adjacency, signed_volumes
 from mgn.train import to_torch
 
 
@@ -37,6 +40,24 @@ def velocity_scores(wp, frames):
     med = np.median(speed, axis=0)
     mad = np.median(np.abs(speed - med), axis=0) * 1.4826 + 1e-9
     return np.abs(speed[np.asarray(frames) - 1] - med) / mad
+
+
+def laplacian_scores(traj, wp, frames):
+    adj = adjacency(traj).astype(np.float32)
+    deg = np.asarray(adj.sum(1)).clip(1)
+    u = wp[np.asarray(frames)] - traj["mesh_pos"]
+    return np.stack([np.linalg.norm(x - (adj @ x) / deg, axis=-1) for x in u])
+
+
+def jacobian_scores(traj, wp, frames):
+    """Per node: number of incident tets whose signed volume has flipped relative to the rest configuration."""
+    cells = traj["cells"]
+    rest = np.sign(signed_volumes(traj["mesh_pos"], cells))
+    out = np.zeros((len(frames), len(traj["node_type"])))
+    for j, t in enumerate(frames):
+        bad = cells[np.sign(signed_volumes(wp[t], cells)) != rest]
+        np.add.at(out[j], bad.ravel(), 1)
+    return out
 
 
 def frame_score(node_scores, normal, k=5):

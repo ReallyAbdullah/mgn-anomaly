@@ -43,21 +43,25 @@ Answer with ONLY a JSON object:
 "confidence": <0-1>, "explanation": "<one or two sentences citing the visual evidence>"}}"""
 
 
-def diagnostics(traj, wp, t, res, rend, frame_ratio):
-    """Deterministic, engineer-style diagnostics for frame t."""
+def diagnostics(traj, wp, t, res, rend, frame_ratio, clean_ref):
+    """Deterministic, engineer-style diagnostics for frame t: (numeric dict, prompt text)."""
     nt, normal = traj["node_type"], traj["node_type"] == NORMAL
     rest_sign = np.sign(signed_volumes(traj["mesh_pos"], traj["cells"]))
-    inverted = int((np.sign(signed_volumes(wp[t], traj["cells"])) != rest_sign).sum())
     r = np.where(normal, res, 0)
     hot = np.argsort(r)[-10:]
-    flagged = int((r > 5 * np.median(r[normal])).sum())
-    gap = np.linalg.norm(wp[t][hot][:, None] - wp[t][nt == OBSTACLE][None], axis=-1).min() * 1000
     speed = np.linalg.norm(wp[t] - wp[t - 1], axis=1)
-    speed_ratio = speed[hot].mean() / (np.median(speed[normal]) + 1e-12)
-    return (f"Diagnostics: residual {frame_ratio:.1f}x the simulation's typical level; hotspot in the "
-            f"{grid_cell(rend.project(wp[t][hot]))} cell; {flagged} nodes above 5x median residual; "
-            f"{inverted} inverted elements; hotspot-to-actuator distance {gap:.1f} mm; "
-            f"hotspot speed {speed_ratio:.2f}x the median plate node speed.")
+    d = dict(residual_ratio=frame_ratio,
+             flagged_nodes=int((r > 5 * np.median(r[normal])).sum()),
+             inverted=int((np.sign(signed_volumes(wp[t], traj["cells"])) != rest_sign).sum()),
+             gap_mm=np.linalg.norm(wp[t][hot][:, None] - wp[t][nt == OBSTACLE][None], axis=-1).min() * 1000,
+             speed_ratio=speed[hot].mean() / (np.median(speed[normal]) + 1e-12),
+             hotspot=grid_cell(rend.project(wp[t][hot])))
+    text = (f"Diagnostics: residual {d['residual_ratio']:.1f}x the simulation's typical level (95% of clean frames stay "
+            f"below {clean_ref:.1f}x, with 0 inverted elements); hotspot in the "
+            f"{d['hotspot']} cell; {d['flagged_nodes']} nodes above 5x median residual; {d['inverted']} inverted "
+            f"elements; hotspot-to-actuator distance {d['gap_mm']:.1f} mm; hotspot speed {d['speed_ratio']:.2f}x the "
+            f"median plate node speed.")
+    return d, text
 
 
 def parse(text):
@@ -87,8 +91,8 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--model", default="mlx-community/Qwen3-VL-8B-Instruct-4bit")
     p.add_argument("--ckpt", default=str(RUNS / "mgn" / "model.pt"))
-    p.add_argument("--n-per-type", type=int, default=10)
-    p.add_argument("--n-clean", type=int, default=10)
+    p.add_argument("--n-per-type", type=int, default=20)
+    p.add_argument("--n-clean", type=int, default=20)
     a = p.parse_args()
 
     from mlx_vlm import generate, load
@@ -98,6 +102,7 @@ def main():
     with open(RESULTS / "records.pkl", "rb") as f:
         records = pickle.load(f)
     picks = select(records, a.n_per_type, a.n_clean, np.random.default_rng(0))
+    clean_ref = np.percentile([r["frame_gnn"] for r in records if not r["label"]], 95)
     dev = device()
     gnn = load_model(a.ckpt, dev)
     test = load_split("test", max(r["traj"] for r in picks) + 1)
@@ -129,46 +134,62 @@ def main():
         heat = rend.render(wp[t], scalars=np.where(normal, res, 0), clim=(0, np.percentile(res[normal], 99.5)))
         path = out_dir / f"{k:03d}_{r['type']}_s{r['sev']}_t{t}_{'anom' if r['label'] else 'clean'}.png"
         Image.fromarray(np.hstack([rend.render(wp[t]), heat])).save(path)
-        stats = diagnostics(tr, wp, t, res, rend, r["frame_gnn"])
+        diag, stats = diagnostics(tr, wp, t, res, rend, r["frame_gnn"], clean_ref)
         truth = r["type"] if r["label"] else "none"
         cell = grid_cell(rend.project(wp[t][mask])) if r["label"] else None
-        row = dict(image=path.name, truth=truth, sev=r["sev"], cell=cell, stats=stats)
+        row = dict(image=path.name, truth=truth, sev=r["sev"], cell=cell, diag=diag)
         for cond, s in (("visual", ""), ("full", stats)):
-            d, raw = ask(PROMPT.format(stats=s, labels=", ".join(LABELS), cells=", ".join(CELLS)), str(path))
-            row[cond] = d
-            row[f"{cond}_raw"] = raw
+            prompt = PROMPT.format(stats=s, labels=", ".join(LABELS), cells=", ".join(CELLS))
+            d, raw = ask(prompt, str(path))
+            row[cond], row[f"{cond}_raw"], row[f"{cond}_prompt"] = d, raw, prompt
         results.append(row)
         print(k, truth, "| visual:", (row["visual"] or {}).get("anomaly_type"), "| full:", (row["full"] or {}).get("anomaly_type"), flush=True)
-    (RESULTS / "vlm_results.json").write_text(json.dumps(results, indent=1))
+    import mlx_vlm
+    meta = dict(model=a.model, mlx_vlm=mlx_vlm.__version__, temperature=0.0, selection_seed=0, ckpt=a.ckpt)
+    (RESULTS / "vlm_results.json").write_text(json.dumps(dict(meta=meta, frames=results), indent=1, default=float))
     score(results)
 
 
-def adjacent(a, b):
-    (ra, ca), (rb, cb) = divmod(CELLS.index(a), 3), divmod(CELLS.index(b), 3)
-    return abs(ra - rb) <= 1 and abs(ca - cb) <= 1
+def diagnostics_baseline(results):
+    """Does the VLM add anything beyond the numbers? A depth-4 decision tree on the diagnostics, 5-fold CV."""
+    from sklearn.model_selection import cross_val_predict
+    from sklearn.tree import DecisionTreeClassifier
+    keys = ["residual_ratio", "flagged_nodes", "inverted", "gap_mm", "speed_ratio"]
+    X = np.array([[r["diag"][k] for k in keys] for r in results])
+    y = [r["truth"] for r in results]
+    pred = cross_val_predict(DecisionTreeClassifier(max_depth=4, random_state=0), X, y, cv=5)
+    return [dict(anomaly_type=p, location=r["diag"]["hotspot"]) for p, r in zip(pred, results)]
 
 
 def score(results):
-    lines = ["| condition | valid JSON | type accuracy | macro-F1 | location hit (±1 cell) |", "|---|---|---|---|---|"]
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.6))
-    for ax, cond in zip(axes, ("visual", "full")):
-        y = [r["truth"] for r in results]
-        pred = [(r[cond] or {}).get("anomaly_type", "invalid") for r in results]
-        valid = np.mean([r[cond] is not None for r in results])
+    y = [r["truth"] for r in results]
+    cells = [r["cell"] for r in results if r["cell"]]
+    majority_cell = max(set(cells), key=cells.count)
+    arms = {"visual (VLM, images)": [r["visual"] for r in results],
+            "full (VLM, images + diagnostics)": [r["full"] for r in results],
+            "diagnostics-only decision tree (5-fold CV)": diagnostics_baseline(results),
+            "majority class / majority cell": [dict(anomaly_type=max(set(y), key=y.count), location=majority_cell)] * len(y)}
+    lines = [f"n = {len(y)} frames; uniform-random type accuracy = {1 / len(LABELS):.0%}\n",
+             "| arm | valid JSON | type accuracy | macro-F1 | exact location cell |", "|---|---|---|---|---|"]
+    fig, axes = plt.subplots(1, 3, figsize=(16, 4.6))
+    for k, (name, preds) in enumerate(arms.items()):
+        pred = [(p or {}).get("anomaly_type", "invalid") for p in preds]
+        valid = np.mean([p is not None for p in preds])
         acc = np.mean([a == b for a, b in zip(y, pred)])
         f1 = f1_score(y, pred, labels=LABELS, average="macro", zero_division=0)
-        loc = [adjacent(r["cell"], r[cond]["location"]) for r in results
-               if r["cell"] and r[cond] and r[cond].get("location") in CELLS]
-        lines.append(f"| {cond} | {valid:.0%} | {acc:.0%} | {f1:.2f} | {np.mean(loc) if loc else float('nan'):.0%} |")
-        cm = confusion_matrix(y, pred, labels=LABELS + ["invalid"])[:len(LABELS)]
-        ax.imshow(cm, cmap="Blues")
-        ax.set_xticks(range(len(LABELS) + 1), LABELS + ["invalid"], rotation=45, ha="right")
-        ax.set_yticks(range(len(LABELS)), LABELS)
-        for (i, j), v in np.ndenumerate(cm):
-            if v:
-                ax.text(j, i, v, ha="center", va="center", fontsize=8)
-        ax.set_title(f"VLM — {cond}")
-        ax.set_xlabel("predicted")
+        loc = [p is not None and p.get("location") == r["cell"] for r, p in zip(results, preds) if r["cell"]]
+        lines.append(f"| {name} | {valid:.0%} | {acc:.0%} | {f1:.2f} | {np.mean(loc):.0%} |")
+        if k < 3:
+            ax = axes[k]
+            cm = confusion_matrix(y, pred, labels=LABELS + ["invalid"])[:len(LABELS)]
+            ax.imshow(cm, cmap="Blues")
+            ax.set_xticks(range(len(LABELS) + 1), LABELS + ["invalid"], rotation=45, ha="right")
+            ax.set_yticks(range(len(LABELS)), LABELS)
+            for (i, j), v in np.ndenumerate(cm):
+                if v:
+                    ax.text(j, i, v, ha="center", va="center", fontsize=8)
+            ax.set_title(name, fontsize=9)
+            ax.set_xlabel("predicted")
     axes[0].set_ylabel("injected")
     fig.tight_layout()
     fig.savefig(RESULTS / "vlm_confusion.png", dpi=150)

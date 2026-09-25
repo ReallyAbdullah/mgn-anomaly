@@ -15,7 +15,8 @@ from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
 from mgn.data import NORMAL, T_MAX
-from mgn.detect import ClipDetector, constvel_scores, frame_score, gnn_scores, velocity_scores
+from mgn.detect import (ClipDetector, constvel_scores, frame_score, gnn_scores, jacobian_scores, laplacian_scores,
+                        velocity_scores)
 from mgn.inject import SEVERITY, TYPES, inject
 from mgn.render import SIZE, Renderer, grid_cell
 from mgn.train import RUNS, device, load_model, load_split
@@ -24,7 +25,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 RESULTS = RUNS.parent / "results"
-DETECTORS = ["gnn", "constvel", "velocity", "clip_knn", "clip_zero"]
+DETECTORS = ["gnn", "constvel", "laplacian", "velocity", "jacobian", "clip_knn", "clip_zero"]
 CALIB = np.arange(5, T_MAX, 10)
 
 
@@ -71,14 +72,17 @@ def run(a):
                 frames, labels = choose_frames(fmask, rng)
                 node = {"gnn": gnn_scores(model, tr, wp, list(frames) + list(CALIB), dev),
                         "constvel": constvel_scores(wp, np.r_[frames, CALIB]),
-                        "velocity": velocity_scores(wp, frames)}
+                        "laplacian": laplacian_scores(tr, wp, np.r_[frames, CALIB]),
+                        "velocity": velocity_scores(wp, frames),
+                        "jacobian": jacobian_scores(tr, wp, frames)}
                 fs = {}
-                for d in ("gnn", "constvel"):
+                for d in ("gnn", "constvel", "laplacian"):
                     # per-node calibration (PaDiM-style): residual relative to that node's median residual
                     cal = np.median(node[d][len(frames):], axis=0)
                     node[d] = node[d][:len(frames)] / (cal + np.median(cal[normal]))
                     fs[d] = frame_score(node[d], normal)
                 fs["velocity"] = frame_score(node["velocity"], normal)
+                fs["jacobian"] = node["jacobian"][:, normal].sum(1) / 4  # inverted-tet count
                 if clip:
                     images = [rend.render(wp[t]) for t in frames]
                     fs["clip_zero"], maps = clip.score(images)
@@ -93,6 +97,8 @@ def run(a):
                             rec[f"node_{d}"] = node_auroc(v[j][normal], mask[normal])
                         if rend:
                             rec["cell"] = grid_cell(rend.project(wp[t][mask]))
+                            shift = rend.project(wp[t][mask]) - rend.project(tr["world_pos"][t][mask])
+                            rec["px"] = float(np.linalg.norm(shift, axis=1).max())  # visible size in the render
                     records.append(rec)
     RESULTS.mkdir(exist_ok=True)
     with open(RESULTS / "records.pkl", "wb") as f:
@@ -100,53 +106,70 @@ def run(a):
     return records
 
 
-def bootstrap_auroc(y, s, groups, n=500, rng=np.random.default_rng(0)):
-    point = roc_auc_score(y, s)
-    ug = np.unique(groups)
-    idx = {g: np.flatnonzero(groups == g) for g in ug}
+def bootstrap(stat, groups, n=500, seed=0):
+    """Point estimate + 95% CI of stat(indices), resampling whole simulations with replacement."""
+    rng = np.random.default_rng(seed)
+    idx = {g: np.flatnonzero(groups == g) for g in np.unique(groups)}
+    keys = list(idx)
     boots = []
     for _ in range(n):
-        take = np.concatenate([idx[g] for g in rng.choice(ug, len(ug))])
-        if y[take].all() or not y[take].any():
-            continue
-        boots.append(roc_auc_score(y[take], s[take]))
-    lo, hi = np.percentile(boots, [2.5, 97.5])
-    return point, lo, hi
+        take = np.concatenate([idx[keys[k]] for k in rng.integers(len(keys), size=len(keys))])
+        try:
+            boots.append(stat(take))
+        except ValueError:  # resample with a single class
+            pass
+    return stat(np.arange(len(groups))), *np.percentile(boots, [2.5, 97.5])
+
+
+def tpr_at_fpr(y, s, fpr=0.05):
+    thr = np.quantile(s[~y], 1 - fpr)
+    return (s[y] > thr).mean()
 
 
 def report(records):
     dets = [d for d in DETECTORS if f"frame_{d}" in records[0]]
-    rows = []
+    rows, pixels = [], {}
     for kind in TYPES:
         for sev in SEVERITY:
             R = [r for r in records if r["type"] == kind and r["sev"] == sev]
             y = np.array([r["label"] for r in R])
             g = np.array([r["traj"] for r in R])
+            S = {d: np.array([r[f"frame_{d}"] for r in R]) for d in dets}
             for d in dets:
-                s = np.array([r[f"frame_{d}"] for r in R])
-                auc, lo, hi = bootstrap_auroc(y, s, g)
+                s = S[d]
+                auc, lo, hi = bootstrap(lambda i: roc_auc_score(y[i], s[i]), g)
                 nodes = [r[f"node_{d}"] for r in R if r["label"] and f"node_{d}" in r]
-                rows.append(dict(type=kind, sev=sev, detector=d, frame_auroc=auc, lo=lo, hi=hi,
-                                 node_auroc=np.mean(nodes) if nodes else np.nan))
+                row = dict(type=kind, sev=sev, detector=d, frame_auroc=auc, lo=lo, hi=hi, tpr5=tpr_at_fpr(y, s),
+                           node_auroc=np.mean(nodes) if nodes else np.nan, delta=np.nan, dlo=np.nan, dhi=np.nan)
+                if d != "gnn":  # paired bootstrap of the AUROC difference, GNN minus this detector
+                    row["delta"], row["dlo"], row["dhi"] = bootstrap(
+                        lambda i: roc_auc_score(y[i], S["gnn"][i]) - roc_auc_score(y[i], s[i]), g)
+                rows.append(row)
+            px = [r["px"] for r in R if "px" in r]
+            pixels[kind, sev] = np.median(px) if px else np.nan
     with open(RESULTS / "metrics.csv", "w") as f:
-        f.write("type,severity,detector,frame_auroc,ci_lo,ci_hi,node_auroc\n")
+        f.write("type,severity,detector,frame_auroc,ci_lo,ci_hi,tpr_at_5fpr,node_auroc,gnn_minus_det,d_lo,d_hi,"
+                "median_px\n")
         for r in rows:
             f.write(f"{r['type']},{r['sev']},{r['detector']},{r['frame_auroc']:.4f},{r['lo']:.4f},{r['hi']:.4f},"
-                    f"{r['node_auroc']:.4f}\n")
+                    f"{r['tpr5']:.4f},{r['node_auroc']:.4f},{r['delta']:.4f},{r['dlo']:.4f},{r['dhi']:.4f},"
+                    f"{pixels[r['type'], r['sev']]:.2f}\n")
 
     # markdown table: frame AUROC per type (rows) x detector (cols), one block per severity
     lines = []
     for sev in SEVERITY:
-        lines.append(f"\n**Severity {sev}** ({SEVERITY[sev]:g}x RMS step displacement) — frame AUROC [95% CI] / node AUROC\n")
-        lines.append("| anomaly | " + " | ".join(dets) + " |")
-        lines.append("|---|" + "---|" * len(dets))
+        lines.append(f"\n**Severity {sev}** ({SEVERITY[sev]:g}x RMS step displacement) — frame AUROC [95% CI] / node AUROC; px = median visible shift in the 448 px render\n")
+        lines.append("| anomaly | px | " + " | ".join(dets) + " | GNN − constvel |")
+        lines.append("|---|---|" + "---|" * (len(dets) + 1))
         for kind in TYPES:
             cells = []
             for d in dets:
                 r = next(r for r in rows if r["type"] == kind and r["sev"] == sev and r["detector"] == d)
                 node = "" if np.isnan(r["node_auroc"]) else f" / {r['node_auroc']:.2f}"
                 cells.append(f"{r['frame_auroc']:.2f} [{r['lo']:.2f}–{r['hi']:.2f}]{node}")
-            lines.append(f"| {kind} | " + " | ".join(cells) + " |")
+            dc = next(r for r in rows if r["type"] == kind and r["sev"] == sev and r["detector"] == "constvel")
+            lines.append(f"| {kind} | {pixels[kind, sev]:.1f} | " + " | ".join(cells)
+                         + f" | {dc['delta']:+.2f} [{dc['dlo']:+.2f}, {dc['dhi']:+.2f}] |")
     (RESULTS / "metrics.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
 

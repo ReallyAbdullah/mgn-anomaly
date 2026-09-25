@@ -65,3 +65,16 @@ def test_injectors(kind):
         assert (signed_volumes(traj["world_pos"][50], traj["cells"]) > 0).all()
     if kind == "frozen":
         np.testing.assert_array_equal(wp[51, mask], traj["world_pos"][50, mask])
+
+
+def test_geometric_detectors():
+    from mgn.detect import jacobian_scores, laplacian_scores
+    rng = np.random.default_rng(2)
+    traj = _toy_traj(rng)
+    wp, mask, _ = inject(traj, "inversion", 3, rng, t0=50)
+    assert jacobian_scores(traj, wp, [50])[0, mask].min() >= 1
+    assert jacobian_scores(traj, traj["world_pos"], [50]).sum() == 0
+    shifted = traj["world_pos"] + np.float32([0.1, -0.2, 0.3])  # rigid translation has zero Laplacian residual
+    plate = traj["node_type"] == 0  # the toy actuator nodes have no mesh neighbours
+    np.testing.assert_allclose(laplacian_scores(traj, shifted, [50])[:, plate],
+                               laplacian_scores(traj, traj["world_pos"], [50])[:, plate], atol=1e-5)

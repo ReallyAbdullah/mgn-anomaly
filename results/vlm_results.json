@@ -1,128 +1,461 @@
-[
- {
-  "image": "000_hourglass_s3_t183_anom.png",
-  "truth": "hourglass",
-  "sev": 3,
-  "cell": "middle-right",
-  "stats": "Diagnostics: residual 5432.5x the simulation's typical level; hotspot in the middle-center cell; 32 nodes above 5x median residual; 28 inverted elements; hotspot-to-actuator distance 90.6 mm; hotspot speed 1008.74x the median plate node speed.",
-  "visual": {
-   "anomaly_type": "none",
-   "location": "middle-center",
-   "confidence": 0.98,
-   "explanation": "The right panel shows a smooth color gradient from dark to bright near the actuator, indicating localized inconsistency, but the bright region is small and does not suggest a global anomaly. The left panel shows a physically plausible deformation without signs of penetration, inversion, or instability. The bright spot is likely a small numerical artifact or contact pressure zone, not a structural failure mode."
-  },
-  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a smooth color gradient from dark to bright near the actuator, indicating localized inconsistency, but the bright region is small and does not suggest a global anomaly. The left panel shows a physically plausible deformation without signs of penetration, inversion, or instability. The bright spot is likely a small numerical artifact or contact pressure zone, not a structural failure mode.\"\n}",
-  "full": {
-   "anomaly_type": "instability",
-   "location": "middle-center",
-   "confidence": 0.95,
-   "explanation": "The hotspot in the middle-center cell, combined with the extreme speed (1008.74x median) and residual (5432.5x typical), indicates a local numerical blow-up. The bright color in the right panel confirms physical inconsistency at this location, matching the instability classification."
-  },
-  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-center cell, combined with the extreme speed (1008.74x median) and residual (5432.5x typical), indicates a local numerical blow-up. The bright color in the right panel confirms physical inconsistency at this location, matching the instability classification.\"\n}"
+{
+ "meta": {
+  "model": "mlx-community/Qwen3-VL-8B-Instruct-4bit",
+  "mlx_vlm": "0.7.3",
+  "temperature": 0.0,
+  "selection_seed": 0,
+  "ckpt": "runs/smoke_noise3e-4/model.pt"
  },
- {
-  "image": "001_penetration_s1_t167_anom.png",
-  "truth": "penetration",
-  "sev": 1,
-  "cell": "middle-right",
-  "stats": "Diagnostics: residual 0.7x the simulation's typical level; hotspot in the middle-right cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 2.1 mm; hotspot speed 4.57x the median plate node speed.",
-  "visual": {
-   "anomaly_type": "none",
-   "location": "middle-center",
-   "confidence": 0.98,
-   "explanation": "The right panel shows a smooth gradient from dark to bright, indicating the surrogate model's prediction is consistent with the observed deformation. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions in the left panel's mesh deformation."
+ "frames": [
+  {
+   "image": "000_hourglass_s3_t183_anom.png",
+   "truth": "hourglass",
+   "sev": 3,
+   "cell": "middle-center",
+   "diag": {
+    "residual_ratio": 131.9387969970703,
+    "flagged_nodes": 32,
+    "inverted": 28,
+    "gap_mm": 90.55331420898438,
+    "speed_ratio": 1008.7227172851562,
+    "hotspot": "middle-center"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-center",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-center cell, indicated by intense red coloring in the right panel, shows extreme physical inconsistency. This is corroborated by the diagnostics: a hotspot speed of 1008.72x the median plate node speed and a residual 131.9x the typical level, both hallmarks of numerical blow-up or instability."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-center cell, indicated by intense red coloring in the right panel, shows extreme physical inconsistency. This is corroborated by the diagnostics: a hotspot speed of 1008.72x the median plate node speed and a residual 131.9x the typical level, both hallmarks of numerical blow-up or instability.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 131.9x the simulation's typical level; hotspot in the middle-center cell; 32 nodes above 5x median residual; 28 inverted elements; hotspot-to-actuator distance 90.6 mm; hotspot speed 1008.72x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a smooth gradient from dark to bright, indicating the surrogate model's prediction is consistent with the observed deformation. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions in the left panel's mesh deformation.\"\n}",
-  "full": {
-   "anomaly_type": "instability",
-   "location": "middle-right",
-   "confidence": 0.95,
-   "explanation": "The hotspot in the middle-right cell, combined with the 4.57x median speed and 2.1mm distance from actuator, indicates violent local motion. The bright color in the surrogate disagreement map confirms a region of physically inconsistent, growing deformation \u2014 a hallmark of numerical instability."
+  {
+   "image": "001_hourglass_s1_t121_anom.png",
+   "truth": "hourglass",
+   "sev": 1,
+   "cell": "middle-right",
+   "diag": {
+    "residual_ratio": 1.9668123722076416,
+    "flagged_nodes": 0,
+    "inverted": 0,
+    "gap_mm": 7.541192531585693,
+    "speed_ratio": 6.350500106811523,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell shows nodes moving at 6.35x the median speed, indicating violent motion. The residual is 2.0x typical, and the hotspot is located far from the actuator, suggesting numerical blow-up rather than contact violation or inversion."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell shows nodes moving at 6.35x the median speed, indicating violent motion. The residual is 2.0x typical, and the hotspot is located far from the actuator, suggesting numerical blow-up rather than contact violation or inversion.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 2.0x the simulation's typical level; hotspot in the middle-right cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 7.5 mm; hotspot speed 6.35x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, combined with the 4.57x median speed and 2.1mm distance from actuator, indicates violent local motion. The bright color in the surrogate disagreement map confirms a region of physically inconsistent, growing deformation \u2014 a hallmark of numerical instability.\"\n}"
- },
- {
-  "image": "002_inversion_s1_t110_anom.png",
-  "truth": "inversion",
-  "sev": 1,
-  "cell": "middle-center",
-  "stats": "Diagnostics: residual 850.5x the simulation's typical level; hotspot in the middle-right cell; 8 nodes above 5x median residual; 3 inverted elements; hotspot-to-actuator distance 2.7 mm; hotspot speed 63.40x the median plate node speed.",
-  "visual": {
-   "anomaly_type": "none",
-   "location": "middle-center",
-   "confidence": 0.98,
-   "explanation": "The right panel shows a smooth color gradient from dark to bright, indicating the simulation is physically consistent across the entire domain. The bright region near the center of the plate corresponds to a low-discrepancy area in the surrogate model, not a violation of physical constraints or mesh integrity."
+  {
+   "image": "002_penetration_s3_t273_anom.png",
+   "truth": "penetration",
+   "sev": 3,
+   "cell": "middle-center",
+   "diag": {
+    "residual_ratio": 687.2013549804688,
+    "flagged_nodes": 10,
+    "inverted": 20,
+    "gap_mm": 2.249396800994873,
+    "speed_ratio": 4.131965637207031,
+    "hotspot": "middle-center"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire deformed region colored pale yellow, indicating physical consistency. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire deformed region colored pale yellow, indicating physical consistency. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-center",
+    "confidence": 0.95,
+    "explanation": "The hotspot at the middle-center cell, indicated by the red region in the right panel, shows severe physical inconsistency. This is corroborated by the diagnostics: a residual 687.2x typical, 20 inverted elements, and a hotspot speed 4.13x the median plate node speed, all pointing to numerical blow-up or instability rather than a localized contact or inversion issue."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot at the middle-center cell, indicated by the red region in the right panel, shows severe physical inconsistency. This is corroborated by the diagnostics: a residual 687.2x typical, 20 inverted elements, and a hotspot speed 4.13x the median plate node speed, all pointing to numerical blow-up or instability rather than a localized contact or inversion issue.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 687.2x the simulation's typical level; hotspot in the middle-center cell; 10 nodes above 5x median residual; 20 inverted elements; hotspot-to-actuator distance 2.2 mm; hotspot speed 4.13x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a smooth color gradient from dark to bright, indicating the simulation is physically consistent across the entire domain. The bright region near the center of the plate corresponds to a low-discrepancy area in the surrogate model, not a violation of physical constraints or mesh integrity.\"\n}",
-  "full": {
-   "anomaly_type": "instability",
-   "location": "middle-right",
-   "confidence": 0.95,
-   "explanation": "The hotspot in the middle-right cell, combined with the extreme speed (63.40x median) and residual (850.5x typical), indicates a local numerical blow-up. The bright color in the right panel confirms this region is physically inconsistent with the learned surrogate, matching the instability anomaly."
+  {
+   "image": "003_penetration_s3_t272_anom.png",
+   "truth": "penetration",
+   "sev": 3,
+   "cell": "middle-center",
+   "diag": {
+    "residual_ratio": 702.9312744140625,
+    "flagged_nodes": 10,
+    "inverted": 20,
+    "gap_mm": 2.3539388179779053,
+    "speed_ratio": 401.10467529296875,
+    "hotspot": "middle-center"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire deformed region colored pale yellow, indicating physical consistency. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire deformed region colored pale yellow, indicating physical consistency. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-center",
+    "confidence": 0.95,
+    "explanation": "The hotspot at the middle-center cell shows extreme motion (401x median speed) and high residual (702.9x typical), indicating numerical blow-up. The red color in the right panel confirms physical inconsistency localized there, matching the instability signature."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot at the middle-center cell shows extreme motion (401x median speed) and high residual (702.9x typical), indicating numerical blow-up. The red color in the right panel confirms physical inconsistency localized there, matching the instability signature.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 702.9x the simulation's typical level; hotspot in the middle-center cell; 10 nodes above 5x median residual; 20 inverted elements; hotspot-to-actuator distance 2.4 mm; hotspot speed 401.10x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, combined with the extreme speed (63.40x median) and residual (850.5x typical), indicates a local numerical blow-up. The bright color in the right panel confirms this region is physically inconsistent with the learned surrogate, matching the instability anomaly.\"\n}"
- },
- {
-  "image": "003_instability_s2_t272_anom.png",
-  "truth": "instability",
-  "sev": 2,
-  "cell": "middle-right",
-  "stats": "Diagnostics: residual 41305.4x the simulation's typical level; hotspot in the middle-right cell; 9 nodes above 5x median residual; 17 inverted elements; hotspot-to-actuator distance 17.0 mm; hotspot speed 167.82x the median plate node speed.",
-  "visual": {
-   "anomaly_type": "none",
-   "location": "middle-center",
-   "confidence": 0.98,
-   "explanation": "The right panel shows a uniform dark color, indicating the entire frame is physically consistent with the learned surrogate. There are no signs of hourglass patterns, penetration, inversion, instability, or freezing in the deformed mesh on the left."
+  {
+   "image": "004_inversion_s1_t118_anom.png",
+   "truth": "inversion",
+   "sev": 1,
+   "cell": "middle-right",
+   "diag": {
+    "residual_ratio": 21.775957107543945,
+    "flagged_nodes": 1,
+    "inverted": 2,
+    "gap_mm": 68.78466033935547,
+    "speed_ratio": 8.730292320251465,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate colored with a smooth gradient from yellow to red, indicating physical consistency across the domain. The red regions (inconsistent) are minimal and localized near the actuator, not forming any of the specific anomaly patterns like hourglass, penetration, or inversion. The deformation appears physically plausible for a hyperelastic plate under actuation."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate colored with a smooth gradient from yellow to red, indicating physical consistency across the domain. The red regions (inconsistent) are minimal and localized near the actuator, not forming any of the specific anomaly patterns like hourglass, penetration, or inversion. The deformation appears physically plausible for a hyperelastic plate under actuation.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell, marked by intense red in the right panel, indicates a region of high physical inconsistency. This is corroborated by the diagnostics showing a hotspot speed 8.73x the median plate node speed and a residual 21.8x typical, pointing to numerical blow-up rather than a contact or inversion issue."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, marked by intense red in the right panel, indicates a region of high physical inconsistency. This is corroborated by the diagnostics showing a hotspot speed 8.73x the median plate node speed and a residual 21.8x typical, pointing to numerical blow-up rather than a contact or inversion issue.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 21.8x the simulation's typical level; hotspot in the middle-right cell; 1 nodes above 5x median residual; 2 inverted elements; hotspot-to-actuator distance 68.8 mm; hotspot speed 8.73x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a uniform dark color, indicating the entire frame is physically consistent with the learned surrogate. There are no signs of hourglass patterns, penetration, inversion, instability, or freezing in the deformed mesh on the left.\"\n}",
-  "full": {
-   "anomaly_type": "instability",
-   "location": "middle-right",
-   "confidence": 0.95,
-   "explanation": "The hotspot in the middle-right cell, combined with the extremely high residual (41305.4x typical) and the node speed 167.82x the median, indicates a local numerical blow-up. The bright spot in the right panel confirms this region is physically inconsistent with the learned surrogate, matching the instability signature."
+  {
+   "image": "005_inversion_s1_t119_anom.png",
+   "truth": "inversion",
+   "sev": 1,
+   "cell": "middle-right",
+   "diag": {
+    "residual_ratio": 18.737865447998047,
+    "flagged_nodes": 1,
+    "inverted": 2,
+    "gap_mm": 68.83031463623047,
+    "speed_ratio": 2.0193352699279785,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the simulation result colored by physical consistency, with the majority of the plate in pale yellow (consistent) and only a small region near the actuator in red (inconsistent). However, the red region is small and localized, and the overall deformation appears physically plausible for a hyperelastic plate being pushed by an actuator. There is no evidence of the specific failure modes like hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the simulation result colored by physical consistency, with the majority of the plate in pale yellow (consistent) and only a small region near the actuator in red (inconsistent). However, the red region is small and localized, and the overall deformation appears physically plausible for a hyperelastic plate being pushed by an actuator. There is no evidence of the specific failure modes like hourglass, penetration, inversion, instability, or frozen regions.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell, marked by intense red color indicating high physical inconsistency, is accompanied by a node speed 2.02x the median, suggesting violent motion. This, along with the high residual (18.7x typical) and presence of inverted elements, points to numerical blow-up or instability rather than a localized contact or inversion issue."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, marked by intense red color indicating high physical inconsistency, is accompanied by a node speed 2.02x the median, suggesting violent motion. This, along with the high residual (18.7x typical) and presence of inverted elements, points to numerical blow-up or instability rather than a localized contact or inversion issue.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 18.7x the simulation's typical level; hotspot in the middle-right cell; 1 nodes above 5x median residual; 2 inverted elements; hotspot-to-actuator distance 68.8 mm; hotspot speed 2.02x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, combined with the extremely high residual (41305.4x typical) and the node speed 167.82x the median, indicates a local numerical blow-up. The bright spot in the right panel confirms this region is physically inconsistent with the learned surrogate, matching the instability signature.\"\n}"
- },
- {
-  "image": "004_frozen_s3_t172_anom.png",
-  "truth": "frozen",
-  "sev": 3,
-  "cell": "middle-right",
-  "stats": "Diagnostics: residual 251.9x the simulation's typical level; hotspot in the middle-right cell; 37 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 115.2 mm; hotspot speed 0.00x the median plate node speed.",
-  "visual": {
-   "anomaly_type": "none",
-   "location": "middle-center",
-   "confidence": 0.98,
-   "explanation": "The right panel shows a heat map with only a small localized region of high disagreement (yellow-orange), indicating minor inconsistency, not a global anomaly. The left panel shows a physically plausible deformation without signs of penetration, inversion, or instability. The mesh deformation appears smooth and continuous, consistent with expected hyperelastic behavior under actuation."
+  {
+   "image": "006_instability_s2_t266_anom.png",
+   "truth": "instability",
+   "sev": 2,
+   "cell": "middle-center",
+   "diag": {
+    "residual_ratio": 113.8994140625,
+    "flagged_nodes": 9,
+    "inverted": 7,
+    "gap_mm": 3.3150992393493652,
+    "speed_ratio": 430.8793640136719,
+    "hotspot": "middle-center"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-center",
+    "confidence": 0.95,
+    "explanation": "The hotspot at the middle-center cell shows extreme motion (430.88x median speed) and high residual (113.9x typical), indicating numerical blow-up. The pale yellow color in the right panel confirms this region is physically inconsistent, matching the instability anomaly."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot at the middle-center cell shows extreme motion (430.88x median speed) and high residual (113.9x typical), indicating numerical blow-up. The pale yellow color in the right panel confirms this region is physically inconsistent, matching the instability anomaly.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 113.9x the simulation's typical level; hotspot in the middle-center cell; 9 nodes above 5x median residual; 7 inverted elements; hotspot-to-actuator distance 3.3 mm; hotspot speed 430.88x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a heat map with only a small localized region of high disagreement (yellow-orange), indicating minor inconsistency, not a global anomaly. The left panel shows a physically plausible deformation without signs of penetration, inversion, or instability. The mesh deformation appears smooth and continuous, consistent with expected hyperelastic behavior under actuation.\"\n}",
-  "full": {
-   "anomaly_type": "instability",
-   "location": "middle-right",
-   "confidence": 0.95,
-   "explanation": "The hotspot in the middle-right cell, indicated by bright yellow, shows a region of high physical inconsistency. Combined with the high residual (251.9x typical) and the hotspot's speed being 0.00x median (suggesting it's not moving with the deformation but is a localized error), this points to a local numerical blow-up or instability rather than a contact or inversion issue."
+  {
+   "image": "007_instability_s1_t168_anom.png",
+   "truth": "instability",
+   "sev": 1,
+   "cell": "middle-center",
+   "diag": {
+    "residual_ratio": 57.83039093017578,
+    "flagged_nodes": 13,
+    "inverted": 0,
+    "gap_mm": 205.70382690429688,
+    "speed_ratio": 238.9129638671875,
+    "hotspot": "middle-center"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-center",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-center cell shows extreme motion (238.91x median speed) and high residual (57.8x typical), indicating numerical blow-up. The red color in the right panel confirms physical inconsistency at this location, matching the instability signature."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-center cell shows extreme motion (238.91x median speed) and high residual (57.8x typical), indicating numerical blow-up. The red color in the right panel confirms physical inconsistency at this location, matching the instability signature.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 57.8x the simulation's typical level; hotspot in the middle-center cell; 13 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 205.7 mm; hotspot speed 238.91x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, indicated by bright yellow, shows a region of high physical inconsistency. Combined with the high residual (251.9x typical) and the hotspot's speed being 0.00x median (suggesting it's not moving with the deformation but is a localized error), this points to a local numerical blow-up or instability rather than a contact or inversion issue.\"\n}"
- },
- {
-  "image": "005_hourglass_s2_t286_clean.png",
-  "truth": "none",
-  "sev": 2,
-  "cell": null,
-  "stats": "Diagnostics: residual 0.9x the simulation's typical level; hotspot in the middle-center cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 10.9 mm; hotspot speed 1.40x the median plate node speed.",
-  "visual": {
-   "anomaly_type": "none",
-   "location": "middle-center",
-   "confidence": 0.98,
-   "explanation": "The right panel shows a smooth color gradient from red to yellow, indicating no regions of physical inconsistency. The deformation in the left panel appears physically plausible without signs of inversion, penetration, or instability."
+  {
+   "image": "008_frozen_s3_t172_anom.png",
+   "truth": "frozen",
+   "sev": 3,
+   "cell": "middle-right",
+   "diag": {
+    "residual_ratio": 2.976097822189331,
+    "flagged_nodes": 27,
+    "inverted": 0,
+    "gap_mm": 100.3436050415039,
+    "speed_ratio": 0.0,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-right",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the simulation result colored by physical consistency, with only a small red region near the actuator. This red area indicates minor inconsistency, but it is localized and does not represent a structural failure or anomaly like hourglass, penetration, or inversion. The overall deformation appears physically plausible and stable, with no signs of violent motion, inversion, or frozen regions."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the simulation result colored by physical consistency, with only a small red region near the actuator. This red area indicates minor inconsistency, but it is localized and does not represent a structural failure or anomaly like hourglass, penetration, or inversion. The overall deformation appears physically plausible and stable, with no signs of violent motion, inversion, or frozen regions.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell, marked by intense red in the right panel, indicates a region of high physical inconsistency. The hotspot-to-actuator distance (100.3 mm) and the fact that the hotspot speed is 0.00x the median plate node speed suggest a localized numerical blow-up, not a contact violation or inversion. The high residual (3.0x typical) and the presence of 27 nodes above 5x median residual further support instability rather than a simple frozen region."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, marked by intense red in the right panel, indicates a region of high physical inconsistency. The hotspot-to-actuator distance (100.3 mm) and the fact that the hotspot speed is 0.00x the median plate node speed suggest a localized numerical blow-up, not a contact violation or inversion. The high residual (3.0x typical) and the presence of 27 nodes above 5x median residual further support instability rather than a simple frozen region.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 3.0x the simulation's typical level; hotspot in the middle-right cell; 27 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 100.3 mm; hotspot speed 0.00x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a smooth color gradient from red to yellow, indicating no regions of physical inconsistency. The deformation in the left panel appears physically plausible without signs of inversion, penetration, or instability.\"\n}",
-  "full": {
-   "anomaly_type": "none",
-   "location": "middle-center",
-   "confidence": 0.98,
-   "explanation": "The right panel shows a hotspot in the middle-center, indicating a local inconsistency, but the left panel's deformed mesh appears physically plausible without signs of penetration, inversion, or instability. The hotspot is localized and does not suggest a global failure mode; it may be a minor numerical artifact within acceptable tolerance given the residual is only 0.9x typical and no inverted elements are present."
+  {
+   "image": "009_frozen_s3_t181_anom.png",
+   "truth": "frozen",
+   "sev": 3,
+   "cell": "middle-right",
+   "diag": {
+    "residual_ratio": 3.6127593517303467,
+    "flagged_nodes": 49,
+    "inverted": 0,
+    "gap_mm": 88.77030181884766,
+    "speed_ratio": 1.678968906402588,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-right",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the simulation result colored by physical consistency, with red indicating inconsistency. The red region is localized to the area of the actuator contact, which is expected due to the high deformation and potential modeling error at the contact interface. The rest of the plate is colored pale yellow, indicating physical consistency. There is no evidence of hourglass, penetration, inversion, instability, or frozen regions elsewhere in the mesh."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the simulation result colored by physical consistency, with red indicating inconsistency. The red region is localized to the area of the actuator contact, which is expected due to the high deformation and potential modeling error at the contact interface. The rest of the plate is colored pale yellow, indicating physical consistency. There is no evidence of hourglass, penetration, inversion, instability, or frozen regions elsewhere in the mesh.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell, marked by intense red color indicating high physical inconsistency, is accompanied by a high hotspot speed (1.68x median) and a large residual (3.6x typical), suggesting numerical blow-up rather than a contact or inversion issue."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, marked by intense red color indicating high physical inconsistency, is accompanied by a high hotspot speed (1.68x median) and a large residual (3.6x typical), suggesting numerical blow-up rather than a contact or inversion issue.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 3.6x the simulation's typical level; hotspot in the middle-right cell; 49 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 88.8 mm; hotspot speed 1.68x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
   },
-  "full_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows a hotspot in the middle-center, indicating a local inconsistency, but the left panel's deformed mesh appears physically plausible without signs of penetration, inversion, or instability. The hotspot is localized and does not suggest a global failure mode; it may be a minor numerical artifact within acceptable tolerance given the residual is only 0.9x typical and no inverted elements are present.\"\n}"
- }
-]
+  {
+   "image": "010_frozen_s2_t37_clean.png",
+   "truth": "none",
+   "sev": 2,
+   "cell": null,
+   "diag": {
+    "residual_ratio": 1.0347206592559814,
+    "flagged_nodes": 0,
+    "inverted": 0,
+    "gap_mm": 14.691529273986816,
+    "speed_ratio": 3.740999698638916,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate colored consistently from pale yellow to orange, indicating no regions of physical inconsistency. The deformation in the left panel appears smooth and physically plausible for a hyperelastic plate under clamped and actuated loading."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate colored consistently from pale yellow to orange, indicating no regions of physical inconsistency. The deformation in the left panel appears smooth and physically plausible for a hyperelastic plate under clamped and actuated loading.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell, indicated by intense red color in the right panel, shows a region of extreme physical inconsistency. This is corroborated by the diagnostic data showing a hotspot speed of 3.74x the median plate node speed, which is a clear sign of numerical blow-up or instability, not just a localized deformation."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, indicated by intense red color in the right panel, shows a region of extreme physical inconsistency. This is corroborated by the diagnostic data showing a hotspot speed of 3.74x the median plate node speed, which is a clear sign of numerical blow-up or instability, not just a localized deformation.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 1.0x the simulation's typical level; hotspot in the middle-right cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 14.7 mm; hotspot speed 3.74x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
+  },
+  {
+   "image": "011_inversion_s1_t101_clean.png",
+   "truth": "none",
+   "sev": 1,
+   "cell": null,
+   "diag": {
+    "residual_ratio": 1.3500646352767944,
+    "flagged_nodes": 0,
+    "inverted": 0,
+    "gap_mm": 32.37766647338867,
+    "speed_ratio": 9.45510482788086,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate colored consistently from pale yellow to orange, indicating no regions of physical inconsistency. The deformation appears smooth and physically plausible without signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate colored consistently from pale yellow to orange, indicating no regions of physical inconsistency. The deformation appears smooth and physically plausible without signs of hourglass, penetration, inversion, instability, or freezing.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell shows extreme motion (9.46x median speed) and high residual (1.4x typical), indicating numerical blow-up. The red color in the right panel confirms physical inconsistency localized there, matching the instability signature."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell shows extreme motion (9.46x median speed) and high residual (1.4x typical), indicating numerical blow-up. The red color in the right panel confirms physical inconsistency localized there, matching the instability signature.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 1.4x the simulation's typical level; hotspot in the middle-right cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 32.4 mm; hotspot speed 9.46x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
+  },
+  {
+   "image": "012_hourglass_s2_t31_clean.png",
+   "truth": "none",
+   "sev": 2,
+   "cell": null,
+   "diag": {
+    "residual_ratio": 1.0236570835113525,
+    "flagged_nodes": 0,
+    "inverted": 0,
+    "gap_mm": 14.960865020751953,
+    "speed_ratio": 3.834731340408325,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate colored consistently in pale yellow, indicating no regions of physical inconsistency. The deformation appears smooth and physically plausible without signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate colored consistently in pale yellow, indicating no regions of physical inconsistency. The deformation appears smooth and physically plausible without signs of hourglass, penetration, inversion, instability, or freezing.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell, indicated by intense red color in the right panel, shows a region of extreme physical inconsistency. This is corroborated by the diagnostic data showing a hotspot speed of 3.83x the median plate node speed, which is a clear sign of numerical blow-up or instability, not just a localized deformation."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell, indicated by intense red color in the right panel, shows a region of extreme physical inconsistency. This is corroborated by the diagnostic data showing a hotspot speed of 3.83x the median plate node speed, which is a clear sign of numerical blow-up or instability, not just a localized deformation.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 1.0x the simulation's typical level; hotspot in the middle-right cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 15.0 mm; hotspot speed 3.83x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
+  },
+  {
+   "image": "013_hourglass_s2_t230_clean.png",
+   "truth": "none",
+   "sev": 2,
+   "cell": null,
+   "diag": {
+    "residual_ratio": 0.7715200185775757,
+    "flagged_nodes": 0,
+    "inverted": 0,
+    "gap_mm": 4.957979679107666,
+    "speed_ratio": 6.2483086585998535,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate colored consistently pale yellow, indicating no physical inconsistency. The deformation in the left panel appears smooth and physically plausible for a hyperelastic plate under clamped and actuated loading, with no signs of the specific anomalies listed."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate colored consistently pale yellow, indicating no physical inconsistency. The deformation in the left panel appears smooth and physically plausible for a hyperelastic plate under clamped and actuated loading, with no signs of the specific anomalies listed.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell shows a region of extreme deformation (6.25x median node speed) and high residual (0.8x typical), indicating numerical blow-up. The visual evidence of a bright orange patch in the right panel, corresponding to high disagreement, confirms this instability is localized to that cell."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell shows a region of extreme deformation (6.25x median node speed) and high residual (0.8x typical), indicating numerical blow-up. The visual evidence of a bright orange patch in the right panel, corresponding to high disagreement, confirms this instability is localized to that cell.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 0.8x the simulation's typical level; hotspot in the middle-right cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 5.0 mm; hotspot speed 6.25x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
+  },
+  {
+   "image": "014_penetration_s1_t253_clean.png",
+   "truth": "none",
+   "sev": 1,
+   "cell": null,
+   "diag": {
+    "residual_ratio": 0.8107213973999023,
+    "flagged_nodes": 0,
+    "inverted": 0,
+    "gap_mm": 3.7626750469207764,
+    "speed_ratio": 5.056349754333496,
+    "hotspot": "middle-right"
+   },
+   "visual": {
+    "anomaly_type": "none",
+    "location": "middle-center",
+    "confidence": 0.98,
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "visual_raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The right panel shows the entire plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation.\"\n}",
+   "visual_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\n\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}",
+   "full": {
+    "anomaly_type": "instability",
+    "location": "middle-right",
+    "confidence": 0.95,
+    "explanation": "The hotspot in the middle-right cell shows nodes moving at 5.06x the median speed, indicating violent motion. The residual is high (0.8x typical), and the color gradient in the right panel shows red (inconsistent) near this hotspot, confirming numerical blow-up rather than a physical contact or inversion issue."
+   },
+   "full_raw": "{\n  \"anomaly_type\": \"instability\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.95,\n  \"explanation\": \"The hotspot in the middle-right cell shows nodes moving at 5.06x the median speed, indicating violent motion. The residual is high (0.8x typical), and the color gradient in the right panel shows red (inconsistent) near this hotspot, confirming numerical blow-up rather than a physical contact or inversion issue.\"\n}",
+   "full_prompt": "You are a simulation QA engineer reviewing one frame of a finite-element simulation.\nSetup: a hyperelastic plate is clamped along one edge; a blue actuator pushes it from below, so the plate bends.\nLEFT panel: the deformed mesh. RIGHT panel: same camera, coloured by the disagreement between the observed motion and a\nlearned physics surrogate (red = the frame is physically inconsistent there, pale yellow = consistent).\nDiagnostics: residual 0.8x the simulation's typical level; hotspot in the middle-right cell; 0 nodes above 5x median residual; 0 inverted elements; hotspot-to-actuator distance 3.8 mm; hotspot speed 5.06x the median plate node speed.\nClassify the frame as exactly one of:\n- hourglass: a patch of dozens of nodes with a checkerboard / zig-zag pattern of alternating offsets, away from the actuator\n- penetration: a handful of plate nodes at the actuator contact pushed into the actuator (contact violated)\n- inversion: a single element turned inside out: one node pushed through its element, very few nodes involved\n- instability: a few nodes moving violently and erratically, far faster than the rest of the plate (numerical blow-up)\n- frozen: a region that stops moving (much slower than the plate) while its surroundings keep deforming\n- none: no anomaly; the frame is physically consistent\nAnswer with ONLY a JSON object:\n{\"anomaly_type\": \"<one of: hourglass, penetration, inversion, instability, frozen, none>\", \"location\": \"<3x3 grid cell of the LEFT panel: top-left, top-center, top-right, middle-left, middle-center, middle-right, bottom-left, bottom-center, bottom-right>\",\n\"confidence\": <0-1>, \"explanation\": \"<one or two sentences citing the visual evidence>\"}"
+  }
+ ]
+}
