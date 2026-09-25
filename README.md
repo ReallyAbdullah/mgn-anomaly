@@ -108,7 +108,10 @@ RESULTS_PLACEHOLDER
   | 3e-4 (chosen)    | 9.4e-5 (const-vel: 3e-6) | **0.91** vs 0.75 | **0.79** vs 0.71 | **0.80** vs 0.63 |
   | 1e-3             | 2.2e-4 | 0.85 vs 0.78 | 0.76 vs 0.69 | 0.71 vs 0.69 |
 
-  Choosing σ on test simulations was a mistake. It is being re-checked on validation simulations (Gate A below).
+  Choosing σ on test simulations was a mistake, so it was re-checked on validation simulations (Gate A,
+  pre-registered in [docs/gate_a.md](docs/gate_a.md)). At equal budget (40 train simulations, ~9k steps), σ=3e-4
+  beats σ=1e-3 on mean GNN frame AUROC over hourglass, inversion and frozen: 0.83 vs 0.72, paired difference −0.105,
+  95% CI [−0.129, −0.077], 30 validation simulations. So σ=3e-4 stays.
 - **Steady-actuator regime only.** In every trajectory the actuator speeds up about 9x around frame 360. We train and
   score on frames under 350.
 - **MPS shape bucketing.** Batches are padded to fixed node and edge buckets. Without this, every new graph size

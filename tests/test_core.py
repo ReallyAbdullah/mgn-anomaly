@@ -126,3 +126,14 @@ def test_leadtime_analysis():
     res = analyse([ev, fr], {d: 1.0 for d in DETS})
     assert res["blowup/gnn_causal"]["median"] == 12 and res["blowup/gnn_causal"]["false_alarm_rate"] == 0
     assert res["frozen/gnn_causal"]["detected"] == 0  # never alarmed -> censored, not counted as detected
+
+
+def test_score_copy_finite_on_static_start():
+    """Causal calibration on early frames sees only pre-motion (all-zero) residuals; scores must stay finite."""
+    from mgn.evaluate import score_copy
+    rng = np.random.default_rng(4)
+    traj = _toy_traj(rng)
+    traj["world_pos"][:40] = traj["world_pos"][0]  # plate at rest before contact
+    model = MeshGraphNet(steps=1, hidden=8).eval()
+    fs, _ = score_copy(model, traj, traj["world_pos"], np.array([10, 20, 45]), torch.device("cpu"))
+    assert all(np.isfinite(v).all() for v in fs.values())

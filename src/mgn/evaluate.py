@@ -76,14 +76,14 @@ def score_copy(model, tr, wp, frames, dev):
         raw, calib = node[d][:len(frames)], node[d][len(frames):]
         # per-node calibration (PaDiM-style): residual relative to that node's median residual
         cal = np.median(calib, axis=0)
-        node[d] = raw / (cal + np.median(cal[normal]))
+        node[d] = raw / (cal + np.median(cal[normal]) + 1e-12)
         fs[d] = frame_score(node[d], normal)
         # causal variant: calibrate only on frames at least 4 before the scored one (min. first 3)
         causal = []
         for j, t in enumerate(frames):
             past = CALIB < t - 3
             c = np.median(calib[past if past.sum() >= 3 else slice(0, 3)], axis=0)
-            causal.append(raw[j] / (c + np.median(c[normal])))
+            causal.append(raw[j] / (c + np.median(c[normal]) + 1e-12))  # floor: pre-contact frames are all zero
         node[f"{d}_causal"] = np.stack(causal)
         fs[f"{d}_causal"] = frame_score(node[f"{d}_causal"], normal)
     fs["velocity"] = frame_score(node["velocity"], normal)
