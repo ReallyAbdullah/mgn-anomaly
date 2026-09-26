@@ -168,3 +168,14 @@ def test_global_injectors(kind):
     assert np.abs(wp - traj["world_pos"]).max() > 0
     identity = {"scale": 0.0, "lag": 0, "timescale": 1.0}[kind]
     np.testing.assert_allclose(inject_global(traj, kind, 1, param=identity), traj["world_pos"], atol=1e-7)
+
+
+def test_conformal_run_level_guarantee():
+    from mgn.leadtime import conformal_threshold
+    rng = np.random.default_rng(0)
+    fprs = []
+    for _ in range(2000):  # exchangeable clean runs: calibrate on 30, test on a fresh one
+        runs = rng.gumbel(size=31)
+        fprs.append(runs[30] > conformal_threshold(runs[:30], 0.10))
+    assert np.mean(fprs) <= 0.10 + 0.02
+    assert conformal_threshold(np.arange(10.0), 0.01) == float("inf")  # n too small for alpha
