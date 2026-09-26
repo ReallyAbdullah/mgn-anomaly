@@ -12,7 +12,36 @@ from scipy.spatial import cKDTree
 from mgn.data import NORMAL, OBSTACLE, T_MAX
 
 TYPES = ["hourglass", "penetration", "inversion", "instability", "frozen"]
+# Phase 2: whole-run, spatially and temporally smooth errors that are inconsistent with the loading. The actuator
+# prescribes displacement here, so a wrong material stiffness would mostly change stress, not shape; `scale` is
+# therefore a response-scale / contact-consistency error (e.g. an output scaling bug), not a material-card error.
+GLOBAL_TYPES = ["scale", "lag", "timescale"]
+GLOBAL_SEVERITY = {"scale": {1: 0.05, 2: 0.10, 3: 0.20},   # plate displacement x (1 + eps)
+                   "lag": {1: 1, 2: 3, 3: 10},             # plate response k frames behind the actuator
+                   "timescale": {1: 0.95, 2: 0.90, 3: 0.80}}  # plate response at c x the correct rate
 SEVERITY = {1: 1.0, 2: 10.0, 3: 100.0}  # amplitude in multiples of the RMS per-step displacement (~0.3 mm)
+
+
+def inject_global(traj, kind, severity, param=None):
+    """Whole-run global error on plate (NORMAL) nodes only; actuator and clamp keep their kinematics. Deterministic."""
+    p = GLOBAL_SEVERITY[kind][severity] if param is None else param
+    wp, mp = traj["world_pos"].copy(), traj["mesh_pos"]
+    normal = traj["node_type"] == NORMAL
+    u = wp[:, normal] - mp[normal]
+    t = np.arange(len(wp))
+    if kind == "scale":
+        u2 = (1 + p) * u
+    elif kind == "lag":
+        u2 = u[np.maximum(t - int(p), 0)]
+    elif kind == "timescale":
+        tt = p * t
+        lo = np.floor(tt).astype(int)
+        w = (tt - lo)[:, None, None]
+        u2 = (1 - w) * u[lo] + w * u[np.minimum(lo + 1, len(wp) - 1)]
+    else:
+        raise ValueError(kind)
+    wp[:, normal] = mp[normal] + u2
+    return wp
 
 
 def adjacency(traj):

@@ -156,3 +156,15 @@ def test_kinematic_and_contact_rules():
     inside = outside.copy()
     inside[0] = outside[5:9].mean(0)  # plate node 0 moved to the actuator tet's centroid
     assert contact_scores(traj, inside[None].repeat(3, 0), [1])[0, 0] > 0
+
+
+@pytest.mark.parametrize("kind", ["scale", "lag", "timescale"])
+def test_global_injectors(kind):
+    from mgn.inject import inject_global
+    traj = _toy_traj(np.random.default_rng(6))
+    wp = inject_global(traj, kind, 3)
+    fixed = traj["node_type"] != 0
+    np.testing.assert_array_equal(wp[:, fixed], traj["world_pos"][:, fixed])  # actuator and clamp untouched
+    assert np.abs(wp - traj["world_pos"]).max() > 0
+    identity = {"scale": 0.0, "lag": 0, "timescale": 1.0}[kind]
+    np.testing.assert_allclose(inject_global(traj, kind, 1, param=identity), traj["world_pos"], atol=1e-7)
