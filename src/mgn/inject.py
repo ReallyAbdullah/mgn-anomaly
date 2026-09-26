@@ -37,6 +37,35 @@ def step_scale(traj):
     return np.sqrt((d ** 2).mean())
 
 
+def actuator_surface(traj, pos):
+    """Outward-oriented triangle surface of the actuator at positions `pos` (cell normals in cell_data["Normals"])."""
+    nt, cells = traj["node_type"], traj["cells"]
+    obs_cells = cells[(nt[cells] == OBSTACLE).all(1)]
+    surf = pv.UnstructuredGrid(np.c_[np.full(len(obs_cells), 4), obs_cells].ravel(),
+                               np.full(len(obs_cells), pv.CellType.TETRA), pos.astype(np.float64)
+                               ).extract_surface(algorithm="dataset_surface").compute_normals(
+                                   cell_normals=True, point_normals=False, auto_orient_normals=True)
+    # enforce outward normals (away from the actuator centroid; actuators are convex). A no-op where auto-orient
+    # already succeeded, which it does on the real meshes; it can fail on tiny surfaces such as a single tet.
+    n = surf.cell_data["Normals"]
+    flip = np.einsum("ij,ij->i", surf.cell_centers().points - surf.points.mean(0), n) < 0
+    surf.cell_data["Normals"] = np.where(flip[:, None], -n, n)
+    return surf
+
+
+def actuator_distance(traj, pos, nodes):
+    """Signed distance of `nodes` to the actuator surface (negative = inside the actuator). Inside/outside comes from
+    a point-in-tet test on the actuator's volume mesh; face-normal signs are unreliable near edges and vertices."""
+    nt, cells = traj["node_type"], traj["cells"]
+    obs_cells = cells[(nt[cells] == OBSTACLE).all(1)]
+    vol = pv.UnstructuredGrid(np.c_[np.full(len(obs_cells), 4), obs_cells].ravel(),
+                              np.full(len(obs_cells), pv.CellType.TETRA), pos.astype(np.float64))
+    p = pos[nodes].astype(np.float64)
+    _, closest = vol.extract_surface(algorithm="dataset_surface").find_closest_cell(p, return_closest_point=True)
+    dist = np.linalg.norm(p - closest, axis=1)
+    return np.where(vol.find_containing_cell(p) >= 0, -dist, dist)
+
+
 def signed_volumes(pos, cells):
     a, b, c, d = (pos[cells[:, i]] for i in range(4))
     return np.einsum("ij,ij->i", np.cross(b - a, c - a), d - a) / 6
@@ -76,15 +105,7 @@ def inject(traj, kind, severity, rng, t0=None):
             gaps = np.array([cKDTree(wp[t][obs]).query(wp[t][plate])[0].min() for t in range(40, 300)])
             contact = np.flatnonzero(gaps < 2e-3) + 40
             t0 = int(rng.choice(contact)) if len(contact) else int(np.argmin(gaps)) + 40
-        obs_cells = traj["cells"][(nt[traj["cells"]] == OBSTACLE).all(1)]
-
-        def actuator_surface(pos):
-            return pv.UnstructuredGrid(np.c_[np.full(len(obs_cells), 4), obs_cells].ravel(),
-                                       np.full(len(obs_cells), pv.CellType.TETRA), pos.astype(np.float64)
-                                       ).extract_surface(algorithm="dataset_surface").compute_normals(
-                                           cell_normals=True, point_normals=False, auto_orient_normals=True)
-
-        _, cp = actuator_surface(wp[t0]).find_closest_cell(wp[t0][plate].astype(np.float64), return_closest_point=True)
+        _, cp = actuator_surface(traj, wp[t0]).find_closest_cell(wp[t0][plate].astype(np.float64), return_closest_point=True)
         dist = np.linalg.norm(cp - wp[t0][plate], axis=1)
         order = np.argsort(dist)[:10]
         close = plate[order[dist[order] <= max(1e-3, dist[order[0]])]]  # nodes touching the actuator (<1 mm)
@@ -92,7 +113,7 @@ def inject(traj, kind, severity, rng, t0=None):
         mask[close] = True
         for t in range(t0, t0 + k):
             # closest point on the actuator surface, then `a` further inward along the surface normal
-            surf = actuator_surface(wp[t])
+            surf = actuator_surface(traj, wp[t])
             cid, closest = surf.find_closest_cell(wp[t][close].astype(np.float64), return_closest_point=True)
             wp[t, close] = closest - a * surf.cell_data["Normals"][cid]
 

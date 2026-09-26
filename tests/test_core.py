@@ -137,3 +137,22 @@ def test_score_copy_finite_on_static_start():
     model = MeshGraphNet(steps=1, hidden=8).eval()
     fs, _ = score_copy(model, traj, traj["world_pos"], np.array([10, 20, 45]), torch.device("cpu"))
     assert all(np.isfinite(v).all() for v in fs.values())
+
+
+def test_kinematic_and_contact_rules():
+    from mgn.detect import contact_scores, velocity_causal_scores, velocity_laplacian_scores
+    rng = np.random.default_rng(5)
+    traj = _toy_traj(rng)
+    plate = traj["node_type"] == 0
+    t = np.arange(400, dtype=np.float32)[:, None, None]
+    rigid = (traj["mesh_pos"] + t * np.float32([1e-4, 0, 2e-4])).astype(np.float32)  # every node, same velocity
+    assert velocity_laplacian_scores(traj, rigid, [50])[0, plate].max() < 1e-6
+    frozen = rigid.copy()
+    frozen[50:60, 0] = rigid[50, 0]  # node 0 stops while its neighbours keep moving
+    assert velocity_laplacian_scores(traj, frozen, [55])[0, 0] > 1e-6
+    assert np.isfinite(velocity_causal_scores(rigid, [3, 50, 200])).all()
+    outside = traj["mesh_pos"].copy()
+    assert contact_scores(traj, outside[None].repeat(3, 0), [1])[0].max() == 0
+    inside = outside.copy()
+    inside[0] = outside[5:9].mean(0)  # plate node 0 moved to the actuator tet's centroid
+    assert contact_scores(traj, inside[None].repeat(3, 0), [1])[0, 0] > 0

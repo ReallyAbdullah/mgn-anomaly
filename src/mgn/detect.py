@@ -5,14 +5,17 @@
 - velocity:  robust z-score of node speed over the trajectory   (trivial statistics)
 - laplacian: |displacement - mean neighbour displacement|   (physics-free spatial smoothness)
 - jacobian:  inverted elements (signed tet volume flips sign vs. rest)   (geometric rule)
+- vlap:      |velocity - mean neighbour velocity|   (physics-free spatial kinematic rule)
+- velocity_causal: speed z-score against the node's own past only   (online trivial statistics)
+- contact:   penetration depth of plate nodes into the actuator surface   (contact rule)
 - clip_zero / clip_knn:  image-space detectors on renders (see ClipDetector)
 """
 import numpy as np
 import open_clip
 import torch
 
-from mgn.data import T_MAX, build_graph, collate
-from mgn.inject import adjacency, signed_volumes
+from mgn.data import NORMAL, T_MAX, build_graph, collate
+from mgn.inject import actuator_distance, adjacency, signed_volumes
 from mgn.train import to_torch
 
 
@@ -47,6 +50,34 @@ def laplacian_scores(traj, wp, frames):
     deg = np.asarray(adj.sum(1)).clip(1)
     u = wp[np.asarray(frames)] - traj["mesh_pos"]
     return np.stack([np.linalg.norm(x - (adj @ x) / deg, axis=-1) for x in u])
+
+
+def velocity_laplacian_scores(traj, wp, frames):
+    adj = adjacency(traj).astype(np.float32)
+    deg = np.asarray(adj.sum(1)).clip(1)
+    f = np.asarray(frames)
+    return np.stack([np.linalg.norm(v - (adj @ v) / deg, axis=-1) for v in wp[f] - wp[f - 1]])
+
+
+def velocity_causal_scores(wp, frames, min_past=5):
+    """Robust speed z-score using only frames at least 4 before the scored one (min. the first `min_past`)."""
+    speed = np.linalg.norm(np.diff(wp[:T_MAX], axis=0), axis=-1)  # speed[t-1] = |wp[t] - wp[t-1]|
+    out = []
+    for t in frames:
+        past = speed[:max(t - 4, min_past)]
+        med = np.median(past, axis=0)
+        mad = np.median(np.abs(past - med), axis=0) * 1.4826 + 1e-9
+        out.append(np.abs(speed[t - 1] - med) / mad)
+    return np.stack(out)
+
+
+def contact_scores(traj, wp, frames):
+    """Per plate node: penetration depth into the actuator surface (0 outside)."""
+    plate = np.flatnonzero(traj["node_type"] == NORMAL)
+    out = np.zeros((len(frames), len(traj["node_type"])))
+    for j, t in enumerate(frames):
+        out[j, plate] = np.maximum(0.0, -actuator_distance(traj, wp[t], plate))
+    return out
 
 
 def jacobian_scores(traj, wp, frames):

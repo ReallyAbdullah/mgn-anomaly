@@ -18,7 +18,7 @@ from mgn.evaluate import RESULTS, score_copy, seed
 from mgn.inject import inject
 from mgn.train import RUNS, device, load_model, load_split
 
-DETS = ["gnn_causal", "constvel_causal", "laplacian_causal", "jacobian"]  # causally calibrated or memoryless only
+DETS = ["gnn_causal", "constvel_causal", "laplacian_causal", "vlap_causal", "velocity_causal", "jacobian", "contact"]  # causally calibrated or memoryless only
 
 
 def run(a):
@@ -71,7 +71,7 @@ def analyse(events, thr):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--ckpt", default=str(RUNS / "mgn" / "model.pt"))
-    p.add_argument("--split", default="valid", choices=["valid", "test"])
+    p.add_argument("--split", default="valid", choices=["train", "valid", "test"])
     p.add_argument("--start", type=int, default=20)
     p.add_argument("--stop", type=int, default=100)
     p.add_argument("--device")

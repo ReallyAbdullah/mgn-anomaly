@@ -79,11 +79,15 @@ All numbers are on **92 held-out test simulations (8–99), scored once** with t
 [results/test/metrics.md](results/test/metrics.md) and [results/test/gate_c.md](results/test/gate_c.md).
 
 ### TL;DR
-1. **Learned physics helps where the error is kinematic, not geometric** (our post-hoc reading; the evidence is the
-   Holm-significant frozen cells). A frozen region looks geometrically plausible but is inconsistent with how its
-   neighbours move. The GNN catches it (sustained-frame AUROC 0.99),
-   while the geometric rules can't (Laplacian 0.63, inverted elements 0.51).
-2. **Everywhere else, simple rules match or beat the GNN.** Constant-velocity extrapolation is near-perfect at the
+1. **Some simple rule matches or beats the GNN in every cell.** The GNN's only test-set win was frozen regions
+   (sustained-frame AUROC 0.99, against 0.63 for the position Laplacian and 0.51 for inverted elements). That led to
+   the post-hoc reading "learned physics catches kinematic, not geometric, errors". A later **post-hoc, validation-only
+   check refutes it** ([scripts/posthoc_vlap_check.py](scripts/posthoc_vlap_check.py), validation sims 20–49, the same
+   corrupted copies). A one-line *velocity* Laplacian (a node's velocity minus its neighbours' mean) scores 1.00 on
+   sustained frozen frames at every severity, against the GNN's 0.97–0.99. That rule wasn't in the pre-registered
+   pool, so Gate C stands as reported, but the taxonomy claim doesn't. Phase 2 (in progress) tests the one case where
+   learned physics should still be needed: runs that are smooth everywhere but inconsistent with the loading.
+2. **Across the other types, simple rules match or beat the GNN.** Constant-velocity extrapolation is near-perfect at the
    onset of every anomaly. Spatial checks (Laplacian smoothness, inverted elements) beat the GNN on persistent
    hourglass, penetration and inversion.
 3. **The pre-registered Gate C gives a split result.**

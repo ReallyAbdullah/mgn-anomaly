@@ -24,21 +24,21 @@ from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
 from mgn.data import NORMAL, T_MAX
-from mgn.detect import (ClipDetector, constvel_scores, frame_score, gnn_scores, jacobian_scores, laplacian_scores,
-                        velocity_scores)
+from mgn.detect import (ClipDetector, constvel_scores, contact_scores, frame_score, gnn_scores, jacobian_scores,
+                        laplacian_scores, velocity_causal_scores, velocity_laplacian_scores, velocity_scores)
 from mgn.inject import SEVERITY, TYPES, inject
 from mgn.render import SIZE, Renderer, grid_cell
 from mgn.train import RUNS, device, load_model, load_split
 
-PROTOCOL = "v2"
+PROTOCOL = "v3"  # v3 = v2 + vlap, velocity_causal, contact in the pools
 MIN_SIMS_FOR_CI = 20
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 RESULTS = RUNS.parent / "results"
-DETECTORS = ["gnn", "constvel", "laplacian", "velocity", "jacobian", "clip_knn", "clip_zero",
-             "gnn_causal", "constvel_causal", "laplacian_causal"]
+DETECTORS = ["gnn", "constvel", "laplacian", "vlap", "velocity", "jacobian", "contact", "clip_knn", "clip_zero",
+             "gnn_causal", "constvel_causal", "laplacian_causal", "vlap_causal", "velocity_causal"]
 CALIB = np.arange(5, T_MAX, 10)
 
 
@@ -69,10 +69,13 @@ def score_copy(model, tr, wp, frames, dev):
     node = {"gnn": gnn_scores(model, tr, wp, list(frames) + list(CALIB), dev),
             "constvel": constvel_scores(wp, np.r_[frames, CALIB]),
             "laplacian": laplacian_scores(tr, wp, np.r_[frames, CALIB]),
+            "vlap": velocity_laplacian_scores(tr, wp, np.r_[frames, CALIB]),
             "velocity": velocity_scores(wp, frames),
-            "jacobian": jacobian_scores(tr, wp, frames)}
+            "velocity_causal": velocity_causal_scores(wp, frames),
+            "jacobian": jacobian_scores(tr, wp, frames),
+            "contact": contact_scores(tr, wp, frames)}
     fs = {}
-    for d in ("gnn", "constvel", "laplacian"):
+    for d in ("gnn", "constvel", "laplacian", "vlap"):
         raw, calib = node[d][:len(frames)], node[d][len(frames):]
         # per-node calibration (PaDiM-style): residual relative to that node's median residual
         cal = np.median(calib, axis=0)
@@ -87,6 +90,8 @@ def score_copy(model, tr, wp, frames, dev):
         node[f"{d}_causal"] = np.stack(causal)
         fs[f"{d}_causal"] = frame_score(node[f"{d}_causal"], normal)
     fs["velocity"] = frame_score(node["velocity"], normal)
+    fs["velocity_causal"] = frame_score(node["velocity_causal"], normal)
+    fs["contact"] = frame_score(node["contact"], normal)
     fs["jacobian"] = node["jacobian"][:, normal].sum(1) / 4  # inverted-tet count
     return fs, node
 
@@ -186,8 +191,8 @@ def cell_rows(records, dets, kind, sev, phase=None):
     return rows
 
 
-CAUSAL_POOL = {"constvel_causal", "laplacian_causal", "jacobian"}  # causal or memoryless baselines
-NONCAUSAL_POOL = {"constvel", "laplacian", "velocity", "jacobian", "clip_knn", "clip_zero"}
+CAUSAL_POOL = {"constvel_causal", "laplacian_causal", "vlap_causal", "velocity_causal", "jacobian", "contact"}
+NONCAUSAL_POOL = {"constvel", "laplacian", "vlap", "velocity", "jacobian", "contact", "clip_knn", "clip_zero"}
 
 
 def best_baselines(metrics_csv, phase="all"):
@@ -282,7 +287,7 @@ def report(meta, records, out, best=None):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--ckpt", default=str(RUNS / "mgn" / "model.pt"))
-    p.add_argument("--split", default="test", choices=["valid", "test"])
+    p.add_argument("--split", default="test", choices=["train", "valid", "test"])
     p.add_argument("--start", type=int, default=8, help="test sims 0-7 were used for pilots; start after them")
     p.add_argument("--stop", type=int, default=100)
     p.add_argument("--device")
