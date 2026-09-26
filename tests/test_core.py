@@ -179,3 +179,21 @@ def test_conformal_run_level_guarantee():
         fprs.append(runs[30] > conformal_threshold(runs[:30], 0.10))
     assert np.mean(fprs) <= 0.10 + 0.02
     assert conformal_threshold(np.arange(10.0), 0.01) == float("inf")  # n too small for alpha
+
+
+def test_triage_pipeline_and_leakage_guard():
+    from mgn.triage import LABELS, evaluate_model, features, fit
+    rng = np.random.default_rng(0)
+    recs = []
+    for sim in range(50, 100):
+        for c, name in enumerate(LABELS):
+            for _ in range(4):
+                base = rng.random(3)
+                base[c % 3] += 3 * (c + 1)  # separable synthetic classes
+                recs.append(dict(traj=sim, type=name if name != "none" else "frozen", label=name != "none", sev=1 + c % 3,
+                                 frame_a=base[0], frame_b=base[1], frame_c=base[2] + c))
+    m = fit([r for r in recs if r["traj"] < 70], [r for r in recs if r["traj"] >= 70], list(range(len(LABELS))))
+    res = evaluate_model(m, recs)
+    assert res["accuracy"] > 0.9 and 0 <= res["ece"] <= 1
+    with pytest.raises(AssertionError):
+        features([dict(recs[0], frame_stress=1.0)])
