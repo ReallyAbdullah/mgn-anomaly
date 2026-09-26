@@ -1,0 +1,1166 @@
+{
+ "model": "mlx-community/Qwen3-VL-8B-Instruct-4bit",
+ "ckpt": "/Users/muhammadabdullah/Claude Projects/mgn-anomaly/runs/mgn/model.pt",
+ "pairs": [
+  {
+   "sim": 8,
+   "t": 330,
+   "px": 51.1777865228779,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate deformation under actuator pressure. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The mesh deformation appears physically plausible for the given loading condition."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between the observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate's deformation is physically consistent, with pale yellow coloring indicating low residual error. The mesh in the left panel deforms smoothly without any signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with a hyperelastic plate bending under a clamped edge and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible; all elements maintain their orientation and connectivity without violation or erratic motion."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored in pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot in the bottom-right region colored red, indicating physical inconsistency. The hotspot speed (1.82x median) is high, and the visual deformation in the left panel shows violent, erratic motion in that area, consistent with numerical blow-up."
+   }
+  },
+  {
+   "sim": 9,
+   "t": 330,
+   "px": 45.53444185777925,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied load."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow to orange, indicating high consistency between observed motion and the learned physics surrogate. There are no red regions (indicating physical inconsistency) or any visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate's deformation is physically consistent, with only pale yellow regions indicating low disagreement. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's mesh."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the blue actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. Element shapes remain intact and deformation is physically consistent with expected behavior."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate colored in pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) visible, and the deformation appears smooth and physically plausible without signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot of red color near the actuator, indicating physical inconsistency, and the hotspot speed (2.90x median) is extremely high, suggesting numerical blow-up. The deformed mesh in the left panel shows violent, erratic deformation in that region, consistent with instability."
+   }
+  },
+  {
+   "sim": 10,
+   "t": 330,
+   "px": 10.517741986988932,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact area appears physically plausible with no node penetration or element inversion."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), and the left panel shows a smooth deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. The hotspot speed is 3.63x median, which is high but not indicative of numerical blow-up, and the mesh remains well-formed."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact area appears physically plausible with no node penetration or element inversion."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "B_full": {
+    "pred": "inversion",
+    "explanation": "The right panel shows a hotspot of red indicating physical inconsistency near the actuator, and the left panel shows a region with inverted element geometry (negative volume) near the actuator contact, consistent with inversion. The hotspot-to-actuator distance (45.1 mm) and hotspot speed (3.39x median) are high, but the primary visual anomaly is the inverted element patch."
+   }
+  },
+  {
+   "sim": 11,
+   "t": 330,
+   "px": 14.779629655649135,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The deformation pattern is physically plausible for a plate being pushed by an actuator."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate's deformation is physically consistent, with only pale yellow coloring indicating low residual disagreement. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's mesh."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible and numerically stable."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the frame is physically consistent, with pale yellow indicating agreement between observed motion and the learned surrogate. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot near the actuator with red coloring, indicating physical inconsistency, and the hotspot-to-actuator distance (146.8 mm) and hotspot speed (2.18x median) are high, suggesting numerical blow-up. The left panel shows a region of intense deformation near the actuator, consistent with instability."
+   }
+  },
+  {
+   "sim": 12,
+   "t": 330,
+   "px": 19.52634012181861,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored in pale yellow, indicating high physical consistency. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied load and boundary conditions."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the simulation is physically consistent, with only pale yellow regions indicating agreement between observed motion and the learned surrogate. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot of red color near the actuator, indicating physical inconsistency. The hotspot-to-actuator distance (232.3 mm) and hotspot speed (2.09x median) are high, suggesting numerical blow-up. The red region in the right panel corresponds to the top-right area of the left panel, where nodes are moving violently and erratically, far faster than the rest of the plate."
+   }
+  },
+  {
+   "sim": 13,
+   "t": 330,
+   "px": 18.814484432046783,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot in the middle-right region colored red, indicating physical inconsistency. The diagnostics confirm a hotspot speed 3.46x the median plate node speed, which is a hallmark of numerical instability or blow-up, not just deformation."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot at the bottom-right shows nodes moving at 3.69x the median speed, indicating numerical blow-up. The pale yellow to red gradient in the right panel confirms this region is physically inconsistent with the learned surrogate, matching instability."
+   }
+  },
+  {
+   "sim": 14,
+   "t": 330,
+   "px": 25.31885456031672,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is consistently colored pale yellow, indicating no physical inconsistency. The deformation in the left panel appears physically plausible for a hyperelastic plate being pushed by an actuator, with no signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. The color map on the right indicates physical consistency (pale yellow), and the diagnostics report zero inverted elements and no nodes above the residual threshold."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. Element shapes remain intact and deformation is physically consistent with expected bending behavior."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot at 18.5 mm from the actuator is moving at 5.21x the median plate node speed, indicating violent motion. The red region in the right panel confirms physical inconsistency at this location, consistent with numerical blow-up or instability."
+   }
+  },
+  {
+   "sim": 15,
+   "t": 330,
+   "px": 26.353274007837204,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "A_full": {
+    "pred": "instability",
+    "explanation": "The hotspot speed (21.64x median) indicates a localized numerical blow-up, and the right panel's coloration shows a large region of high disagreement (red/pale yellow) near the actuator, consistent with instability rather than penetration or inversion."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate colored pale yellow, indicating physical consistency across the domain. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot speed (31.60x median) indicates violent motion, and the red region near the actuator in the right panel shows physical inconsistency, consistent with numerical blow-up or instability."
+   }
+  },
+  {
+   "sim": 16,
+   "t": 330,
+   "px": 5.626141624307283,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The deformation pattern is physically plausible for a clamped plate under actuation."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), with no red regions indicating inconsistency. The mesh deformation on the left is smooth and continuous, with no signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with bending under a point load from the actuator. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The element connectivity remains intact and physically plausible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating high physical consistency. The deformation in the left panel is smooth and continuous, with no signs of hourglass, penetration, inversion, instability, or freezing. The mesh deforms naturally under the actuator without any visual anomalies."
+   },
+   "B_full": {
+    "pred": "inversion",
+    "explanation": "The right panel shows a hotspot of red color near the center, indicating physical inconsistency. The left panel shows a region with inverted element geometry (nodes crossing over) in the middle-center, matching the red zone. This is characteristic of a single element turning inside out, which is the definition of inversion."
+   }
+  },
+  {
+   "sim": 17,
+   "t": 330,
+   "px": 11.869641544299872,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. The left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed region colored pale yellow, indicating physical consistency. There are no red zones (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's mesh."
+   },
+   "B_full": {
+    "pred": "inversion",
+    "explanation": "The right panel shows a bright red hotspot in the middle-center, indicating physical inconsistency. The left panel shows a localized region with inverted element geometry near the actuator, matching the inversion anomaly definition."
+   }
+  },
+  {
+   "sim": 18,
+   "t": 330,
+   "px": 25.30724962559757,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible for a clamped plate under actuation."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating high physical consistency. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate deforming consistently with the actuator, indicated by the pale yellow coloration, with no red regions indicating physical inconsistency. The mesh deformation appears physically plausible without signs of inversion, penetration, or instability."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible for a clamped plate under actuation."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel. The deformation appears smooth and physically plausible."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot at the actuator contact shows a speed 1.84x the median plate node speed, indicating violent motion. The surrounding region is deforming erratically, consistent with numerical blow-up, and the yellow-to-orange gradient in the right panel highlights the physically inconsistent zone near the actuator."
+   }
+  },
+  {
+   "sim": 19,
+   "t": 330,
+   "px": 19.504679649743245,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible for a clamped plate under actuation."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate deforming consistently with the actuator, colored pale yellow to indicate physical consistency. The left panel shows the deformed mesh without any visual signs of hourglass, penetration, inversion, instability, or freezing. All elements appear to be oriented correctly and the deformation is smooth and continuous."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible for a clamped plate under actuation."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot near the actuator shows a speed 3.54x the median plate node speed, indicating violent motion. The red coloration in the right panel confirms physical inconsistency in this region, consistent with numerical blow-up or instability."
+   }
+  },
+  {
+   "sim": 20,
+   "t": 330,
+   "px": 7.162128391651116,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with bending under a clamped boundary condition. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible for a hyperelastic plate under actuation."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), and the left panel shows a smooth deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. The hotspot speed is 2.30x median, which is high but within expected range for actuation, and no nodes are above the 5x median residual threshold."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with a hyperelastic plate bending under a clamped edge and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate with a smooth gradient from pale yellow to orange, indicating high physical consistency. There are no red regions (inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel. The deformation appears physically plausible and continuous."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot at the actuator contact shows a speed 2.68x the median plate node speed, indicating violent motion. The right panel's color gradient (yellow to orange) around this region confirms high disagreement with the physics surrogate, suggesting numerical blow-up rather than physical inconsistency."
+   }
+  },
+  {
+   "sim": 21,
+   "t": 330,
+   "px": 9.981595785081742,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. Element shapes remain intact and deformation is physically consistent with applied load."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored consistently pale yellow, indicating no physical inconsistency. The deformation appears smooth and physically plausible, with no signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate's deformation is physically consistent, with pale yellow indicating low disagreement. The mesh in the left panel deforms smoothly without any signs of hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. Element shapes remain intact and deformation is physically consistent with expected behavior."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored consistently in pale yellow, indicating no physical inconsistency. The deformation appears smooth and physically plausible without signs of inversion, penetration, or instability."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot near the actuator shows a speed 2.39x the median plate node speed, indicating violent motion. The red coloration in the right panel confirms physical inconsistency at this location, consistent with numerical blow-up or instability."
+   }
+  },
+  {
+   "sim": 22,
+   "t": 330,
+   "px": 19.779282075794857,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible across the entire domain."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating global physical consistency. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), with no red regions indicating inconsistency. The mesh deformation on the left is smooth and continuous, with no signs of hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented correctly throughout the deformed plate."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is pale yellow, indicating high physical consistency. There are no red regions (inconsistencies), no checkerboard patterns, no penetration, no inversion, and no signs of instability or freezing. The deformation appears physically plausible for a hyperelastic plate under actuation."
+   },
+   "B_full": {
+    "pred": "inversion",
+    "explanation": "The RIGHT panel shows a bright orange hotspot at the bottom-center, indicating high disagreement (inconsistency) with the physics surrogate. This corresponds to the LEFT panel's bottom-center region, where the mesh appears to have inverted elements (nodes crossing over), a classic sign of inversion. The visual evidence of element flipping and the high residual value confirm this."
+   }
+  },
+  {
+   "sim": 23,
+   "t": 330,
+   "px": 7.231011708850717,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented, indicating physically consistent behavior."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating high physical consistency. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), and the left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. All elements appear properly oriented and the motion is coherent with the actuator's push."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible for a clamped plate under actuation."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is consistently coloured pale yellow, indicating no physical inconsistency. The deformation in the left panel appears smooth and physically plausible for a hyperelastic plate under actuation, with no signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot speed (4.07x median) indicates a localized numerical blow-up, and the yellow-to-red gradient in the right panel shows high disagreement near the actuator, consistent with instability rather than penetration or inversion."
+   }
+  },
+  {
+   "sim": 24,
+   "t": 330,
+   "px": 7.225638312265095,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic behavior under clamping and actuator push, with no signs of hourglass, penetration, inversion, instability, or frozen regions. Element shapes remain intact and deformation is continuous."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate with pale yellow coloring, indicating high physical consistency. There are no red regions (inconsistencies) visible, and the mesh deformation appears physically plausible without signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "A_full": {
+    "pred": "instability",
+    "explanation": "The hotspot speed (8.16x median) indicates a localized numerical blow-up, and the pale yellow to red gradient in the right panel shows high disagreement near the actuator, consistent with instability rather than penetration or inversion."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied load."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or freezing. The deformation appears smooth and physically plausible."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot near the actuator shows a speed 7.90x the median plate node speed, indicating violent motion. The red region in the right panel confirms physical inconsistency at this location, consistent with numerical blow-up or instability."
+   }
+  },
+  {
+   "sim": 25,
+   "t": 330,
+   "px": 20.132058899153268,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented, indicating physically consistent behavior."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (inconsistencies) or visual signs of the other anomaly types like hourglass patterns, penetration, inversion, instability, or frozen regions."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate's deformation is physically consistent, with pale yellow coloring indicating low residual error. The left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented, indicating physically consistent behavior."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as physically consistent (pale yellow), with no red regions indicating inconsistency. The deformation in the left panel appears smooth and physically plausible for a clamped hyperelastic plate under actuation, without signs of the specific anomalies listed."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot-to-actuator distance is 45.0 mm and hotspot speed is 2.42x the median plate node speed, indicating a localized region of extreme motion. The red coloration in the right panel, concentrated near the actuator contact, confirms physical inconsistency, and the visual deformation in the left panel shows a small region with erratic motion far exceeding the plate's overall deformation, consistent with numerical blow-up."
+   }
+  },
+  {
+   "sim": 26,
+   "t": 330,
+   "px": 21.878947719478177,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The deformation is physically consistent with expected behavior for a clamped plate being pushed from below."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "A_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot of red/pale yellow near the actuator contact, indicating physical inconsistency. The hotspot speed (7.25x median) is extremely high, suggesting numerical blow-up. The deformed mesh in the left panel shows violent, erratic motion in that region, consistent with instability."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth bending of the plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The element connectivity remains intact and physically plausible for a hyperelastic material under load."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot of red/pale yellow indicating physical inconsistency, and the diagnostics mention a hotspot speed 7.19x the median plate node speed, which visually aligns with the high-speed deformation in the middle-right region of the left panel, suggesting numerical blow-up."
+   }
+  },
+  {
+   "sim": 27,
+   "t": 330,
+   "px": 13.721664171513039,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored consistently in pale yellow, indicating no regions of physical inconsistency. The deformation in the left panel appears smooth and physically plausible for a hyperelastic plate under actuator load, with no signs of the specific anomalies listed."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate deforming consistently with the actuator, colored in pale yellow to orange indicating physical consistency. The left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. All diagnostics (0 inverted elements, 0 nodes above 5x median residual, hotspot speed 2.01x median) are within expected bounds for a physically consistent simulation."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically plausible and numerically stable."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating global physical consistency. There are no red regions (inconsistencies) or visual signs of the other anomaly types like penetration, inversion, or instability."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The red hotspot in the right panel indicates physical inconsistency centered at the actuator contact, and the hotspot speed (1.58x median) suggests numerical blow-up. The left panel shows a localized region of high deformation near the actuator, consistent with instability rather than penetration or inversion."
+   }
+  },
+  {
+   "sim": 28,
+   "t": 330,
+   "px": 16.799231544094745,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic plate behavior under clamped and actuated loading, with no signs of hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is pale yellow, indicating high physical consistency. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "instability",
+    "explanation": "The hotspot speed (4.72x median) indicates localized numerical blow-up, and the pale yellow to red gradient in the right panel shows high disagreement near the actuator, suggesting the simulation is diverging physically in that region."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic plate behavior under clamped and actuated loading, with no signs of hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is consistently coloured pale yellow, indicating no physical inconsistency. The deformation in the left panel appears smooth and physically plausible for a hyperelastic plate under clamped and actuated loading, with no signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot at the actuator contact (middle-right) shows extreme deformation and is moving at 6.66x the median plate node speed, indicating numerical blow-up. The pale yellow to red gradient in the right panel confirms this region is physically inconsistent with the learned surrogate, matching the instability signature."
+   }
+  },
+  {
+   "sim": 29,
+   "t": 330,
+   "px": 16.430050429996427,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with a hyperelastic plate bending under a blue actuator. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible; the deformation appears physically consistent with expected behavior."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "A_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a bright yellow-orange region near the actuator, indicating high disagreement between observed motion and the physics surrogate. This suggests numerical instability, as the hotspot speed (11.91x median) is extremely high and localized, matching the visual evidence of a few nodes moving violently far faster than the rest of the plate."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with a hyperelastic plate bending under a point load from a blue actuator. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible; the deformation appears physically consistent with expected behavior."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot speed (11.80x median) and the yellow-to-red gradient in the right panel indicate a region of extreme motion. The bottom-center of the left panel shows the most intense deformation, matching the hotspot location, suggesting numerical blow-up rather than physical inconsistency."
+   }
+  },
+  {
+   "sim": 30,
+   "t": 330,
+   "px": 20.95862324475565,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate deformation under actuator pressure. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible; the mesh quality and deformation are physically plausible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of the other anomaly types like hourglass patterns, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate's deformation is physically consistent, with pale yellow coloring indicating low disagreement with the learned surrogate. The left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator appears to be in proper contact without violation."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of the other anomalies like penetration, inversion, or instability. The deformation appears physically plausible for a hyperelastic plate under actuation."
+   },
+   "B_full": {
+    "pred": "inversion",
+    "explanation": "The RIGHT panel shows a hotspot of red near the actuator, indicating physical inconsistency. The LEFT panel shows a region with inverted elements (negative Jacobian) around the actuator contact, consistent with inversion. The hotspot-to-actuator distance (39.1 mm) and hotspot speed (1.48x median) are high, but the primary visual evidence is the inverted elements near the actuator, which is the defining feature of an inversion anomaly."
+   }
+  },
+  {
+   "sim": 31,
+   "t": 330,
+   "px": 3.632565245947726,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as physically consistent (pale yellow), with no red regions indicating inconsistency. The deformed mesh on the left matches the expected bending behavior under actuation without signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), and the left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. The mesh deformation appears physically plausible and matches the actuator's push."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is consistently colored pale yellow, indicating no physical inconsistency. The deformation in the left panel appears smooth and physically plausible for a hyperelastic plate under actuation, with no signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_full": {
+    "pred": "inversion",
+    "explanation": "The RIGHT panel shows a hotspot of red near the middle-center, indicating physical inconsistency. The LEFT panel shows a region with inverted element geometry (negative volume) in that area, consistent with inversion. The red color and inverted elements point to a single element turned inside out, which is the definition of inversion."
+   }
+  },
+  {
+   "sim": 32,
+   "t": 330,
+   "px": 12.062369214560972,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The deformation pattern is physically plausible for a clamped plate under actuation."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no red regions (inconsistencies), no checkerboard patterns, no inverted elements, and no nodes moving violently or frozen. The diagnostics also confirm no anomalies: 0 nodes above 5x median residual, 0 inverted elements, and hotspot speed is only 1.42x median, which is not indicative of instability."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact appears physically plausible without violation."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed region colored pale yellow, indicating physical consistency. There are no red zones (inconsistencies) visible, and the deformation pattern on the left panel is smooth and continuous without any signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a bright orange hotspot near the actuator, indicating high residual error, and the left panel shows a localized region of rapid deformation near the actuator contact. This matches the diagnostic hotspot speed of 1.58x median, suggesting numerical blow-up or instability in that region."
+   }
+  },
+  {
+   "sim": 33,
+   "t": 330,
+   "px": 36.69942459525471,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the blue actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. The element connectivity remains intact and physically plausible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no red regions (inconsistencies), no checkerboard patterns, no penetration, no inversion, and no nodes moving violently or frozen. The diagnostics also confirm no anomalies: 0 inverted elements, 0 nodes above median residual, and hotspot speed is consistent with plate motion."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic plate behavior under actuator load, with no signs of hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the surrogate disagreement map, where the red and yellow regions are minimal and localized near the actuator. The plate deformation appears physically consistent with the applied load, and no signs of hourglass, penetration, inversion, instability, or freezing are visible in the left panel's mesh deformation."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot at the top-right shows extreme deformation with a speed 7.68x the median plate node speed, indicating numerical blow-up. The red coloration in the right panel confirms physical inconsistency in this region, consistent with instability."
+   }
+  },
+  {
+   "sim": 34,
+   "t": 330,
+   "px": 5.4815429589751625,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The element connectivity remains intact and physically plausible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no red regions (inconsistencies), no inverted elements, and no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and deformation is physically consistent with expected behavior."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel. The deformation appears physically plausible for a hyperelastic plate under actuator load."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot at the bottom-right shows a node moving at 3.08x the median plate speed, indicating violent motion. The red coloration in the right panel confirms physical inconsistency in this region, consistent with numerical blow-up or instability."
+   }
+  },
+  {
+   "sim": 35,
+   "t": 330,
+   "px": 16.91092996196556,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The deformation pattern is physically plausible for a plate being pushed by an actuator."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), and the left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. All elements appear properly oriented and the motion is coherent with the actuator's push."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with bending under a clamped boundary condition. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The deformation pattern is physically plausible for a hyperelastic plate under actuation."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the simulation is physically consistent, with only pale yellow coloring indicating agreement between observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of the other anomaly types like hourglass, penetration, or inversion."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot of red color near the actuator, indicating physical inconsistency. The left panel shows a region with severe deformation near the actuator, and the diagnostics mention a hotspot speed 2.16x the median, suggesting numerical blow-up or instability localized to the bottom-right region."
+   }
+  },
+  {
+   "sim": 36,
+   "t": 330,
+   "px": 4.651851833680919,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied boundary conditions."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating physical consistency. The left panel shows a smooth deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. The hotspot speed (6.51x median) is high but not indicative of numerical blow-up, and the mesh remains well-formed."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel. The deformation appears smooth and physically plausible."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot-to-actuator distance (40.8 mm) and hotspot speed (6.84x median) indicate extreme localized motion. The right panel's yellow-to-red gradient near the actuator suggests high residual error, and the visual deformation in the left panel shows violent, erratic motion far exceeding the plate's overall deformation, consistent with numerical blow-up."
+   }
+  },
+  {
+   "sim": 37,
+   "t": 330,
+   "px": 18.13844385861127,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible across the entire domain."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating high physical consistency. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate's deformation is physically consistent, with pale yellow coloring indicating low residual error. The left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The deformation pattern follows the expected behavior of a clamped plate being pushed from below."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate colored in pale yellow, indicating high physical consistency. There are no red regions (which would indicate inconsistency) and no visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot in the right panel, located at the bottom-right of the left panel, shows a red region indicating physical inconsistency, and the diagnostics confirm it is moving at 3.77x the median plate node speed, which is a clear sign of numerical blow-up or instability."
+   }
+  },
+  {
+   "sim": 38,
+   "t": 330,
+   "px": 132.17822460260894,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with bending under a point load from the actuator. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The element connectivity and node motion appear physically consistent with hyperelastic plate bending."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency. The left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. All diagnostics (0 inverted elements, 0 nodes above median residual, hotspot speed 2.03x median) are within expected bounds for a physically consistent simulation."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the simulation is physically consistent, with only pale yellow regions indicating agreement between observed motion and the learned surrogate. There are no red zones (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot of red color at the bottom-right, indicating physical inconsistency. The hotspot-to-actuator distance (198.0 mm) and hotspot speed (1.98x median) are both high, suggesting a localized numerical blow-up. The red region in the left panel corresponds to the bottom-right corner, where nodes are moving violently and erratically, inconsistent with the rest of the plate's deformation."
+   }
+  },
+  {
+   "sim": 39,
+   "t": 330,
+   "px": 6.938371436354067,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is consistently coloured pale yellow, indicating no physical inconsistency. The deformation in the left panel appears physically plausible for a clamped plate being pushed by an actuator, with no signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), and the left panel shows a smooth deformation without any visual signs of hourglass, penetration, inversion, instability, or freezing. The hotspot speed (1.83x median) is high but within expected range for actuation, and no nodes are inverted or penetrating."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied boundary conditions."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate is colored pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot-to-actuator distance is 9.6 mm and hotspot speed is 2.45x the median plate node speed, indicating localized high-speed motion. The right panel shows a red hotspot near the actuator, confirming physical inconsistency due to numerical blow-up, which is characteristic of instability."
+   }
+  },
+  {
+   "sim": 40,
+   "t": 330,
+   "px": 3.101143477983827,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped and actuated loading. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "A_full": {
+    "pred": "instability",
+    "explanation": "The hotspot speed (10.21x median) indicates a localized numerical blow-up, and the right panel's yellow-to-red gradient near the actuator suggests the learned surrogate detects physical inconsistency there, matching instability."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped and actuated loading. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency across the domain. There are no red regions (inconsistencies) visible, and the deformation appears smooth and physically plausible without signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot at the top-right shows a node moving at 26.91x the median plate speed, indicating numerical blow-up. The red coloration in the right panel confirms physical inconsistency in this region, matching the instability signature."
+   }
+  },
+  {
+   "sim": 41,
+   "t": 330,
+   "px": 2.7153986876912493,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped and actuated loading. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible; the deformation appears physically consistent with the applied boundary conditions."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire deformed plate colored pale yellow, indicating high physical consistency between the observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied load."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot near the actuator shows a speed 3.49x the median plate node speed, indicating violent motion. The red-colored region in the right panel confirms physical inconsistency at this location, suggesting numerical blow-up rather than a contact or inversion issue."
+   }
+  },
+  {
+   "sim": 42,
+   "t": 330,
+   "px": 39.53349447626368,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact appears well-defined without violation."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (inconsistency) or visual signs of the other anomalies like hourglass, penetration, or inversion."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), and the left panel shows a smooth deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. All elements appear properly oriented and the motion is coherent with the actuator's push."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact area appears physically plausible without violation."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as physically consistent (pale yellow), with no red regions indicating inconsistency. The deformation in the left panel appears smooth and physically plausible for a clamped, bent plate under actuation, without signs of the specific anomalies listed."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The bottom-right region shows a small cluster of nodes moving violently and erratically, far faster than the rest of the plate, indicated by the red hotspot in the right panel and the high hotspot speed (5.97x median) \u2014 a clear sign of numerical blow-up."
+   }
+  },
+  {
+   "sim": 43,
+   "t": 330,
+   "px": 12.669532559642224,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact appears physically plausible without violation."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate is physically consistent (pale yellow), and the left panel shows a smooth deformation without any signs of hourglass, penetration, inversion, instability, or frozen regions. All elements appear properly oriented and the motion is coherent with the actuator's push."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact appears physically plausible without violation."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The entire plate deforms smoothly under the blue actuator without any signs of hourglass, penetration, inversion, instability, or freezing. The right panel's color gradient (yellow to red) indicates physical consistency, with only minor red regions near the actuator contact, which is expected due to contact modeling and does not constitute an anomaly."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a red hotspot near the actuator, indicating physical inconsistency. The hotspot-to-actuator distance (134.5 mm) and hotspot speed (1.96x median) are high, suggesting numerical blow-up. The visual deformation in the left panel near the actuator shows erratic motion consistent with instability."
+   }
+  },
+  {
+   "sim": 44,
+   "t": 330,
+   "px": 42.156426050929525,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The blue actuator appears to be in contact without violation, and the mesh deformation is physically plausible."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (indicating inconsistency) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate's deformation is physically consistent, with pale yellow coloring indicating low residual error. The left panel shows a smooth, continuous deformation without any signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator appears to be in proper contact without violation."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate as pale yellow, indicating physical consistency across the domain. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The right panel shows a hotspot of high residual error (pale yellow to red), indicating physical inconsistency. The hotspot-to-actuator distance (50.9 mm) and hotspot speed (1.94x median) are both high, suggesting a localized numerical blow-up. The visual deformation in the left panel around the actuator region shows erratic motion inconsistent with the rest of the plate, matching the instability anomaly."
+   }
+  },
+  {
+   "sim": 45,
+   "t": 330,
+   "px": 28.129081072805565,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. Element connectivity remains intact and deformation appears physically consistent with expected behavior."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "instability",
+    "explanation": "The hotspot speed (8.09x median) indicates a localized numerical blow-up, and the pale yellow coloring in the right panel suggests the surrogate model detects inconsistency in that region, matching the instability signature."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating high physical consistency between observed motion and the learned surrogate. There are no red regions (inconsistencies) or visual signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot at the actuator contact shows a speed 8.58x the median plate node speed, indicating violent motion. The right panel's coloration shows a large region of red/pale yellow near the actuator, suggesting physical inconsistency due to this localized instability."
+   }
+  },
+  {
+   "sim": 46,
+   "t": 330,
+   "px": 40.426303836042514,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented correctly throughout the deformed plate."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformation."
+   },
+   "A_full": {
+    "pred": "none",
+    "explanation": "The right panel shows the plate deforming consistently with the learned physics surrogate (pale yellow to light yellow), with no red regions indicating physical inconsistency. The mesh deformation on the left is smooth and continuous without any signs of hourglass, penetration, inversion, instability, or freezing."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions; all elements maintain their connectivity and orientation without violation of physical or numerical constraints."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The right panel shows the entire plate colored pale yellow, indicating physical consistency across the domain. There are no signs of hourglass, penetration, inversion, instability, or frozen regions in the left panel's deformed mesh."
+   },
+   "B_full": {
+    "pred": "inversion",
+    "explanation": "The right panel shows a red hotspot near the bottom-right of the plate, indicating physical inconsistency. The left panel shows a localized region with inverted elements (negative Jacobian) in that same area, consistent with inversion. The red color and the visual distortion match the definition of inversion, where a single element turns inside out."
+   }
+  },
+  {
+   "sim": 47,
+   "t": 330,
+   "px": 3.8527689188920924,
+   "A_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with bending under a point load from the blue actuator. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The element connectivity and node motion appear physically consistent with hyperelastic plate bending."
+   },
+   "A_heatmap": {
+    "pred": "none",
+    "explanation": "The entire plate deforms smoothly under the actuator without any signs of hourglass, penetration, inversion, instability, or freezing. The right panel shows only pale yellow, indicating physical consistency across the entire domain."
+   },
+   "A_full": {
+    "pred": "instability",
+    "explanation": "The bottom-right region of the deformed mesh shows nodes moving violently and erratically, far faster than the rest of the plate, which is indicative of numerical blow-up. This is further supported by the hotspot speed being 31.30x the median plate node speed, a clear sign of instability."
+   },
+   "B_render": {
+    "pred": "none",
+    "explanation": "The mesh shows smooth deformation consistent with bending under a point load from the blue actuator. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The deformation pattern is physically plausible for a hyperelastic plate under clamped boundary conditions."
+   },
+   "B_heatmap": {
+    "pred": "none",
+    "explanation": "The entire plate deforms smoothly under the actuator without any signs of hourglass, penetration, inversion, instability, or freezing. The right panel shows only pale yellow, indicating physical consistency across the entire domain."
+   },
+   "B_full": {
+    "pred": "instability",
+    "explanation": "The hotspot in the bottom-right of the right panel shows a node moving at 28.49x the median plate speed, indicating numerical blow-up. The corresponding region in the left panel shows violent deformation inconsistent with the rest of the plate."
+   }
+  }
+ ]
+}

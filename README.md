@@ -74,7 +74,87 @@ Everything below is fixed on validation simulations before test simulations 8–
 
 ## Results
 
-RESULTS_PLACEHOLDER
+All numbers are on **92 held-out test simulations (8–99), scored once** with the frozen protocol (commit
+`3ff1e07`, checkpoint `b917f77f`, 258.6k steps). 95% CIs are bootstrapped over simulations. Full tables are in
+[results/test/metrics.md](results/test/metrics.md) and [results/test/gate_c.md](results/test/gate_c.md).
+
+### TL;DR
+1. **Learned physics helps where the error is kinematic, not geometric.** A frozen region looks geometrically
+   plausible but is inconsistent with how its neighbours move. The GNN catches it (sustained-frame AUROC 0.99),
+   while the geometric rules can't (Laplacian 0.63, inverted elements 0.51).
+2. **Everywhere else, simple rules match or beat the GNN.** Constant-velocity extrapolation is near-perfect at the
+   onset of every anomaly. Spatial checks (Laplacian smoothness, inverted elements) beat the GNN on persistent
+   hourglass, penetration and inversion.
+3. **The pre-registered Gate C gives a split result.**
+   - The non-causal GNN shows **no demonstrated benefit** over the best non-causal baseline: −0.058, 95% CI [−0.073, −0.042].
+   - The causal GNN, used as an online monitor, **beats the best causal baseline**: +0.023 [+0.006, +0.040]. That win
+     comes entirely from frozen regions (+0.22 to +0.38 AUROC, Holm-significant), largely because the
+     whole-trajectory velocity z-score, which detects frozen regions well offline, isn't available online.
+4. **CLIP is blind to these failures,** even when they are visible. It stays at 0.51–0.53 for penetration and
+   inversion at a 16–20 px visible shift.
+5. **The VLM doesn't explain better than the numbers it's given.** Qwen3-VL-8B scores 12% type accuracy from images
+   (below the 18% majority baseline) and 26% with diagnostics. A depth-4 decision tree on the same diagnostics scores 55%.
+
+### Detection: onset vs. sustained frames
+Frame AUROC, averaged over the three severities:
+
+| anomaly | phase | GNN | const-velocity | Laplacian | velocity z | inverted-tet | CLIP kNN |
+|---|---|---|---|---|---|---|---|
+| hourglass | onset | 1.00 | 1.00 | 0.85 | 0.97 | 0.72 | 0.57 |
+| hourglass | sustained | 0.79 | 0.62 | **0.85** | 0.50 | 0.72 | 0.57 |
+| penetration | onset | 0.99 | 1.00 | 0.79 | 0.93 | 0.56 | 0.52 |
+| penetration | sustained | 0.70 | 0.66 | **0.79** | 0.55 | 0.55 | 0.51 |
+| inversion | onset | 1.00 | 1.00 | 0.94 | 0.99 | 0.84 | 0.52 |
+| inversion | sustained | 0.73 | 0.63 | **0.94** | 0.52 | 0.84 | 0.51 |
+| instability | onset | 0.81 | **0.99** | 0.61 | 0.77 | 0.51 | 0.50 |
+| instability | sustained | 0.90 | **1.00** | 0.74 | 0.92 | 0.60 | 0.52 |
+| frozen | onset | 0.94 | **1.00** | 0.48 | 0.86 | 0.50 | 0.50 |
+| frozen | sustained | **0.99** | 0.49 | 0.63 | 0.85 | 0.51 | 0.50 |
+
+Constant velocity (the GNN with zero learned output) collapses on sustained frames, as hypothesized, and the GNN
+recovers part of that gap everywhere. But only for frozen regions does it beat every alternative.
+
+![Frame AUROC vs severity](results/test/auroc_vs_severity.png)
+
+### Surrogate quality (Gate B)
+On fixed validation frames, the one-step RMSE is 4.85e-5 against 7.0e-6 for constant velocity. The noise-trained
+surrogate is **6.9× worse than "do nothing" on clean data.** It is a denoiser that detects states which don't relax
+back to equilibrium, not a better simulator. That is also why it trails constant velocity at anomaly onset and on
+small instabilities.
+
+### Lead time (causal detectors; thresholds at 95% specificity set on validation)
+The blow-up ramps 1.3× per frame from each simulation's clean-acceleration floor to a 100× cap, over about 45 frames.
+
+| detector | blow-up: median warning before cap (frames) | detected | frozen: latency (frames) | detected | false-alarm rate |
+|---|---|---|---|---|---|
+| const-velocity (causal) | **39** [37–41] | 100% | 0 | 100% | 6.2% / 3.1% |
+| GNN (causal) | 18 [18–19] | 100% | 0 | 93% | 1.1% / 2.3% |
+| Laplacian (causal) | 7 [6–8] | 100% | 10.5 | 30% | 5.1% / 8.7% |
+| inverted-tet | 6 [5–7] | 96% | 23 | 14% | 0% |
+
+For early warning of a growing instability, the second-difference rule is the best tool. The GNN's higher noise
+floor costs it about 20 frames of warning.
+
+### VLM explanations (200 test frames, sampled without regard to detection)
+[results/vlm_metrics.md](results/vlm_metrics.md), [confusion matrices](results/vlm_confusion.png)
+
+| arm | type accuracy | macro-F1 | exact location cell |
+|---|---|---|---|
+| VLM, images only | 12% | 0.04 | 55% |
+| VLM, images + diagnostics | 26% | 0.18 | 41% |
+| decision tree on diagnostics (5-fold CV) | **55%** | **0.55** | **79%** |
+| majority class / majority cell | 18% | 0.05 | 49% |
+
+**Counterfactual pairs** (40 pairs; A = a clean, strongly bent frame, B = the same frame plus a severity-3 hourglass,
+median visible shift 17 px; [results/counterfactual.md](results/counterfactual.md)):
+- From the render alone, the VLM called **every** B frame "none". It never saw the hourglass.
+- With the heatmap, it still called every B frame "none".
+- With diagnostics, it separated 78% of the pairs, but labelled B as "instability" or "inversion", never "hourglass".
+- Its explanations of A and B overlap about as much as explanations of unrelated frames (term Jaccard 0.25 vs 0.24).
+
+The fluent text is not grounded in what it sees. For engineering sign-off, this is an automation-bias risk rather
+than an explanation.
+
 
 ## Design notes (what mattered)
 
@@ -98,17 +178,8 @@ RESULTS_PLACEHOLDER
   constant-velocity extrapolation's own one-step RMSE on clean frames is about 3e-6, so a noise-trained surrogate is
   15–70× *worse* than "do nothing" on clean data. It is a denoiser, not a better simulator.
 
-  Pilot study (frame AUROC, GNN vs constant velocity, 8 test simulations that are excluded from the final
-  evaluation). **This table is confounded and will be regenerated:** the σ=0 row is a 250-simulation, 10k-step run,
-  while the others are 40-simulation, ~9k-step runs, and only the σ=3e-4 row used per-node calibration.
-
-  | training noise σ | clean one-step RMSE | hourglass (100x) | inversion (100x) | frozen (10 frames) |
-  |---|---|---|---|---|
-  | 0 (clean only; 250 sims) | ≈ const-velocity | 0.73 vs 0.78 | 0.65 vs 0.69 | 0.64 vs 0.69 |
-  | 3e-4 (chosen)    | 9.4e-5 (const-vel: 3e-6) | **0.91** vs 0.75 | **0.79** vs 0.71 | **0.80** vs 0.63 |
-  | 1e-3             | 2.2e-4 | 0.85 vs 0.78 | 0.76 vs 0.69 | 0.71 vs 0.69 |
-
-  Choosing σ on test simulations was a mistake, so it was re-checked on validation simulations (Gate A,
+  An early pilot chose σ on test simulations. That was a mistake, and the pilot was confounded: its runs differed in
+  training-set size and calibration. So σ was re-checked on validation simulations (Gate A,
   pre-registered in [docs/gate_a.md](docs/gate_a.md)). At equal budget (40 train simulations, ~9k steps), σ=3e-4
   beats σ=1e-3 on mean GNN frame AUROC over hourglass, inversion and frozen: 0.83 vs 0.72, paired difference −0.105,
   95% CI [−0.129, −0.077], 30 validation simulations. So σ=3e-4 stays.

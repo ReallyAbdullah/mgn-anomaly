@@ -1,0 +1,1 @@
+Gate B: one-step RMSE 4.851e-05 vs constant velocity 7.029e-06 (ratio 6.9x), valid sims 20-49, fixed frames

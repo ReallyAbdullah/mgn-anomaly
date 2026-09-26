@@ -1,0 +1,6 @@
+{
+ "gnn_causal": 1.924785715341568,
+ "constvel_causal": 6.886449432373046,
+ "laplacian_causal": 6.291164922714231,
+ "jacobian": 0.0
+}
