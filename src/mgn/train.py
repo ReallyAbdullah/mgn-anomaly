@@ -82,12 +82,20 @@ def main():
     p.add_argument("--warmup", type=int, default=500, help="steps that only accumulate normalizer stats")
     p.add_argument("--eval-every", type=int, default=5000)
     p.add_argument("--device")
+    p.add_argument("--mode", default="velocity", choices=["velocity", "shape"],
+                   help="velocity: one-step acceleration model (Phase 1); shape: displacement from actuator position")
+    p.add_argument("--seed", type=int, default=0)
     a = p.parse_args()
+    torch.manual_seed(a.seed)  # Phase 1 runs predate this: their weight init was unseeded
+    if a.mode == "shape":
+        from mgn import shape
 
     dev = device(a.device)
     out = RUNS / a.name
     out.mkdir(parents=True, exist_ok=True)
     cfg = dict(hidden=a.hidden, steps=a.steps)
+    if a.mode == "shape":
+        cfg.update(node_in=shape.NODE_IN, mesh_in=shape.MESH_IN, world_in=shape.WORLD_IN)
     model = MeshGraphNet(**cfg).to(dev)
     opt = torch.optim.Adam(model.parameters(), lr=a.lr, fused=dev.type != "cpu")
     # decay lr by 100x over the run (as in MGN: 1e-4 -> 1e-6)
@@ -101,12 +109,13 @@ def main():
 
     train, val = load_split("train", a.n_train), load_split("valid", a.n_val)
     print(f"{len(train)} train / {len(val)} val trajectories on {dev}; {sum(p.numel() for p in model.parameters()):,} params")
-    rng = np.random.default_rng(step)
+    rng = np.random.default_rng((a.seed, step))
     log = open(out / "log.csv", "a")
     t0, last, losses = time.time(), time.time(), []
 
     def save():
-        meta = dict(noise=a.noise, n_train=a.n_train, batch=a.batch, lr=a.lr, iters=a.iters, seed=0)
+        meta = dict(mode=a.mode, noise=a.noise if a.mode == "velocity" else 0.0, n_train=a.n_train, batch=a.batch,
+                    lr=a.lr, iters=a.iters, seed=a.seed, steps=a.steps)
         torch.save(dict(model=model.state_dict(), opt=opt.state_dict(), sched=sched.state_dict(), step=step, cfg=cfg,
                         meta=meta), out / "model.pt.tmp")
         (out / "model.pt.tmp").replace(out / "model.pt")  # atomic: readers never see a half-written checkpoint
@@ -114,7 +123,8 @@ def main():
     while step < a.iters and time.time() - t0 < a.hours * 3600:
         idx = [(rng.integers(len(train)), rng.integers(1, T_MAX)) for _ in range(a.batch)]
         warm = step < a.warmup  # normalizer stats must not see padding, so warmup batches are unpadded
-        g, y, m = sample(train, idx, rng, a.noise, pad=not warm)
+        g, y, m = (shape.sample(train, idx, pad=not warm) if a.mode == "shape"
+                   else sample(train, idx, rng, a.noise, pad=not warm))
         g, y, m = to_torch(g, dev), torch.from_numpy(y).to(dev), torch.from_numpy(m).to(dev)
         pred = model(g, accumulate=warm)
         target = model.norm_y(y[m], accumulate=warm)
@@ -132,14 +142,15 @@ def main():
             print(f"step {step} loss {np.mean(losses):.4f} {dt * 1000:.0f} ms/step lr {sched.get_last_lr()[0]:.2e}", flush=True)
             losses = []
         if step % a.eval_every == 0:
-            rmse, base = evaluate(model, val, dev)
-            print(f"  val one-step RMSE {rmse:.2e} (const-velocity baseline {base:.2e})", flush=True)
+            rmse, base = (shape.evaluate if a.mode == "shape" else evaluate)(model, val, dev)
+            print(f"  val {a.mode} RMSE {rmse:.2e} ({'zero-displacement' if a.mode == 'shape' else 'const-velocity'} "
+                  f"baseline {base:.2e})", flush=True)
             log.write(f"{step},{time.time() - t0:.0f},{rmse:.6e},{base:.6e}\n")
             log.flush()
             save()
     save()
-    rmse, base = evaluate(model, val, dev)
-    print(f"final val one-step RMSE {rmse:.2e} (const-velocity baseline {base:.2e})")
+    rmse, base = (shape.evaluate if a.mode == "shape" else evaluate)(model, val, dev)
+    print(f"final val {a.mode} RMSE {rmse:.2e} (baseline {base:.2e})")
 
 
 if __name__ == "__main__":
