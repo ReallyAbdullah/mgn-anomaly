@@ -10,3 +10,4 @@ results/records.pkl
 results/render_*.png
 .DS_Store
 results/counterfactual/
+results/after_training.log

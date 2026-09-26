@@ -79,8 +79,9 @@ All numbers are on **92 held-out test simulations (8–99), scored once** with t
 [results/test/metrics.md](results/test/metrics.md) and [results/test/gate_c.md](results/test/gate_c.md).
 
 ### TL;DR
-1. **Learned physics helps where the error is kinematic, not geometric.** A frozen region looks geometrically
-   plausible but is inconsistent with how its neighbours move. The GNN catches it (sustained-frame AUROC 0.99),
+1. **Learned physics helps where the error is kinematic, not geometric** (our post-hoc reading; the evidence is the
+   Holm-significant frozen cells). A frozen region looks geometrically plausible but is inconsistent with how its
+   neighbours move. The GNN catches it (sustained-frame AUROC 0.99),
    while the geometric rules can't (Laplacian 0.63, inverted elements 0.51).
 2. **Everywhere else, simple rules match or beat the GNN.** Constant-velocity extrapolation is near-perfect at the
    onset of every anomaly. Spatial checks (Laplacian smoothness, inverted elements) beat the GNN on persistent
@@ -88,12 +89,16 @@ All numbers are on **92 held-out test simulations (8–99), scored once** with t
 3. **The pre-registered Gate C gives a split result.**
    - The non-causal GNN shows **no demonstrated benefit** over the best non-causal baseline: −0.058, 95% CI [−0.073, −0.042].
    - The causal GNN, used as an online monitor, **beats the best causal baseline**: +0.023 [+0.006, +0.040]. That win
-     comes entirely from frozen regions (+0.22 to +0.38 AUROC, Holm-significant), largely because the
-     whole-trajectory velocity z-score, which detects frozen regions well offline, isn't available online.
-4. **CLIP is blind to these failures,** even when they are visible. It stays at 0.51–0.53 for penetration and
-   inversion at a 16–20 px visible shift.
-5. **The VLM doesn't explain better than the numbers it's given.** Qwen3-VL-8B scores 12% type accuracy from images
-   (below the 18% majority baseline) and 26% with diagnostics. A depth-4 decision tree on the same diagnostics scores 55%.
+     comes entirely from frozen regions (+0.22 to +0.38 AUROC, Holm-significant). Part of that margin is because the
+     pre-registered causal pool has no past-only velocity z-score, which would be easy to build. The frozen advantage
+     doesn't depend on it, though: the non-causal GNN also beats the non-causal velocity z-score on frozen by +0.09
+     to +0.15 (Holm-significant).
+4. **CLIP is near chance even on visible failures.** It stays at 0.51–0.53 for penetration and inversion at a 16–20 px
+   shift in the 448 px render, which is about half a 16 px patch at CLIP's 224 px input. Its reference bank also comes
+   from other simulations' geometries.
+5. **The VLM doesn't explain better than the numbers it's given.** From images alone, Qwen3-VL-8B called 199 of 200
+   frames "none": 0% type accuracy on anomalies at *every* severity, including severity 3. With diagnostics it
+   reaches 26%. A depth-4 decision tree, cross-validated on the same diagnostics, reaches 55%.
 
 ### Detection: onset vs. sustained frames
 Frame AUROC, averaged over the three severities:
@@ -111,8 +116,10 @@ Frame AUROC, averaged over the three severities:
 | frozen | onset | 0.94 | **1.00** | 0.48 | 0.86 | 0.50 | 0.50 |
 | frozen | sustained | **0.99** | 0.49 | 0.63 | 0.85 | 0.51 | 0.50 |
 
-Constant velocity (the GNN with zero learned output) collapses on sustained frames, as hypothesized, and the GNN
-recovers part of that gap everywhere. But only for frozen regions does it beat every alternative.
+Regenerate with `scripts/phase_table.py`. Constant velocity (the GNN with zero learned output) collapses on sustained
+frames of the persistent anomalies, as hypothesized, and the GNN recovers part of that gap. Instability is the
+exception: constant velocity never collapses there and beats the GNN in both phases. Only for frozen regions does
+the GNN beat every alternative.
 
 ![Frame AUROC vs severity](results/test/auroc_vs_severity.png)
 
@@ -142,8 +149,13 @@ floor costs it about 20 frames of warning.
 |---|---|---|---|
 | VLM, images only | 12% | 0.04 | 55% |
 | VLM, images + diagnostics | 26% | 0.18 | 41% |
-| decision tree on diagnostics (5-fold CV) | **55%** | **0.55** | **79%** |
+| decision tree on diagnostics (supervised, 5-fold CV on these frames) | **55%** | **0.55** | **79%**¹ |
 | majority class / majority cell | 18% | 0.05 | 49% |
+
+¹ The tree predicts only the type. Its location is the diagnostics' hotspot cell, copied directly. The VLM is
+zero-shot. Split by severity, image-only type accuracy on anomalous frames is 0% at severities 1, 2 and 3 (n = 48, 53,
+74), and with diagnostics it is 10%, 32% and 20%. Clean frames are called "none" 100% of the time from images and 60%
+with diagnostics, where the VLM labels 72% of all frames "instability".
 
 **Counterfactual pairs** (40 pairs; A = a clean, strongly bent frame, B = the same frame plus a severity-3 hourglass,
 median visible shift 17 px; [results/counterfactual.md](results/counterfactual.md)):
@@ -203,9 +215,10 @@ than an explanation.
 ```bash
 uv sync
 uv run python -m mgn.data valid -n 100 && uv run python -m mgn.data test -n 100 && uv run python -m mgn.data train -n 250
-uv run python -m mgn.train --name mgn --hours 8 --iters 260000      # ~110 ms/step on M4 Pro
-uv run python -m mgn.evaluate --n-traj 100                          # detectors + AUROC table + figure
-uv run python -m mgn.explain                                        # VLM explanations + correctness
+uv run python -m mgn.train --name mgn --hours 8 --iters 260000      # ~110 ms/step on M4 Pro (sigma=3e-4 default)
+scripts/after_training.sh <training PID>   # frozen protocol: Gate B, validation, single test run, Gate C,
+                                           # lead time, VLM, counterfactuals (~2 h on M4 Pro)
+uv run python scripts/phase_table.py       # onset-vs-sustained table below
 uv run pytest
 ```
 
