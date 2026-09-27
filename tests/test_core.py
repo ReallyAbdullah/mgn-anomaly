@@ -197,3 +197,12 @@ def test_triage_pipeline_and_leakage_guard():
     assert res["accuracy"] > 0.9 and 0 <= res["ece"] <= 1
     with pytest.raises(AssertionError):
         features([dict(recs[0], frame_stress=1.0)])
+
+
+def test_bundle_features_and_score():
+    from mgn.bundle import Bundle, features
+    traj = _toy_traj(np.random.default_rng(7))
+    X = features(traj, traj["world_pos"], np.arange(40, 60, 2))
+    assert X.shape == (10, 18) and np.isfinite(X).all()
+    b = Bundle(np.random.default_rng(0).normal(size=(50, 18)), k=5)
+    assert b.score(X).shape == (10,)
