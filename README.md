@@ -75,7 +75,7 @@ Everything below is fixed on validation simulations before test simulations 8–
 ## Results
 
 All numbers are on **92 held-out test simulations (8–99), scored once** with the frozen protocol (commit
-`3ff1e07`, checkpoint `b917f77f`, 258.6k steps). 95% CIs are bootstrapped over simulations. Full tables are in
+`58feca9`, checkpoint `b917f77f`, 258.6k steps). 95% CIs are bootstrapped over simulations. Full tables are in
 [results/test/metrics.md](results/test/metrics.md) and [results/test/gate_c.md](results/test/gate_c.md).
 
 ### TL;DR
@@ -276,3 +276,8 @@ uv run pytest
 ## License
 
 Code: MIT (see [LICENSE](LICENSE)). The `deforming_plate` data belongs to DeepMind and is not redistributed here.
+
+### Commit provenance
+Commit author metadata was normalised before publication, so the hashes recorded inside generated files predate it:
+`92bc310` → `0939a63` (test and Phase 1 validation records) and `cd756a0` → `4ad8076` (protocol v3 validation records).
+The tags `phase1-frozen` and `phase1-results` mark the frozen protocol and the Phase 1 results.
