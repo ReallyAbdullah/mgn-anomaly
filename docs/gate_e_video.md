@@ -1,7 +1,7 @@
 # Gate E video pilot — pre-registered 2026-09-27, before any video-arm output was seen
 
 **Question.** Does a short *video* (a sequence of frames) help a VLM detect and name simulation failures, compared
-with a single frame? The BMW position concerns crash-*video* evaluation, and failures such as frozen regions or
+with a single frame? Industrial crash analysis is largely *video*-based, and failures such as frozen regions or
 instability are temporal, so a single frame may be the wrong input format.
 
 **Model.** The local Qwen3-VL-8B (4-bit, MLX), the Phase 1 model. It is free and has no request limit. Only the input

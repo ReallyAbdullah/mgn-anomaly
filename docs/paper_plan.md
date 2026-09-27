@@ -56,3 +56,39 @@ Workshop cut: ch. 2 and 6 to one paragraph each, lead time to appendix.
   Argue quasi-static is the surrogate's easy case (STRESS-TEST in Step 3: it is also constant velocity's easy case).
 - Main-text weakness: additive injections snap back to the clean trajectory (not self-consistent).
   Limitations: frozen sev-1 near-imperceptible; severity relative to RMS displacement, not physical units.
+
+### 4 Detectors & protocol
+- "Undertrained" defence: Gate B states the gap openly (6.9x worse than constant velocity); Gate D gives the scaling
+  trend over the tested range; Gate A shows sigma, not length, moves AUROC by ~0.10 at equal budget.
+- Velocity Laplacian: reported openly as post-hoc, validation-only; Gate C stands; it refutes the kinematic-vs-geometric
+  reading. It enters the Phase 2 and Gate D pre-registrations from the start (no extra gate, test sims not re-scored).
+- Gates shown as one timeline figure: A -> B -> C -> post-hoc -> D/E/Phase 2, each with pre-registration date and decision.
+
+### 5 Detection results
+- Headline: in every failure type and phase, some one-line rule matches or beats the learned surrogate (frozen included,
+  once the velocity Laplacian counts). Directly under it, the mechanism: constant velocity collapses on sustained
+  anomalies; the surrogate recovers part of the gap, cheap spatial rules recover more.
+- Causal Gate C split (+0.023): reported exactly as pre-registered, missing-baseline caveat in the same paragraph.
+  TODO: build past-only velocity z-score (~1 h) and put it in the Gate D pre-registration.
+- Order: Gate B -> Gate C -> onset/sustained table -> velocity-Laplacian refutation -> lead time -> Phase 2 -> Gate D.
+  Workshop cut: lead time to appendix.
+
+### 6 Explanation study
+- Measures correctness + grounding (type/location vs injected ground truth; counterfactual pairs). States plainly that
+  free-text faithfulness is not checked.
+- Decision tree reframed as a ceiling ("what the diagnostics already contain"), not a competitor.
+  TODO: zero-shot rule classifier (thresholds on validation, no training) as like-for-like baseline (~2 h).
+- Visibility: px-shift column separates "unseen" from "unrecognised"; the heatmap arm shows the location and still gets
+  "none", so visibility doesn't explain it. Gate E stays single-variable (capacity only; no crop arm).
+
+### 7 Discussion
+- Responds to residual/digital-twin detection first (report the zero-output baseline, thesis A), then MGN/surrogate
+  work (used as a detector, the surrogate is a denoiser, thesis C).
+- One sentence: ICLR cut "Benchmark a learned detector against its own zero-output baseline"; BMW note "Run the cheap
+  rules before you trust the surrogate".
+- Practitioner takeaways 1, 2, 5 as a numbered QA checklist box.
+
+### 8 Limitations & conclusion
+- Future work, realism before scale (Gate D can't reach paper scale): OpenRadioss solver-generated failures ->
+  CarCrashNet once released -> scaling up the Phase 2 niche.
+- Final paragraph: thesis A + B in two sentences, then the Phase 2 niche as the open question.

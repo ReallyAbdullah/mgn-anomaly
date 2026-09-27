@@ -7,7 +7,7 @@
   evaluation [arXiv 2510.15750](https://arxiv.org/pdf/2510.15750). These target surrogate accuracy, not failure
   detection.
 - **Crashworthiness surrogates**: [Mask-Morph Graph U-Net, arXiv 2605.15231](https://arxiv.org/pdf/2605.15231) and
-  [CarCrashNet / CrashSolver, arXiv 2605.07098](https://arxiv.org/pdf/2605.07098). The closest domain match for BMW.
+  [CarCrashNet / CrashSolver, arXiv 2605.07098](https://arxiv.org/pdf/2605.07098). The closest domain match for automotive crash work.
 - **GNN + FE for damage identification**: ["What lies within", Structures 2025](https://www.sciencedirect.com/science/article/pii/S0141029625012337).
   This is structural damage detection, not detection of simulation failures.
 - **Surrogate-residual fault detection** is a classical digital-twin idea, so our contribution is not the detector.
@@ -26,10 +26,10 @@
 - **CarCrashNet** (CC BY 4.0) has 15,567 OpenRadioss crash simulations (bumper-beam pole impacts plus 825
   full-vehicle crashes, 6.65 TB, VTKHDF, with plastic strain and erosion flags). **Not yet downloadable**: the README
   says it will be released after peer review. Once it is, the bumper-beam subset would be a far better stand-in for
-  BMW than `deforming_plate`.
+  automotive crash than `deforming_plate`.
 
 ## Venues (honest targets)
 - NeurIPS 2026 workshops. Most calls for papers closed on Aug 30, and a few close on Sep 26
   ([tracker](https://aiworkshoptracker.com/conference/neurips/2026/)). That is too late for this cycle.
 - Next realistic targets: ICLR 2027 workshops (AI for science / simulation), a NAFEMS or CAE-industry conference,
-  or an arXiv preprint plus the BMW application.
+  or an arXiv preprint.
