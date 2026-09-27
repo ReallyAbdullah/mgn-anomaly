@@ -172,6 +172,30 @@ The fluent text is not grounded in what it sees. For engineering sign-off, this 
 than an explanation.
 
 
+## Phase 2 (validation-stage results; the replication set is not scored yet)
+
+Technical report: [docs/report/report.pdf](docs/report/report.pdf) (Typst source alongside).
+
+- **Complete rule pool.** A velocity Laplacian, a past-only velocity z-score and a contact rule (penetration depth) are
+  now in every detector pool (protocol v3).
+- **Gate D, whole-run loading errors: FAIL** ([docs/gate_d.md](docs/gate_d.md),
+  [results/runlevel/gate_d.md](results/runlevel/gate_d.md)). The errors are response scale, lag and time scale.
+  - The shape-from-load surrogate missed its admission bar: RMSE 1.99 cm against 3.18 cm for zero displacement.
+  - The velocity GNN never beats the best rule.
+  - Contact rules catch scale (0.85–1.00), timescale (0.92–1.00) and 10-frame lag (0.91).
+  - **A 1–3 frame lag is undetectable by every method (AUROC 0.47–0.58).**
+- **Gate V, vision backbones × resolution: FAIL** ([docs/gate_v.md](docs/gate_v.md),
+  [results/gate_v/gate_v.md](results/gate_v/gate_v.md)). No condition reaches AUROC 0.80 at severity 3.
+  - The conditions were CLIP B/16, OpenCLIP L/14 and DINOv2-L patch-kNN, and CLIP and SigLIP2 zero-shot.
+  - DINOv2-L is the best (mean 0.65; hourglass 0.88).
+  - An 896 px plate crop doesn't help, so the limit is the modality, not the resolution.
+- **Gate E pilot, a larger same-family VLM (Qwen3.8-27B via OpenRouter free tier): running**
+  ([docs/gate_e_pilot.md](docs/gate_e_pilot.md)).
+- **Seed robustness.** A second full-scale seed of the velocity surrogate reproduces the clean one-step error
+  (4.73 vs 4.85 ×10⁻⁵).
+- **Conformal run-level alarms.** Implemented, but on validation the false-alarm rate exceeded the nominal α (up to
+  30% at α = 10%), so no guarantee is claimed yet.
+
 ## Design notes (what mattered)
 
 - **MGN in plain PyTorch.** Aggregation uses `index_add_`, with two edge sets (mesh plus actuator↔plate contact edges
