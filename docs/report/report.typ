@@ -30,8 +30,8 @@
   errors. Each has a known type, location and severity. We compare a noise-trained MeshGraphNet residual detector, a
   shape-from-load surrogate, one-line physics rules, CLIP-family, SigLIP2 and DINOv2 vision models, and Qwen-family
   VLM explanations. Every analysis was pre-registered in version control before it ran, and the test set was scored
-  once. *Some one-line rule matches or beats the learned surrogate for every failure type* (92 test simulations). The
-  surrogate's only apparent win, frozen regions, is matched by a velocity-Laplacian rule. Whole-run loading errors are
+  once. On 92 test simulations, *simple rules match or beat the learned surrogate for every failure type except
+  frozen regions*, and a post-hoc validation check shows that a velocity-Laplacian rule matches it there too. Whole-run loading errors are
   caught by contact rules or by nothing: a 1–3 frame actuator-plate lag is undetectable by every method tested. No
   vision model reaches AUROC 0.80, and higher resolution does not help. A local 8B VLM labels 199 of 200 frames
   "no anomaly", and counterfactual pairs show its explanations are not grounded in the image. A 27B model from the same
