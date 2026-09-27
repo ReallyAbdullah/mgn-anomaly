@@ -44,3 +44,7 @@ requests/day, so this runs when the daily quota resets.
 (HTTP 403: free access only through approved agent apps), so the different-family run uses
 `google/gemma-4-31b-it:free` instead, with identical items, prompts, settings and decision rule. Output:
 `results/vlm_pilot_gemma/`.
+
+**Amendment 2 (2026-09-27, before any output was seen).** The free `gemma-4-31b-it` endpoint was persistently
+rate-limited upstream, so the different-family run uses `google/gemma-4-26b-a4b-it:free` (also Google Gemma 4, with
+image input), with identical items, prompts, settings and decision rule. Output: `results/vlm_pilot_gemma/`.
