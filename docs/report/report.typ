@@ -343,9 +343,10 @@ and labelled by solver energies; a real crash dataset once one is public; tempor
 simulation-grounded explanation methods.
 
 #v(4pt)
-*Use of AI assistance.* Code, experiment orchestration and drafting were carried out with substantial assistance from
-an AI coding assistant (Anthropic's Claude). The author defined the research questions and reviewed all
-pre-registrations, decisions and interpretations.
+*Use of AI tools.* An AI coding assistant (Anthropic's Claude) was used as a research-engineering tool to
+accelerate implementation, debugging, experiment monitoring and drafting, and to run analyses in parallel. The author
+designed the study, set every pre-registered decision rule, and reviewed and takes responsibility for all code,
+results and text.
 
 #set text(size: 8.8pt)
 #bibliography("refs.yml", title: "References", style: "ieee")
