@@ -9,12 +9,13 @@ SIZE = 448
 
 
 class Renderer:
-    def __init__(self, traj):
+    def __init__(self, traj, size=SIZE):
+        self.size = size
         nt, cells = traj["node_type"], traj["cells"]
         is_obs = (nt[cells] == OBSTACLE).all(1)
         self.plate = self._grid(cells[~is_obs], traj["world_pos"][0])
         self.actuator = self._grid(cells[is_obs], traj["world_pos"][0])
-        self.p = pv.Plotter(off_screen=True, window_size=(SIZE, SIZE))
+        self.p = pv.Plotter(off_screen=True, window_size=(size, size))
         self.p.set_background("white")
         # fixed camera: fit the whole modelled window once, reuse for every frame
         pts = traj["world_pos"][[0, T_MAX - 1]].reshape(-1, 3)
@@ -51,7 +52,7 @@ class Renderer:
         m = np.array([[vtk_m.GetElement(i, j) for j in range(4)] for i in range(4)])
         h = np.c_[points, np.ones(len(points))] @ m.T
         ndc = h[:, :2] / h[:, 3:]
-        return np.c_[(ndc[:, 0] + 1) / 2 * SIZE, (1 - ndc[:, 1]) / 2 * SIZE]
+        return np.c_[(ndc[:, 0] + 1) / 2 * self.size, (1 - ndc[:, 1]) / 2 * self.size]
 
 
 def grid_cell(xy, n=3):
