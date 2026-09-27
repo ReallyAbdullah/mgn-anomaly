@@ -28,11 +28,16 @@ def ask(model, prompt, image_path, state):
     for extra in ("", "\nReturn ONLY valid JSON."):
         if state["calls"] >= state["budget"]:
             raise RuntimeError("daily budget reached")
-        r = requests.post(URL, timeout=300, headers={"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}"},
-                          json={"model": model, "temperature": 0, "reasoning": {"enabled": True},
-                                "messages": [{"role": "user", "content": [
-                                    {"type": "text", "text": prompt + extra},
-                                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img}"}}]}]})
+        for wait in (30, 60, 120, 240, 300, 300, 300, 300):  # upstream congestion (not the daily quota): back off
+            r = requests.post(URL, timeout=300, headers={"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}"},
+                              json={"model": model, "temperature": 0, "reasoning": {"enabled": True},
+                                    "messages": [{"role": "user", "content": [
+                                        {"type": "text", "text": prompt + extra},
+                                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img}"}}]}]})
+            if r.status_code != 429 or "daily" in r.text.lower() or "per-day" in r.text.lower():
+                break
+            print(f"  upstream 429, retrying in {wait}s", flush=True)
+            time.sleep(wait)
         state["calls"] += 1
         if r.status_code == 429:
             raise RuntimeError(f"rate limited: {r.text[:200]}")
