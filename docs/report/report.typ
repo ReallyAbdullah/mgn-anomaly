@@ -29,7 +29,7 @@
   penetration, element inversion, numerical instability, frozen regions, and whole-run lag, time-scale and response-scale
   errors. Each has a known type, location and severity. We compare a noise-trained MeshGraphNet residual detector, a
   shape-from-load surrogate, one-line physics rules, CLIP-family, SigLIP2 and DINOv2 vision models, and Qwen-family
-  VLM explanations. Every analysis was pre-registered in version control before it ran, and the test set was scored
+  VLM explanations. Every main analysis was pre-registered in version control before it ran, and the test set was scored
   once. On 92 test simulations, *simple rules match or beat the learned surrogate for every failure type except
   frozen regions*, and a post-hoc validation check shows that a velocity-Laplacian rule matches it there too. Whole-run loading errors are
   caught by contact rules or by nothing: a 1–3 frame actuator-plate lag is undetectable by every method tested. No
