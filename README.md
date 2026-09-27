@@ -1,5 +1,9 @@
 # Learned physics vs. vision vs. rules for anomaly detection in FE simulations
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22992627.svg)](https://doi.org/10.5281/zenodo.22992627)
+
+**Technical report:** Abdullah, M. (2026). *Do learned surrogates, vision models and VLMs catch simulation failures? A pre-registered benchmark on finite-element trajectories* (v1). Zenodo. https://doi.org/10.5281/zenodo.22992627
+
 **When does a learned physics surrogate catch simulation failures that simple rules and generic vision models miss,
 and can a VLM explain the flagged frames correctly?**
 
