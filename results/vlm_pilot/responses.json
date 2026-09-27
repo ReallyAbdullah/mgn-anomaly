@@ -1,0 +1,317 @@
+{
+ "frame:5": {
+  "pred": "penetration",
+  "location": "middle-right",
+  "explanation": "The red disagreement is confined to a small cluster of elements exactly at the blue actuator's contact point, where the plate nodes dip into the actuator body (contact violated), while the rest of the plate is pale yellow/consistent.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-right\", \"confidence\": 0.82, \"explanation\": \"The red disagreement is confined to a small cluster of elements exactly at the blue actuator's contact point, where the plate nodes dip into the actuator body (contact violated), while the rest of the plate is pale yellow/consistent.\"}",
+  "valid": true
+ },
+ "frame:33": {
+  "pred": "penetration",
+  "location": "middle-right",
+  "explanation": "The disagreement map is pale yellow (consistent) across the entire bent plate except for a small, localized red/orange patch confined to the nodes at the actuator contact on the right edge, indicating a handful of contact nodes have been pushed into the actuator (contact violation) rather than a patterned or global anomaly.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-right\", \"confidence\": 0.7, \"explanation\": \"The disagreement map is pale yellow (consistent) across the entire bent plate except for a small, localized red/orange patch confined to the nodes at the actuator contact on the right edge, indicating a handful of contact nodes have been pushed into the actuator (contact violation) rather than a patterned or global anomaly.\"}",
+  "valid": true
+ },
+ "frame:21": {
+  "pred": "penetration",
+  "location": "middle-center",
+  "explanation": "The disagreement map is pale yellow (consistent) across the plate except for a small red cluster located exactly at the plate\u2011actuator contact interface, and in the deformed mesh the bottom nodes at that point dip into the blue actuator body, indicating a contact violation (penetration) rather than a checkerboard, blow\u2011up, or frozen region.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-center\", \"confidence\": 0.72, \"explanation\": \"The disagreement map is pale yellow (consistent) across the plate except for a small red cluster located exactly at the plate\u2011actuator contact interface, and in the deformed mesh the bottom nodes at that point dip into the blue actuator body, indicating a contact violation (penetration) rather than a checkerboard, blow\u2011up, or frozen region.\"}",
+  "valid": true
+ },
+ "frame:17": {
+  "pred": "penetration",
+  "location": "middle-center",
+  "explanation": "The red disagreement is confined to a small cluster of nodes exactly at the downward bend where the actuator contacts the plate, while the surrounding plate is uniformly pale yellow; this localized contact-zone violation (a handful of nodes pushed into the actuator) matches penetration rather than a checkerboard, single-element flip, or global blow-up.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-center\", \"confidence\": 0.7, \"explanation\": \"The red disagreement is confined to a small cluster of nodes exactly at the downward bend where the actuator contacts the plate, while the surrounding plate is uniformly pale yellow; this localized contact-zone violation (a handful of nodes pushed into the actuator) matches penetration rather than a checkerboard, single-element flip, or global blow-up.\"}",
+  "valid": true
+ },
+ "frame:35": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The left panel shows a smooth, continuous bend of the plate with no checkerboard offsets, no nodes pushed into the blue actuator, no inverted element, and no erratic or frozen nodes. The right panel is dominated by pale-yellow (consistent) coloring with only a mild gradient near the contact edge and no red inconsistency patch, indicating the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.85, \"explanation\": \"The left panel shows a smooth, continuous bend of the plate with no checkerboard offsets, no nodes pushed into the blue actuator, no inverted element, and no erratic or frozen nodes. The right panel is dominated by pale-yellow (consistent) coloring with only a mild gradient near the contact edge and no red inconsistency patch, indicating the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "frame:62": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The right panel is uniformly pale yellow across the plate with no localized red patch, checkerboard, or single flipped element, and the left mesh shows smooth, regular bending with no nodes pushed into the blue actuator; the slight warm tint at the free edge is within the consistent range, so the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.82, \"explanation\": \"The right panel is uniformly pale yellow across the plate with no localized red patch, checkerboard, or single flipped element, and the left mesh shows smooth, regular bending with no nodes pushed into the blue actuator; the slight warm tint at the free edge is within the consistent range, so the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "frame:42": {
+  "pred": "frozen",
+  "location": "middle-right",
+  "explanation": "The disagreement map shows a single smooth, contiguous orange blob on the right side of the plate, well away from the actuator contact, with no checkerboard texture (ruling out hourglass) and no single-element spike (ruling out inversion/instability/penetration). This localized region of motion mismatch, where the mesh appears flatter than the surrounding bent surface, is consistent with a frozen patch that has stopped deforming while the rest of the plate continues to bend.",
+  "raw": "{\"anomaly_type\": \"frozen\", \"location\": \"middle-right\", \"confidence\": 0.6, \"explanation\": \"The disagreement map shows a single smooth, contiguous orange blob on the right side of the plate, well away from the actuator contact, with no checkerboard texture (ruling out hourglass) and no single-element spike (ruling out inversion/instability/penetration). This localized region of motion mismatch, where the mesh appears flatter than the surrounding bent surface, is consistent with a frozen patch that has stopped deforming while the rest of the plate continues to bend.\"}",
+  "valid": true
+ },
+ "frame:60": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The right panel is uniformly pale yellow across the entire plate, including the bent region around the actuator, with no red patches indicating disagreement. The left panel shows a smooth, regular deformation with no checkerboard pattern, no nodes penetrating the actuator, no inverted element, and no erratic or frozen nodes.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.92, \"explanation\": \"The right panel is uniformly pale yellow across the entire plate, including the bent region around the actuator, with no red patches indicating disagreement. The left panel shows a smooth, regular deformation with no checkerboard pattern, no nodes penetrating the actuator, no inverted element, and no erratic or frozen nodes.\"}",
+  "valid": true
+ },
+ "frame:90": {
+  "pred": "inversion",
+  "location": "middle-right",
+  "explanation": "The deformed mesh is smooth and physically plausible across nearly the whole plate (pale yellow), with no checkerboard pattern, no nodes inside the actuator, and no flying nodes; the only disagreement is a small saturated red patch at the right tip, where the deformed mesh shows a tiny crossed/bowtie element, consistent with a single element turned inside out.",
+  "raw": "{\"anomaly_type\": \"inversion\", \"location\": \"middle-right\", \"confidence\": 0.7, \"explanation\": \"The deformed mesh is smooth and physically plausible across nearly the whole plate (pale yellow), with no checkerboard pattern, no nodes inside the actuator, and no flying nodes; the only disagreement is a small saturated red patch at the right tip, where the deformed mesh shows a tiny crossed/bowtie element, consistent with a single element turned inside out.\"}",
+  "valid": true
+ },
+ "frame:91": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The disagreement map (right panel) is uniformly pale yellow with no red patches, and the deformed mesh (left panel) bends smoothly with no checkerboard offsets, inverted element, or nodes penetrating the blue actuator, indicating the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.92, \"explanation\": \"The disagreement map (right panel) is uniformly pale yellow with no red patches, and the deformed mesh (left panel) bends smoothly with no checkerboard offsets, inverted element, or nodes penetrating the blue actuator, indicating the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "frame:99": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The left panel shows a smooth, continuous bending of the plate with a regular mesh, no checkerboard pattern, no node inside the actuator, no flipped element, and no erratic or stalled nodes. The right panel is almost entirely pale yellow (consistent), with only a faint orange sliver at the lower edge, so the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.78, \"explanation\": \"The left panel shows a smooth, continuous bending of the plate with a regular mesh, no checkerboard pattern, no node inside the actuator, no flipped element, and no erratic or stalled nodes. The right panel is almost entirely pale yellow (consistent), with only a faint orange sliver at the lower edge, so the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "frame:87": {
+  "pred": "penetration",
+  "location": "bottom-center",
+  "explanation": "The disagreement map is pale yellow (consistent) across the plate except for a small red cluster located exactly at the actuator contact point at the bottom of the bend, indicating a handful of contact nodes have been pushed into the actuator. There is no checkerboard pattern, no flipped element, and no widespread erratic motion, so this is a localized contact violation rather than hourglassing or inversion.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"bottom-center\", \"confidence\": 0.7, \"explanation\": \"The disagreement map is pale yellow (consistent) across the plate except for a small red cluster located exactly at the actuator contact point at the bottom of the bend, indicating a handful of contact nodes have been pushed into the actuator. There is no checkerboard pattern, no flipped element, and no widespread erratic motion, so this is a localized contact violation rather than hourglassing or inversion.\"}",
+  "valid": true
+ },
+ "frame:105": {
+  "pred": "penetration",
+  "location": "middle-center",
+  "explanation": "The disagreement map is pale yellow (consistent) across almost the whole plate except for a small red/orange cluster of a handful of nodes located exactly at the actuator-plate contact on the left side of the actuator top, which is the signature of contact violation (nodes pushed into the actuator) rather than a checkerboard hourglass or a single-element inversion.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-center\", \"confidence\": 0.7, \"explanation\": \"The disagreement map is pale yellow (consistent) across almost the whole plate except for a small red/orange cluster of a handful of nodes located exactly at the actuator-plate contact on the left side of the actuator top, which is the signature of contact violation (nodes pushed into the actuator) rather than a checkerboard hourglass or a single-element inversion.\"}",
+  "valid": true
+ },
+ "frame:121": {
+  "pred": "penetration",
+  "location": "middle-right",
+  "explanation": "The red disagreement is confined to a small cluster of nodes exactly at the actuator-plate contact on the right edge, while the rest of the plate is uniformly pale yellow (consistent), indicating a handful of contact nodes pushed into the actuator (contact violation).",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-right\", \"confidence\": 0.72, \"explanation\": \"The red disagreement is confined to a small cluster of nodes exactly at the actuator-plate contact on the right edge, while the rest of the plate is uniformly pale yellow (consistent), indicating a handful of contact nodes pushed into the actuator (contact violation).\"}",
+  "valid": true
+ },
+ "frame:120": {
+  "pred": "inversion",
+  "location": "bottom-center",
+  "explanation": "The red disagreement is a small, localized patch at the bottom edge (bottom\u2011center), well away from the blue actuator contact at the top, which rules out penetration; it is a smooth blob rather than a checkerboard (not hourglass) and not a large stalled region (not frozen). In the left panel that spot shows a single node/element spike where one node has been pushed through its element, the classic signature of a local inversion.",
+  "raw": "{\"anomaly_type\": \"inversion\", \"location\": \"bottom-center\", \"confidence\": 0.62, \"explanation\": \"The red disagreement is a small, localized patch at the bottom edge (bottom\u2011center), well away from the blue actuator contact at the top, which rules out penetration; it is a smooth blob rather than a checkerboard (not hourglass) and not a large stalled region (not frozen). In the left panel that spot shows a single node/element spike where one node has been pushed through its element, the classic signature of a local inversion.\"}",
+  "valid": true
+ },
+ "frame:117": {
+  "pred": "inversion",
+  "location": "middle-center",
+  "explanation": "The deformed mesh (left) shows a smooth, plausible bend with no checkerboard pattern, no violent spike, and no nodes inside the blue actuator, so hourglass/instability/penetration are ruled out. The only disagreement (right) is a tight cluster of a few elements at the bottom edge, away from the actuator, matching a single locally inverted element rather than a frozen region or global blow-up.",
+  "raw": "{\"anomaly_type\": \"inversion\", \"location\": \"middle-center\", \"confidence\": 0.6, \"explanation\": \"The deformed mesh (left) shows a smooth, plausible bend with no checkerboard pattern, no violent spike, and no nodes inside the blue actuator, so hourglass/instability/penetration are ruled out. The only disagreement (right) is a tight cluster of a few elements at the bottom edge, away from the actuator, matching a single locally inverted element rather than a frozen region or global blow-up.\"}",
+  "valid": true
+ },
+ "frame:171": {
+  "pred": "penetration",
+  "location": "middle-right",
+  "explanation": "The red disagreement is a small cluster of nodes located exactly at the blue actuator's contact point on the plate, while the surrounding mesh is pale yellow (consistent). This localized handful of nodes at the contact surface indicates a contact violation (penetration), not a checkerboard hourglass pattern or a single-element inversion.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-right\", \"confidence\": 0.78, \"explanation\": \"The red disagreement is a small cluster of nodes located exactly at the blue actuator's contact point on the plate, while the surrounding mesh is pale yellow (consistent). This localized handful of nodes at the contact surface indicates a contact violation (penetration), not a checkerboard hourglass pattern or a single-element inversion.\"}",
+  "valid": true
+ },
+ "frame:145": {
+  "pred": "penetration",
+  "location": "middle-right",
+  "explanation": "The right panel is almost entirely pale yellow (consistent) except for a small red cluster at the plate's right edge where it meets the actuator; in the left panel that edge shows a handful of nodes crumpled/overlapping the actuator's top cap, indicating the contact constraint is violated.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-right\", \"confidence\": 0.65, \"explanation\": \"The right panel is almost entirely pale yellow (consistent) except for a small red cluster at the plate's right edge where it meets the actuator; in the left panel that edge shows a handful of nodes crumpled/overlapping the actuator's top cap, indicating the contact constraint is violated.\"}",
+  "valid": true
+ },
+ "frame:169": {
+  "pred": "none",
+  "location": "bottom-center",
+  "explanation": "The left-panel mesh is smooth and continuous: no checkerboard/hourglass pattern, no nodes embedded in the blue actuator, no inverted element, and no erratic or stalled nodes. The right panel shows only mild amber disagreement (no red) near the contact zone, so the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"bottom-center\", \"confidence\": 0.78, \"explanation\": \"The left-panel mesh is smooth and continuous: no checkerboard/hourglass pattern, no nodes embedded in the blue actuator, no inverted element, and no erratic or stalled nodes. The right panel shows only mild amber disagreement (no red) near the contact zone, so the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "frame:164": {
+  "pred": "frozen",
+  "location": "top-left",
+  "explanation": "The left mesh is smooth with no checkerboard, flipped element, or nodes inside the actuator, ruling out hourglass/inversion/penetration/instability. The right panel shows a broad, contiguous orange band along the top-left edge (not a localized spot or checkerboard), meaning that patch is deforming far less than the surrogate expects while the rest of the plate bends \u2013 a frozen region.",
+  "raw": "{\"anomaly_type\": \"frozen\", \"location\": \"top-left\", \"confidence\": 0.62, \"explanation\": \"The left mesh is smooth with no checkerboard, flipped element, or nodes inside the actuator, ruling out hourglass/inversion/penetration/instability. The right panel shows a broad, contiguous orange band along the top-left edge (not a localized spot or checkerboard), meaning that patch is deforming far less than the surrogate expects while the rest of the plate bends \u2013 a frozen region.\"}",
+  "valid": true
+ },
+ "frame:176": {
+  "pred": "frozen",
+  "location": "top-right",
+  "explanation": "The disagreement map shows a smooth error gradient peaking in the top-right corner (orange/red) rather than a checkerboard, a few erratic nodes, or a spot at the actuator; that same corner region in the deformed mesh looks flatter/less domed than the surrounding bent plate, consistent with a region that has stopped deforming while the rest of the plate keeps moving.",
+  "raw": "{\"anomaly_type\": \"frozen\", \"location\": \"top-right\", \"confidence\": 0.65, \"explanation\": \"The disagreement map shows a smooth error gradient peaking in the top-right corner (orange/red) rather than a checkerboard, a few erratic nodes, or a spot at the actuator; that same corner region in the deformed mesh looks flatter/less domed than the surrounding bent plate, consistent with a region that has stopped deforming while the rest of the plate keeps moving.\"}",
+  "valid": true
+ },
+ "frame:185": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The right panel is uniformly pale yellow with no red hotspots, indicating the observed motion agrees with the learned surrogate across the plate; the left mesh is smooth and regular with no checkerboard, inverted element, or erratic node displacement.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.9, \"explanation\": \"The right panel is uniformly pale yellow with no red hotspots, indicating the observed motion agrees with the learned surrogate across the plate; the left mesh is smooth and regular with no checkerboard, inverted element, or erratic node displacement.\"}",
+  "valid": true
+ },
+ "frame:198": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The right panel is uniformly pale yellow (consistent) with no red hotspots, and the left panel mesh deforms smoothly with no checkerboard pattern, inverted element, penetrating node, or erratic/frozen region, so the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.9, \"explanation\": \"The right panel is uniformly pale yellow (consistent) with no red hotspots, and the left panel mesh deforms smoothly with no checkerboard pattern, inverted element, penetrating node, or erratic/frozen region, so the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "frame:186": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The right panel is uniformly pale yellow with no red disagreement anywhere, and the left panel shows a smooth, continuous bending of the plate under the actuator with no checkerboard offsets, contact penetration, inverted element, or erratic/frozen nodes.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.95, \"explanation\": \"The right panel is uniformly pale yellow with no red disagreement anywhere, and the left panel shows a smooth, continuous bending of the plate under the actuator with no checkerboard offsets, contact penetration, inverted element, or erratic/frozen nodes.\"}",
+  "valid": true
+ },
+ "frame:181": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The right panel is uniformly pale yellow with no red patches, meaning the observed motion agrees with the physics surrogate across the entire plate. The left mesh shows a smooth, continuous bend around the actuator with no checkerboard offsets, contact penetration, inverted element, or erratic/frozen nodes.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.95, \"explanation\": \"The right panel is uniformly pale yellow with no red patches, meaning the observed motion agrees with the physics surrogate across the entire plate. The left mesh shows a smooth, continuous bend around the actuator with no checkerboard offsets, contact penetration, inverted element, or erratic/frozen nodes.\"}",
+  "valid": true
+ },
+ "pair:8:A": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The plate bends smoothly around the blue actuator with a clean contact (no plate nodes inside the dome), the clamped edge stays flat, and the free edges deform naturally; there is no checkerboard/zig\u2011zag patch, no erratic outlier nodes, no single flipped element, and no frozen kink. The thin mid\u2011span gap is just a grazing\u2011angle/occlusion artifact of the bent shell, so the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.6, \"explanation\": \"The plate bends smoothly around the blue actuator with a clean contact (no plate nodes inside the dome), the clamped edge stays flat, and the free edges deform naturally; there is no checkerboard/zig\u2011zag patch, no erratic outlier nodes, no single flipped element, and no frozen kink. The thin mid\u2011span gap is just a grazing\u2011angle/occlusion artifact of the bent shell, so the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "pair:8:B": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The mesh drapes smoothly over the blue actuator with no gray nodes intersecting the actuator surface, no checkerboard/hourglass patch, no inverted element, and the clamped edge on the right remains coherent; the overall bend is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.72, \"explanation\": \"The mesh drapes smoothly over the blue actuator with no gray nodes intersecting the actuator surface, no checkerboard/hourglass patch, no inverted element, and the clamped edge on the right remains coherent; the overall bend is physically consistent.\"}",
+  "valid": true
+ },
+ "pair:9:A": {
+  "pred": "inversion",
+  "location": "middle-center",
+  "explanation": "The plate deforms smoothly overall and the actuator contact is clean, but there is a small localized void/tear in the central mesh where a few elements have failed and flipped, matching a single-element inversion rather than a checkerboard hourglass or contact penetration.",
+  "raw": "{\"anomaly_type\": \"inversion\", \"location\": \"middle-center\", \"confidence\": 0.78, \"explanation\": \"The plate deforms smoothly overall and the actuator contact is clean, but there is a small localized void/tear in the central mesh where a few elements have failed and flipped, matching a single-element inversion rather than a checkerboard hourglass or contact penetration.\"}",
+  "valid": true
+ },
+ "pair:9:B": {
+  "pred": "hourglass",
+  "location": "top-right",
+  "explanation": "A patch of dozens of nodes in the upper-right of the plate shows a clear checkerboard / zig-zag alternating-offset pattern (hourglass mode), distinct from the smoothly bending mesh on the left and not nodes penetrating the blue actuator.",
+  "raw": "{\"anomaly_type\": \"hourglass\", \"location\": \"top-right\", \"confidence\": 0.7, \"explanation\": \"A patch of dozens of nodes in the upper-right of the plate shows a clear checkerboard / zig-zag alternating-offset pattern (hourglass mode), distinct from the smoothly bending mesh on the left and not nodes penetrating the blue actuator.\"}",
+  "valid": true
+ },
+ "pair:10:A": {
+  "pred": "hourglass",
+  "location": "middle-center",
+  "explanation": "In the central bent region of the plate, well away from the blue actuator, the node offsets form a wavy zig\u2011zag / checkerboard pattern (alternating up\u2011down along the surface) instead of a smooth curvature, which is the classic signature of an hourglass mode.",
+  "raw": "{\"anomaly_type\": \"hourglass\", \"location\": \"middle-center\", \"confidence\": 0.62, \"explanation\": \"In the central bent region of the plate, well away from the blue actuator, the node offsets form a wavy zig\u2011zag / checkerboard pattern (alternating up\u2011down along the surface) instead of a smooth curvature, which is the classic signature of an hourglass mode.\"}",
+  "valid": true
+ },
+ "pair:10:B": {
+  "pred": "hourglass",
+  "location": "middle-right",
+  "explanation": "Just left of the blue actuator there is a localized patch of small, crumpled triangles showing a checkerboard/zig-zag alternating offset, while the surrounding plate deforms smoothly with well-shaped elements \u2014 the classic hourglass-mode signature.",
+  "raw": "{\"anomaly_type\": \"hourglass\", \"location\": \"middle-right\", \"confidence\": 0.7, \"explanation\": \"Just left of the blue actuator there is a localized patch of small, crumpled triangles showing a checkerboard/zig-zag alternating offset, while the surrounding plate deforms smoothly with well-shaped elements \u2014 the classic hourglass-mode signature.\"}",
+  "valid": true
+ },
+ "pair:11:A": {
+  "pred": "penetration",
+  "location": "middle-center",
+  "explanation": "At the actuator contact the rounded top cap of the blue cylinder is clearly visible protruding above the plate's top-surface mesh lines, meaning the plate nodes at the contact lie inside the actuator volume instead of draping over its top \u2014 a contact violation (penetration).",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-center\", \"confidence\": 0.75, \"explanation\": \"At the actuator contact the rounded top cap of the blue cylinder is clearly visible protruding above the plate's top-surface mesh lines, meaning the plate nodes at the contact lie inside the actuator volume instead of draping over its top \u2014 a contact violation (penetration).\"}",
+  "valid": true
+ },
+ "pair:11:B": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The triangulated mesh is smooth and continuous across the whole plate, with a gradual, physically plausible bend around the blue actuator; there is no checkerboard/hourglass patch, no plate nodes interpenetrating the actuator, no flung/erratic nodes, and no flat frozen region, so the frame is consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.62, \"explanation\": \"The triangulated mesh is smooth and continuous across the whole plate, with a gradual, physically plausible bend around the blue actuator; there is no checkerboard/hourglass patch, no plate nodes interpenetrating the actuator, no flung/erratic nodes, and no flat frozen region, so the frame is consistent.\"}",
+  "valid": true
+ },
+ "pair:12:A": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The deformed mesh is smooth and continuous, draping uniformly over the blue actuator with a gradual bend toward the clamped edge; there is no checkerboard/zig-zag wobble, no nodes penetrating the actuator, no inverted element, and no erratic or frozen nodes, so the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.88, \"explanation\": \"The deformed mesh is smooth and continuous, draping uniformly over the blue actuator with a gradual bend toward the clamped edge; there is no checkerboard/zig-zag wobble, no nodes penetrating the actuator, no inverted element, and no erratic or frozen nodes, so the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "pair:12:B": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The deformed mesh is smooth and continuous, bending gradually around the blue actuator with no checkerboard/zig-zag patch, no nodes pushed into the actuator, no inverted element, and no erratic or stalled regions; the clamped edge on the right deforms consistently with the rest of the plate.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.9, \"explanation\": \"The deformed mesh is smooth and continuous, bending gradually around the blue actuator with no checkerboard/zig-zag patch, no nodes pushed into the actuator, no inverted element, and no erratic or stalled regions; the clamped edge on the right deforms consistently with the rest of the plate.\"}",
+  "valid": true
+ },
+ "pair:13:A": {
+  "pred": "none",
+  "location": "middle-right",
+  "explanation": "The mesh deforms into a smooth, continuous bend with regular triangulation throughout; there is no checkerboard/zig-zag offset, no flipped element, no isolated erratic node, and the plate edge rests on top of the blue actuator without any nodes penetrating into it, so the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-right\", \"confidence\": 0.72, \"explanation\": \"The mesh deforms into a smooth, continuous bend with regular triangulation throughout; there is no checkerboard/zig-zag offset, no flipped element, no isolated erratic node, and the plate edge rests on top of the blue actuator without any nodes penetrating into it, so the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "pair:13:B": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The triangulated plate deforms smoothly and continuously from the clamped left edge up to the blue actuator on the right, with a clean hole and no checkerboard offsets, no nodes embedded in the actuator, no single inverted element, no erratic spikes, and no stalled patch; the flatter left region is simply the clamped boundary, which is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.78, \"explanation\": \"The triangulated plate deforms smoothly and continuously from the clamped left edge up to the blue actuator on the right, with a clean hole and no checkerboard offsets, no nodes embedded in the actuator, no single inverted element, no erratic spikes, and no stalled patch; the flatter left region is simply the clamped boundary, which is physically consistent.\"}",
+  "valid": true
+ },
+ "pair:14:A": {
+  "pred": "penetration",
+  "location": "middle-center",
+  "explanation": "At the actuator contact, the plate's top surface lies below the top of the blue cylinder, i.e., the contact patch of the gray mesh is inside the actuator body rather than resting on it, indicating the contact constraint was violated and plate nodes were pushed into the actuator.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-center\", \"confidence\": 0.75, \"explanation\": \"At the actuator contact, the plate's top surface lies below the top of the blue cylinder, i.e., the contact patch of the gray mesh is inside the actuator body rather than resting on it, indicating the contact constraint was violated and plate nodes were pushed into the actuator.\"}",
+  "valid": true
+ },
+ "pair:14:B": {
+  "pred": "penetration",
+  "location": "middle-center",
+  "explanation": "At the actuator contact, a small patch of plate triangles is visible embedded inside the blue cylinder body (mesh lines crossing the actuator surface at mid-height), indicating that several contact nodes have been pushed into the actuator rather than resting on its top surface.",
+  "raw": "{\"anomaly_type\": \"penetration\", \"location\": \"middle-center\", \"confidence\": 0.72, \"explanation\": \"At the actuator contact, a small patch of plate triangles is visible embedded inside the blue cylinder body (mesh lines crossing the actuator surface at mid-height), indicating that several contact nodes have been pushed into the actuator rather than resting on its top surface.\"}",
+  "valid": true
+ },
+ "pair:15:A": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The deformed mesh shows a smooth, continuous bend with a regular triangulation throughout; there is no checkerboard/zig-zag patch, no single flipped element, no erratic outlier nodes, and the plate edge at the blue actuator rests cleanly on its surface without nodes pushed into it, so the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.72, \"explanation\": \"The deformed mesh shows a smooth, continuous bend with a regular triangulation throughout; there is no checkerboard/zig-zag patch, no single flipped element, no erratic outlier nodes, and the plate edge at the blue actuator rests cleanly on its surface without nodes pushed into it, so the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "pair:15:B": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The triangular mesh deforms into a smooth, continuous bend from the clamped edge toward the free end, with no checkerboard/zig-zag offsets, no flipped element, no nodes penetrating the blue actuator, and no erratic or stalled regions; the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.9, \"explanation\": \"The triangular mesh deforms into a smooth, continuous bend from the clamped edge toward the free end, with no checkerboard/zig-zag offsets, no flipped element, no nodes penetrating the blue actuator, and no erratic or stalled regions; the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "pair:16:A": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The triangulated mesh deforms smoothly and gradually around the blue actuator with a continuous bending gradient; there is no checkerboard/hourglass pattern, no nodes pushed into the actuator, no single inverted element, and no erratic or frozen nodes, so the frame is physically consistent.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.85, \"explanation\": \"The triangulated mesh deforms smoothly and gradually around the blue actuator with a continuous bending gradient; there is no checkerboard/hourglass pattern, no nodes pushed into the actuator, no single inverted element, and no erratic or frozen nodes, so the frame is physically consistent.\"}",
+  "valid": true
+ },
+ "pair:16:B": {
+  "pred": "frozen",
+  "location": "middle-left",
+  "explanation": "The left patch of the mesh stays flat and undeformed while the central/right regions clearly bend upward under the blue actuator, and a visible gap/tear separates this stationary patch from the moving mesh, indicating a region that has stopped deforming while its surroundings keep moving.",
+  "raw": "{\"anomaly_type\": \"frozen\", \"location\": \"middle-left\", \"confidence\": 0.62, \"explanation\": \"The left patch of the mesh stays flat and undeformed while the central/right regions clearly bend upward under the blue actuator, and a visible gap/tear separates this stationary patch from the moving mesh, indicating a region that has stopped deforming while its surroundings keep moving.\"}",
+  "valid": true
+ },
+ "pair:17:A": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The triangular mesh is smooth and continuous across the bent plate, with no checkerboard/zig-zag patches, no flipped elements, no nodes protruding through the surface, and no isolated erratic or stalled nodes; the open region is a clean geometric hole, and the overall curvature is consistent with smooth bending.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.9, \"explanation\": \"The triangular mesh is smooth and continuous across the bent plate, with no checkerboard/zig-zag patches, no flipped elements, no nodes protruding through the surface, and no isolated erratic or stalled nodes; the open region is a clean geometric hole, and the overall curvature is consistent with smooth bending.\"}",
+  "valid": true
+ },
+ "pair:17:B": {
+  "pred": "none",
+  "location": "middle-center",
+  "explanation": "The deformed mesh forms a smooth, continuous bent surface with uniform triangle sizes and no checkerboard/zig-zag offsets, no nodes penetrating an actuator, no single flipped element, and no erratic or stagnant patches; the deformation is physically consistent with a clamped plate under load.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.9, \"explanation\": \"The deformed mesh forms a smooth, continuous bent surface with uniform triangle sizes and no checkerboard/zig-zag offsets, no nodes penetrating an actuator, no single flipped element, and no erratic or stagnant patches; the deformation is physically consistent with a clamped plate under load.\"}",
+  "valid": true
+ }
+}
