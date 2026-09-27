@@ -90,7 +90,7 @@ directly with counterfactual pairs.
 = Benchmark
 
 *Data.* We use DeepMind's MeshGraphNets `deforming_plate` @pfaff: a quasi-static, hyperelastic plate (COMSOL,
-tetrahedral mesh, ≈1.3k nodes) pressed by a moving actuator, with 400 frames per trajectory. The actuator accelerates
+tetrahedral mesh, 750–1,700 nodes per simulation) pressed by a moving actuator, with 400 frames per trajectory. The actuator accelerates
 about 9× near frame 360, so we model and score frames below 350. Splits are by simulation:
 - train 0–249
 - validation 20–49 for selection, 50–69 for fitting and reference, 70–99 for calibration
@@ -116,12 +116,37 @@ whole-run errors change the plate response over the entire run.
   deviates. The first frame of an event is _onset_ and the rest are _sustained_.],
 ) <tab:inject>
 
+#figure(image("figs/failure_gallery.png", width: 100%),
+  caption: [The five local failures at severity 3 (validation simulation 20), cropped around the injected region; the
+  plate is coloured by deviation from the clean trajectory. Penetration and inversion occur on the underside at the
+  actuator contact and are barely visible from the fixed camera used for all vision detectors.]) <fig:gallery>
+
 *Protocol.* For every simulation × type × severity there is one corrupted copy. All anomalous frames are scored, along
 with an equal number of clean frames from the same copy, drawn within ±40 frames of the event but outside a ±3-frame
 guard band. Metrics are frame AUROC and node AUROC. 95% CIs are bootstrapped over simulations, and none are reported
 with fewer than 20 simulations. GNN-vs-baseline differences use a paired bootstrap with Holm correction.
 
 = Detectors
+
+#let node(body, fill: luma(245)) = box(fill: fill, stroke: 0.5pt + luma(150), inset: 5pt, radius: 3pt,
+  width: 100%, align(center, par(justify: false, text(size: 7.6pt, body))))
+#let arr = align(center + horizon, text(size: 11pt, fill: luma(110))[→])
+#figure(
+  kind: image,
+  grid(columns: (0.85fr, 11pt, 0.9fr, 11pt, 2.1fr, 11pt, 1.05fr), align: horizon, row-gutter: 4pt,
+    node[`deforming_plate` trajectories\ (COMSOL, 400 frames)], arr,
+    node[Failure injection\ type · location · severity\ (@tab:inject)], arr,
+    grid(row-gutter: 3pt,
+      node(fill: rgb("#e8f0fb"))[*Learned surrogates*\ MeshGraphNet residual · shape-from-load],
+      node(fill: rgb("#e9f6ef"))[*Physics rules*\ 2nd difference · Laplacians · Jacobian · contact · bundle kNN],
+      node(fill: rgb("#fdf1e7"))[*Vision*\ CLIP · SigLIP2 · DINOv2 on renders],
+      node(fill: rgb("#f1eefb"))[*VLMs*\ Qwen3-VL 8B / 27B: type, cell, explanation]),
+    arr,
+    node[Scoring vs ground truth\ frame / run AUROC, accuracy, counterfactual pairs\ *decided by pre-registered gates*],
+  ),
+  caption: [Study pipeline. Every detector family scores the same corrupted runs against the same injected ground
+  truth; each comparison's decision rule was committed before its data were scored.],
+) <fig:pipeline>
 
 *Learned surrogate.*
 - A MeshGraphNet @pfaff written from scratch in PyTorch on Apple MPS: 10 message-passing steps, latent size 128,
@@ -185,7 +210,7 @@ On fixed validation frames, the surrogate's one-step RMSE is 4.85×10⁻⁵, aga
 state that does not relax back leaves a residual in every frame. A clean-trained model (σ = 0) was indistinguishable
 from constant velocity in pilots.
 
-== Local failures: a rule always matches or wins
+== Local failures: simple rules match or beat the surrogate
 
 @tab:phase gives test-set frame AUROC by event phase. Constant velocity is near-perfect at the onset of every failure,
 because any injected jump is a second-difference spike. It collapses on sustained frames (0.49–0.66), since the
@@ -199,7 +224,7 @@ Laplacian scores 0.79–0.94. In the pre-registered Gate C, the non-causal GNN s
     table.header([*failure*], [*phase*], [*GNN*], [*const-vel*], [*pos. Lapl.*], [*vel. z*], [*inv. tet*], [*CLIP kNN*]),
     [hourglass], [onset], [1.00], [1.00], [0.85], [0.97], [0.72], [0.57],
     [], [sustained], [0.79], [0.62], [*0.85*], [0.50], [0.72], [0.57],
-    [penetration], [onset], [0.99], [1.00], [0.79], [0.93], [0.56], [0.52],
+    [penetration], [onset], [0.99], [*1.00*], [0.79], [0.93], [0.56], [0.52],
     [], [sustained], [0.70], [0.66], [*0.79*], [0.55], [0.55], [0.51],
     [inversion], [onset], [1.00], [1.00], [0.94], [0.99], [0.84], [0.52],
     [], [sustained], [0.73], [0.63], [*0.94*], [0.52], [0.84], [0.51],
@@ -247,7 +272,11 @@ In Phase 1, CLIP patch-kNN stayed at 0.50–0.53 on penetration and inversion ev
 16–20 px in a 448 px render. Gate V tested whether that is an artefact of an old backbone or low resolution.
 @tab:vision shows the result. No condition reaches the pre-registered 0.80. DINOv2-L patch-kNN is the best (mean
 0.65): it detects hourglassing (0.88 [0.79, 0.96]) but not penetration, inversion or frozen regions (0.55–0.62). An
-896 px plate crop changes nothing. The renders lose the information that the field-level rules use.
+896 px plate crop changes nothing. Two mechanisms plausibly contribute, and this study does not separate them. First,
+penetration and inversion happen on the plate's underside, at the actuator contact, and are nearly invisible from the
+fixed camera (@fig:gallery). Second, the kNN memory bank holds clean renders of _other_ simulations, whose geometry
+differs, so normal between-simulation variation competes with the anomaly. A same-simulation reference or
+multiple views might do better. As tested, renders lose much of the information the field-level rules use.
 
 #figure(
   table(columns: 7, inset: 3.2pt, stroke: 0.4pt + luma(180),
@@ -285,35 +314,39 @@ contain rather than a like-for-like competitor.
 severity-3 hourglass (median visible shift 17 px; @fig:vlm).
 - From the render alone, and with the heatmap, the VLM called every B frame "none".
 - With diagnostics, it separated 78% of pairs but never named "hourglass".
-- The term overlap between its explanations of A and of B (Jaccard 0.25) equals that of unrelated pairs (0.24).
+- With diagnostics, the term overlap between its explanations of A and of B (Jaccard 0.25) equals that of unrelated
+  pairs (0.24). From the render alone, it gave near-identical explanations for A and B (0.97).
 
 The explanations are fluent but not grounded in what the model sees, which is an automation-bias risk in engineering
 sign-off.
 
-#figure(grid(columns: 2, gutter: 6pt, image("figs/vlm_example.png"), image("figs/counterfactual_pair.png")),
-  caption: [Left: VLM input, the render and the surrogate-residual panel, for a severity-3 hourglass; the 8B model
-  answered "none". Right: a counterfactual pair, clean (A) and the same frame with an injected hourglass (B).]) <fig:vlm>
+#figure(image("figs/counterfactual_pair.png", width: 92%),
+  caption: [A counterfactual pair: clean frame A and the same frame with an injected severity-3 hourglass (B), with
+  the changed pixels. The failure is plainly visible, yet from the render alone the 8B model answered "none" for both
+  frames.]) <fig:vlm>
 
 *Does a larger model help?* A pre-registered pilot ran Qwen3.8-27B (OpenRouter free tier) on 20 severity-3 anomalous
 frames, 5 clean frames and 10 counterfactual pairs, paired against the 8B on the same images and prompts.
 - The 27B stops defaulting to "none" (6/20 anomalous frames, against 20/20 for the 8B).
 - It localizes the residual hotspot: exact grid cell 11/20.
-- But it names the right failure only 2/20 times, mostly answering "penetration", because the heatmap is often red
-  near the actuator.
+- But it names the right failure only 2/20 times, mostly answering "penetration", plausibly because the heatmap is
+  often red near the actuator.
 - It separates 1 of 10 counterfactual pairs.
 
-The pre-registered rule says do not scale up.
+The pre-registered rule says do not scale up: the larger model sees _where_ the surrogate flags a problem, but not
+_what_ went wrong.
 
 *Does video help?* Crash results are reviewed as animations, so a second pre-registered pilot gave the local 8B an
 8-frame clip (frames t−7 … t, plain renders) instead of a single frame, on the same 25 frames and 10 pairs. It
 answered "none" to all 90 prompts in both arms: 0/20 correct and 0/10 pairs separated either way. Temporal context
-does not rescue a model that doesn't see the failure in the first place. The larger model sees _where_ the surrogate flags a problem, but not
-_what_ went wrong.
+does not rescue a model that doesn't see the failure in the first place.
 
 == Lead time
 
-With causal calibration and per-frame thresholds at 95% specificity set on validation, constant velocity warns 39
-frames before a growing instability reaches its cap, the GNN 18 frames and the position Laplacian 7. A conformal
+On the test set, with causal calibration and per-frame thresholds at 95% specificity set on validation, constant
+velocity warns 39 frames before a growing instability reaches its cap, the GNN 18 frames and the position Laplacian 7.
+These are not like-for-like: the realised pre-event false-alarm rates differ (6.2% for constant velocity, 1.1% for the
+GNN), and a stricter threshold would shorten constant velocity's lead. A conformal
 run-level alarm with a guaranteed false-alarm rate was attempted. On validation, its false-alarm rate exceeded the
 nominal α (up to 30% at α = 10%), so we do not claim the guarantee. We treat exchangeability across simulation ranges
 as an open question.
@@ -322,7 +355,7 @@ as an open question.
 
 *Practitioner checklist.*
 + Report a learned residual detector against its zero-output baseline (here, constant velocity) and cheap spatial
-  rules. Here they win.
+  rules. Here they matched or beat it for every failure type once a velocity rule was included.
 + Evaluate on sustained frames, not only onset: onset flatters every temporal detector.
 + When fields are available, check fields rather than renders. Vision backbones lose the signal even at higher
   resolution.
@@ -337,9 +370,9 @@ errors defeated every detector.
 
 The failures are injected, not produced by a solver. They snap back to the clean trajectory, and the dataset is one
 quasi-static hyperelastic benchmark, not explicit crash dynamics. The surrogate is laptop-scale: 8 h and 250 of 1,000
-trajectories. The VLM study uses one model family. The replication set (training trajectories 250–349) has not yet
+trajectories. The VLM study uses one model family (Qwen), and a cross-family pilot is pending. The replication set (training trajectories 250–349) has not yet
 been scored. Next steps are solver-generated failures, for example OpenRadioss runs with hourglass control disabled
-and labelled by solver energies; a real crash dataset once one is public; temporal (video) VLM inputs; and
+and labelled by solver energies; a real crash dataset once one is public; longer temporal context and multi-view renders; and
 simulation-grounded explanation methods.
 
 #v(4pt)
