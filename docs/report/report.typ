@@ -102,6 +102,16 @@ about 9× near frame 360, so we model and score frames below 350. Splits are by 
 geometric: severity 1 distorts the element without flipping it. For frozen regions the severity is the duration. The
 whole-run errors change the plate response over the entire run.
 
+#figure(image("figs/failure_gallery.png", width: 80%),
+  caption: [The five local failures at severity 3 (validation simulation 20), close up from the side where each
+  occurs; top clean, bottom with the failure, coloured by deviation. Translucent: actuator; for inversion the plate is
+  see-through and the inverted element solid red. The vision detectors' fixed camera does not see the actuator side.]) <fig:gallery>
+
+*Protocol.* For every simulation × type × severity there is one corrupted copy. All anomalous frames are scored, along
+with an equal number of clean frames from the same copy, drawn within ±40 frames of the event but outside a ±3-frame
+guard band. Metrics are frame AUROC and node AUROC. 95% CIs are bootstrapped over simulations, and none are reported
+with fewer than 20 simulations. GNN-vs-baseline differences use a paired bootstrap with Holm correction.
+
 #figure(
   table(columns: (auto, auto, 1fr), inset: 4pt, stroke: 0.4pt + luma(180),
     table.header([*Failure*], [*Mimics*], [*Injection*]),
@@ -116,36 +126,44 @@ whole-run errors change the plate response over the entire run.
   deviates. The first frame of an event is _onset_ and the rest are _sustained_.],
 ) <tab:inject>
 
-#figure(image("figs/failure_gallery.png", width: 100%),
-  caption: [The five local failures at severity 3 (validation simulation 20), cropped around the injected region; the
-  plate is coloured by deviation from the clean trajectory. Penetration and inversion occur on the underside at the
-  actuator contact and are barely visible from the fixed camera used for all vision detectors.]) <fig:gallery>
 
-*Protocol.* For every simulation × type × severity there is one corrupted copy. All anomalous frames are scored, along
-with an equal number of clean frames from the same copy, drawn within ±40 frames of the event but outside a ±3-frame
-guard band. Metrics are frame AUROC and node AUROC. 95% CIs are bootstrapped over simulations, and none are reported
-with fewer than 20 simulations. GNN-vs-baseline differences use a paired bootstrap with Holm correction.
+
+
+
+
+
+
+
+
 
 = Detectors
 
-#let node(body, fill: luma(245)) = box(fill: fill, stroke: 0.5pt + luma(150), inset: 5pt, radius: 3pt,
-  width: 100%, align(center, par(justify: false, text(size: 7.6pt, body))))
-#let arr = align(center + horizon, text(size: 11pt, fill: luma(110))[→])
-#figure(
-  kind: image,
-  grid(columns: (0.85fr, 11pt, 0.9fr, 11pt, 2.1fr, 11pt, 1.05fr), align: horizon, row-gutter: 4pt,
-    node[`deforming_plate` trajectories\ (COMSOL, 400 frames)], arr,
-    node[Failure injection\ type · location · severity\ (@tab:inject)], arr,
-    grid(row-gutter: 3pt,
-      node(fill: rgb("#e8f0fb"))[*Learned surrogates*\ MeshGraphNet residual · shape-from-load],
-      node(fill: rgb("#e9f6ef"))[*Physics rules*\ 2nd difference · Laplacians · Jacobian · contact · bundle kNN],
-      node(fill: rgb("#fdf1e7"))[*Vision*\ CLIP · SigLIP2 · DINOv2 on renders],
-      node(fill: rgb("#f1eefb"))[*VLMs*\ Qwen3-VL 8B / 27B: type, cell, explanation]),
-    arr,
-    node[Scoring vs ground truth\ frame / run AUROC, accuracy, counterfactual pairs\ *decided by pre-registered gates*],
-  ),
-  caption: [Study pipeline. Every detector family scores the same corrupted runs against the same injected ground
-  truth; each comparison's decision rule was committed before its data were scored.],
+#let stage(n, title) = align(center, text(size: 7.4pt, weight: "bold", fill: luma(90))[#n #h(2pt) #upper(title)])
+#let card(title, items, fill: luma(246), accent: luma(150)) = block(width: 100%, fill: fill, stroke: (left: 2pt + accent,
+  rest: 0.4pt + luma(200)), inset: (x: 6pt, y: 5pt), radius: 2pt, breakable: false,
+  par(justify: false, leading: 0.45em)[#text(size: 7.8pt, weight: "bold", title) \ #text(size: 7pt, items)])
+#let arr = align(center + horizon, text(size: 13pt, fill: luma(140))[→])
+#let down = align(center, text(size: 12pt, fill: luma(140))[↓])
+#figure(kind: image, block(width: 100%)[
+  #grid(columns: (auto, 1fr, 16pt, 1fr), align: horizon, column-gutter: 4pt,
+    stage("1–2", "Data and injection"),
+    card([Simulations], [DeepMind `deforming_plate` (COMSOL), 400 frames per run, splits by simulation]), arr,
+    card([Failure injection], [5 local + 3 whole-run failure types with known type, location and severity (@tab:inject)]))
+  #down
+  #stage("3", "Detect: every family scores the same corrupted runs")
+  #v(-2pt)
+  #grid(columns: (1fr, 1fr, 1fr, 1fr), gutter: 5pt,
+    card([Learned surrogates], [MeshGraphNet residual \ shape-from-load], fill: rgb("#eef4fc"), accent: rgb("#2a78d6")),
+    card([Physics rules], [2nd difference, Laplacians, \ Jacobian, contact, bundle kNN], fill: rgb("#edf8f2"), accent: rgb("#1baf7a")),
+    card([Vision models], [CLIP, SigLIP2, DINOv2 \ patch kNN and zero-shot on renders], fill: rgb("#fdf2ea"), accent: rgb("#eb6834")),
+    card([VLMs], [Qwen3-VL 8B / 27B \ type, location, explanation], fill: rgb("#f1effb"), accent: rgb("#4a3aa7")))
+  #down
+  #grid(columns: (auto, 1fr), align: horizon, column-gutter: 4pt,
+    stage("4", "Evaluate"),
+    card([Scoring against the injected ground truth], [frame and run AUROC · type accuracy · counterfactual pairs ·
+      every decision made by a gate pre-registered before its data were scored]))
+],
+  caption: [Study pipeline.],
 ) <fig:pipeline>
 
 *Learned surrogate.*
@@ -273,8 +291,8 @@ In Phase 1, CLIP patch-kNN stayed at 0.50–0.53 on penetration and inversion ev
 @tab:vision shows the result. No condition reaches the pre-registered 0.80. DINOv2-L patch-kNN is the best (mean
 0.65): it detects hourglassing (0.88 [0.79, 0.96]) but not penetration, inversion or frozen regions (0.55–0.62). An
 896 px plate crop changes nothing. Two mechanisms plausibly contribute, and this study does not separate them. First,
-penetration and inversion happen on the plate's underside, at the actuator contact, and are nearly invisible from the
-fixed camera (@fig:gallery). Second, the kNN memory bank holds clean renders of _other_ simulations, whose geometry
+penetration and inversion happen on the actuator side of the plate, which the fixed camera does not see: the
+close-ups in @fig:gallery had to be taken from that side. Second, the kNN memory bank holds clean renders of _other_ simulations, whose geometry
 differs, so normal between-simulation variation competes with the anomaly. A same-simulation reference or
 multiple views might do better. As tested, renders lose much of the information the field-level rules use.
 
@@ -291,6 +309,7 @@ multiple views might do better. As tested, renders lose much of the information 
   `results/gate_v`).],
 ) <tab:vision>
 
+#pagebreak(weak: true)
 == VLM explanations are not grounded
 
 On 200 test frames sampled without filtering on detection, the local Qwen3-VL-8B called 199 frames "none" from images
