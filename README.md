@@ -189,8 +189,10 @@ Technical report: [docs/report/report.pdf](docs/report/report.pdf) (Typst source
   - The conditions were CLIP B/16, OpenCLIP L/14 and DINOv2-L patch-kNN, and CLIP and SigLIP2 zero-shot.
   - DINOv2-L is the best (mean 0.65; hourglass 0.88).
   - An 896 px plate crop doesn't help, so the limit is the modality, not the resolution.
-- **Gate E pilot, a larger same-family VLM (Qwen3.8-27B via OpenRouter free tier): running**
-  ([docs/gate_e_pilot.md](docs/gate_e_pilot.md)).
+- **Gate E pilot, a larger same-family VLM (Qwen3.8-27B via OpenRouter free tier): do not scale up**
+  ([docs/gate_e_pilot.md](docs/gate_e_pilot.md), [results/vlm_pilot/pilot.md](results/vlm_pilot/pilot.md)). The 27B
+  stops defaulting to "none" (6/20 vs 20/20) and localizes the flagged region (11/20 exact cell), but names the right
+  failure only 2 of 20 times and separates 1 of 10 counterfactual pairs.
 - **Seed robustness.** A second full-scale seed of the velocity surrogate reproduces the clean one-step error
   (4.73 vs 4.85 ×10⁻⁵).
 - **Conformal run-level alarms.** Implemented, but on validation the false-alarm rate exceeded the nominal α (up to

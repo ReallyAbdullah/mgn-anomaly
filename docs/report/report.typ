@@ -34,7 +34,8 @@
   surrogate's only apparent win, frozen regions, is matched by a velocity-Laplacian rule. Whole-run loading errors are
   caught by contact rules or by nothing: a 1–3 frame actuator-plate lag is undetectable by every method tested. No
   vision model reaches AUROC 0.80, and higher resolution does not help. A local 8B VLM labels 199 of 200 frames
-  "no anomaly", and counterfactual pairs show its explanations are not grounded in the image. We release the benchmark
+  "no anomaly", and counterfactual pairs show its explanations are not grounded in the image. A 27B model from the same
+family localizes the flagged region but still misnames the failure (2 of 20 correct). We release the benchmark
   and argue that learned detectors of simulation failures must be reported against their zero-output baseline and
   cheap physics rules.]
 ]
@@ -168,7 +169,7 @@ Every gate's question, data, statistic and decision rule was committed before it
     [C], [GNN vs best baseline, sustained frames, 9 cells (test)], [non-causal: no benefit; causal: +0.023, from frozen only],
     [D], [Surrogates vs rules on whole-run errors (validation)], [fail],
     [V], [Modern vision backbones × resolution (validation)], [fail (best 0.65)],
-    [E], [Larger same-family VLM (pilot)], [#pending[pilot running]],
+    [E], [Larger same-family VLM (pilot)], [do not scale up (27B: 2/20 correct)],
   ),
   caption: [Gate timeline. Full pre-registrations and results are in the repository.],
 ) <tab:gates>
@@ -283,8 +284,16 @@ sign-off.
   caption: [Left: VLM input, the render and the surrogate-residual panel, for a severity-3 hourglass; the 8B model
   answered "none". Right: a counterfactual pair, clean (A) and the same frame with an injected hourglass (B).]) <fig:vlm>
 
-*Does a larger model help?* (Gate E pilot) #pending[Qwen3.8-27B on 20 severity-3 frames and 10 pairs, paired against
-the 8B; pre-registered rule in docs/gate_e_pilot.md]
+*Does a larger model help?* A pre-registered pilot ran Qwen3.8-27B (OpenRouter free tier) on 20 severity-3 anomalous
+frames, 5 clean frames and 10 counterfactual pairs, paired against the 8B on the same images and prompts.
+- The 27B stops defaulting to "none" (6/20 anomalous frames, against 20/20 for the 8B).
+- It localizes the residual hotspot: exact grid cell 11/20.
+- But it names the right failure only 2/20 times, mostly answering "penetration", because the heatmap is often red
+  near the actuator.
+- It separates 1 of 10 counterfactual pairs.
+
+The pre-registered rule says do not scale up. The larger model sees _where_ the surrogate flags a problem, but not
+_what_ went wrong.
 
 == Lead time
 
