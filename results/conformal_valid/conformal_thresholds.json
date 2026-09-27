@@ -1,0 +1,20 @@
+{
+ "0.05": {
+  "gnn_causal": 9.134584426879883,
+  "constvel_causal": 129.8069610595703,
+  "laplacian_causal": 17.009357452392578,
+  "vlap_causal": 13.0805082321167,
+  "velocity_causal": 173.4453887939453,
+  "jacobian": 0.0,
+  "contact": 0.000637586061770593
+ },
+ "0.1": {
+  "gnn_causal": 3.029627799987793,
+  "constvel_causal": 84.67452239990234,
+  "laplacian_causal": 14.124177932739258,
+  "vlap_causal": 9.134745597839355,
+  "velocity_causal": 71.25798034667969,
+  "jacobian": 0.0,
+  "contact": 0.0005604214193082029
+ }
+}

@@ -1,0 +1,110 @@
+{
+ "shape_resid": {
+  "clean_cv": 0.8194135513752699,
+  "scale1_shift_in_mads": 0.0421163808620506,
+  "scale2_shift_in_mads": 0.14771117309215276,
+  "scale3_shift_in_mads": 0.5268642598934383,
+  "lag1_shift_in_mads": -0.0010934979533796726,
+  "lag2_shift_in_mads": -0.0019076014410007811,
+  "lag3_shift_in_mads": 0.010499740792937232,
+  "timescale1_shift_in_mads": -0.0061375638883612105,
+  "timescale2_shift_in_mads": 0.020767796847655822,
+  "timescale3_shift_in_mads": 0.15672634244570796
+ },
+ "shape_scale": {
+  "clean_cv": 2.7414122480565286,
+  "scale1_shift_in_mads": 0.14297182471874806,
+  "scale2_shift_in_mads": 0.2792916886763902,
+  "scale3_shift_in_mads": 0.534264953974234,
+  "lag1_shift_in_mads": -0.012079024203836497,
+  "lag2_shift_in_mads": -0.036455116445907265,
+  "lag3_shift_in_mads": -0.12419859880971822,
+  "timescale1_shift_in_mads": -0.13760939172167444,
+  "timescale2_shift_in_mads": -0.28634234849445567,
+  "timescale3_shift_in_mads": -0.6158544287762553
+ },
+ "gnn": {
+  "clean_cv": 0.46970662474632263,
+  "scale1_shift_in_mads": -0.01820453815162182,
+  "scale2_shift_in_mads": -0.03696393221616745,
+  "scale3_shift_in_mads": 0.013668229803442955,
+  "lag1_shift_in_mads": 0.01587763987481594,
+  "lag2_shift_in_mads": 0.06823872029781342,
+  "lag3_shift_in_mads": 0.3332260847091675,
+  "timescale1_shift_in_mads": 0.7742363810539246,
+  "timescale2_shift_in_mads": 3.933478832244873,
+  "timescale3_shift_in_mads": 4.505312919616699
+ },
+ "constvel": {
+  "clean_cv": 0.8361935615539551,
+  "scale1_shift_in_mads": 0.0010848977835848927,
+  "scale2_shift_in_mads": 0.0010610227473080158,
+  "scale3_shift_in_mads": 0.0006459159194491804,
+  "lag1_shift_in_mads": 0.0036372370086610317,
+  "lag2_shift_in_mads": 0.015507038682699203,
+  "lag3_shift_in_mads": 0.06437534093856812,
+  "timescale1_shift_in_mads": 0.15053826570510864,
+  "timescale2_shift_in_mads": 1.0559024810791016,
+  "timescale3_shift_in_mads": 0.9170043468475342
+ },
+ "laplacian": {
+  "clean_cv": 0.6276464462280273,
+  "scale1_shift_in_mads": 7.06161102925762e-08,
+  "scale2_shift_in_mads": 0.0,
+  "scale3_shift_in_mads": -9.415481372343493e-08,
+  "lag1_shift_in_mads": 0.005802478641271591,
+  "lag2_shift_in_mads": 0.019005196169018745,
+  "lag3_shift_in_mads": 0.1290220320224762,
+  "timescale1_shift_in_mads": 0.5284528136253357,
+  "timescale2_shift_in_mads": 2.803684711456299,
+  "timescale3_shift_in_mads": 2.7025461196899414
+ },
+ "vlap": {
+  "clean_cv": 0.5620158314704895,
+  "scale1_shift_in_mads": -1.555758535687346e-05,
+  "scale2_shift_in_mads": -3.154874502797611e-05,
+  "scale3_shift_in_mads": 3.8001317079761066e-06,
+  "lag1_shift_in_mads": 0.009779243730008602,
+  "lag2_shift_in_mads": 0.031798556447029114,
+  "lag3_shift_in_mads": 0.16041672229766846,
+  "timescale1_shift_in_mads": 0.3904598653316498,
+  "timescale2_shift_in_mads": 2.0609827041625977,
+  "timescale3_shift_in_mads": 2.1026103496551514
+ },
+ "velocity": {
+  "clean_cv": 0.4751331652018128,
+  "scale1_shift_in_mads": -0.0005998791051426536,
+  "scale2_shift_in_mads": -0.0021857055335318576,
+  "scale3_shift_in_mads": 0.0008974301915465218,
+  "lag1_shift_in_mads": 0.007172650230980365,
+  "lag2_shift_in_mads": -0.0018487303670145176,
+  "lag3_shift_in_mads": -0.015504310863895178,
+  "timescale1_shift_in_mads": 0.036761717307677605,
+  "timescale2_shift_in_mads": -0.0028727780421371535,
+  "timescale3_shift_in_mads": 0.05191529774206695
+ },
+ "contact_gap": {
+  "clean_cv": 5.999152183532715,
+  "scale1_shift_in_mads": 2.3743250370025635,
+  "scale2_shift_in_mads": 4.722914218902588,
+  "scale3_shift_in_mads": 8.942829132080078,
+  "lag1_shift_in_mads": -0.2551492154598236,
+  "lag2_shift_in_mads": -0.7580392360687256,
+  "lag3_shift_in_mads": -2.5275888442993164,
+  "timescale1_shift_in_mads": -2.280787706375122,
+  "timescale2_shift_in_mads": -4.67748498916626,
+  "timescale3_shift_in_mads": -9.510493278503418
+ },
+ "contact_depth": {
+  "clean_cv": 1.6505613327026367,
+  "scale1_shift_in_mads": -0.41592684388160706,
+  "scale2_shift_in_mads": -0.41592684388160706,
+  "scale3_shift_in_mads": -0.41592684388160706,
+  "lag1_shift_in_mads": 0.46273016929626465,
+  "lag2_shift_in_mads": 1.4515962600708008,
+  "lag3_shift_in_mads": 5.287391662597656,
+  "timescale1_shift_in_mads": 7.164631366729736,
+  "timescale2_shift_in_mads": 15.42305850982666,
+  "timescale3_shift_in_mads": 33.88806915283203
+ }
+}
