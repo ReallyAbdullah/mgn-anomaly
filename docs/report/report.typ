@@ -170,6 +170,8 @@ Every gate's question, data, statistic and decision rule was committed before it
     [D], [Surrogates vs rules on whole-run errors (validation)], [fail],
     [V], [Modern vision backbones × resolution (validation)], [fail (best 0.65)],
     [E], [Larger same-family VLM (pilot)], [do not scale up (27B: 2/20 correct)],
+    [E-video], [8-frame clip vs single frame, local 8B], [no help (0/20 in both arms)],
+    [K], [Bundle-outlier baseline after @kracker (descriptive)], [most robust single detector (0.82–0.98)],
   ),
   caption: [Gate timeline. Full pre-registrations and results are in the repository.],
 ) <tab:gates>
@@ -221,6 +223,14 @@ of positions, or the Laplacian of velocities.
   caption: [Onset vs sustained frame AUROC per detector (validation simulations 20–99, protocol v3, which includes
   the velocity Laplacian). The GNN never beats all three rules. On sustained frames, a different rule wins for each
   failure type.]) <fig:phase>
+
+*A classical crash-data-mining baseline is stronger all-round.* Following @kracker, we describe each frame by 18
+mesh-independent statistics (quantiles of speed, acceleration, and position and velocity Laplacian residuals in units
+of the run's step size, plus the inverted-element count and contact depth), and score it by its mean distance to the 5
+nearest clean frames from validation simulations 50–69. On validation simulations 20–49 this bundle-outlier detector
+never collapses: frame AUROC is 0.82–0.98 in every type × phase cell. On sustained hourglass, penetration and inversion
+it scores 0.82, 0.88 and 0.91, against the GNN's 0.79, 0.69 and 0.73. It doesn't beat the best single rule in any
+cell, but no single rule is safe across all failure types, and the bundle is.
 
 == Whole-run loading errors: contact rules or nothing
 
@@ -292,7 +302,12 @@ frames, 5 clean frames and 10 counterfactual pairs, paired against the 8B on the
   near the actuator.
 - It separates 1 of 10 counterfactual pairs.
 
-The pre-registered rule says do not scale up. The larger model sees _where_ the surrogate flags a problem, but not
+The pre-registered rule says do not scale up.
+
+*Does video help?* Crash results are reviewed as animations, so a second pre-registered pilot gave the local 8B an
+8-frame clip (frames t−7 … t, plain renders) instead of a single frame, on the same 25 frames and 10 pairs. It
+answered "none" to all 90 prompts in both arms: 0/20 correct and 0/10 pairs separated either way. Temporal context
+does not rescue a model that doesn't see the failure in the first place. The larger model sees _where_ the surrogate flags a problem, but not
 _what_ went wrong.
 
 == Lead time

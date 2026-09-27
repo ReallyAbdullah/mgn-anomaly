@@ -193,6 +193,12 @@ Technical report: [docs/report/report.pdf](docs/report/report.pdf) (Typst source
   ([docs/gate_e_pilot.md](docs/gate_e_pilot.md), [results/vlm_pilot/pilot.md](results/vlm_pilot/pilot.md)). The 27B
   stops defaulting to "none" (6/20 vs 20/20) and localizes the flagged region (11/20 exact cell), but names the right
   failure only 2 of 20 times and separates 1 of 10 counterfactual pairs.
+- **Gate E video pilot, 8-frame clip vs single frame (local 8B): no help** ([docs/gate_e_video.md](docs/gate_e_video.md),
+  [results/vlm_video/video_pilot.md](results/vlm_video/video_pilot.md)). "None" on all 90 prompts in both arms.
+- **Gate K, bundle-outlier baseline after Kracker et al. 2023 (descriptive)** ([docs/gate_k.md](docs/gate_k.md),
+  [results/gate_k/gate_k.md](results/gate_k/gate_k.md)). kNN on 18 mesh-independent frame statistics. It is the most
+  robust single detector on local failures (0.82–0.98 in every cell; GNN worst cell 0.69), but misses whole-run
+  scale errors (0.48) and 1–3 frame lag.
 - **Seed robustness.** A second full-scale seed of the velocity surrogate reproduces the clean one-step error
   (4.73 vs 4.85 ×10⁻⁵).
 - **Conformal run-level alarms.** Implemented, but on validation the false-alarm rate exceeded the nominal α (up to

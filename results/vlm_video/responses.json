@@ -1,0 +1,632 @@
+{
+ "frame:5|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic material behavior under clamped and actuated loading. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation is physically plausible and continuous.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth bending consistent with hyperelastic material behavior under clamped and actuated loading. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation is physically plausible and continuous.\"\n}"
+ },
+ "frame:5|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth bending of the hyperelastic plate under the blue actuator, with no signs of penetration, inversion, instability, or freezing. The deformation is physically plausible and continuous with the earlier frames.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"bottom-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth bending of the hyperelastic plate under the blue actuator, with no signs of penetration, inversion, instability, or freezing. The deformation is physically plausible and continuous with the earlier frames.\"}"
+ },
+ "frame:33|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:33|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The plate bends uniformly without any localized hourglass patterns or frozen regions, indicating physically consistent behavior.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The plate bends uniformly without any localized hourglass patterns or frozen regions, indicating physically consistent behavior.\"}"
+ },
+ "frame:21|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:21|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The motion appears physically consistent with the applied load, with no region frozen or exhibiting violent behavior.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The motion appears physically consistent with the applied load, with no region frozen or exhibiting violent behavior.\"}"
+ },
+ "frame:17|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented, indicating physically consistent behavior.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented, indicating physically consistent behavior.\"\n}"
+ },
+ "frame:17|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms gradually and physically plausibly, matching the expected bending behavior.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 1.0,\n  \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms gradually and physically plausibly, matching the expected bending behavior.\"\n}"
+ },
+ "frame:35|single": {
+  "truth": "penetration",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:35|clip": {
+  "truth": "penetration",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the bend, showing expected strain without any signs of inversion, penetration, or instability. The deformation appears physically consistent with the applied load.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the bend, showing expected strain without any signs of inversion, penetration, or instability. The deformation appears physically consistent with the applied load.\"}"
+ },
+ "frame:62|single": {
+  "truth": "penetration",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The mesh deformation is physically plausible and uniform across the plate.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The mesh deformation is physically plausible and uniform across the plate.\"\n}"
+ },
+ "frame:62|clip": {
+  "truth": "penetration",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh is continuous without any signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions frozen or exhibiting violent motion.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh is continuous without any signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions frozen or exhibiting violent motion.\"}"
+ },
+ "frame:42|single": {
+  "truth": "penetration",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented, indicating physical consistency.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented, indicating physical consistency.\"\n}"
+ },
+ "frame:42|clip": {
+  "truth": "penetration",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms uniformly without any localized anomalies or violations of physical behavior.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 1.0,\n  \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms uniformly without any localized anomalies or violations of physical behavior.\"\n}"
+ },
+ "frame:60|single": {
+  "truth": "penetration",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth bending of the plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain physically plausible and consistent with expected hyperelastic deformation.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The deformed mesh shows smooth bending of the plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain physically plausible and consistent with expected hyperelastic deformation.\"}"
+ },
+ "frame:60|clip": {
+  "truth": "penetration",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the bend, showing progressive strain without signs of inversion, penetration, or instability. There is no region of frozen motion or hourglass distortion.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the bend, showing progressive strain without signs of inversion, penetration, or instability. There is no region of frozen motion or hourglass distortion.\"}"
+ },
+ "frame:90|single": {
+  "truth": "inversion",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The mesh deformation is physically consistent with expected behavior for a clamped plate being pushed by an actuator.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The mesh deformation is physically consistent with expected behavior for a clamped plate being pushed by an actuator.\"\n}"
+ },
+ "frame:90|clip": {
+  "truth": "inversion",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the curvature of the bend, and there are no signs of inversion, penetration, hourglass distortion, instability, or freezing. The deformation appears physically plausible and stable.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the curvature of the bend, and there are no signs of inversion, penetration, hourglass distortion, instability, or freezing. The deformation appears physically plausible and stable.\"}"
+ },
+ "frame:91|single": {
+  "truth": "inversion",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:91|clip": {
+  "truth": "inversion",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh exhibits expected bending behavior without any signs of penetration, inversion, instability, or freezing. Nodes are deforming uniformly with the applied load, indicating a physically consistent simulation state.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh exhibits expected bending behavior without any signs of penetration, inversion, instability, or freezing. Nodes are deforming uniformly with the applied load, indicating a physically consistent simulation state.\"}"
+ },
+ "frame:99|single": {
+  "truth": "inversion",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. The element connectivity remains intact and physically plausible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. The element connectivity remains intact and physically plausible.\"\n}"
+ },
+ "frame:99|clip": {
+  "truth": "inversion",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh is continuous without any signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions frozen or exhibiting violent motion.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh is continuous without any signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions frozen or exhibiting violent motion.\"}"
+ },
+ "frame:87|single": {
+  "truth": "inversion",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth, continuous deformation consistent with a hyperelastic plate bending under a point load. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible and numerically stable.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth, continuous deformation consistent with a hyperelastic plate bending under a point load. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible and numerically stable.\"\n}"
+ },
+ "frame:87|clip": {
+  "truth": "inversion",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms uniformly from the clamped edge toward the actuator, matching expected bending behavior.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms uniformly from the clamped edge toward the actuator, matching expected bending behavior.\"\n}"
+ },
+ "frame:105|single": {
+  "truth": "instability",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth deformation consistent with bending under a clamped boundary condition. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The blue actuator is in contact with the plate without violation, and the mesh deformation appears physically plausible for a hyperelastic material under load.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth deformation consistent with bending under a clamped boundary condition. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The blue actuator is in contact with the plate without violation, and the mesh deformation appears physically plausible for a hyperelastic material under load.\"\n}"
+ },
+ "frame:105|clip": {
+  "truth": "instability",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The motion appears physically consistent with the applied load, without any localized regions of abnormal behavior.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The motion appears physically consistent with the applied load, without any localized regions of abnormal behavior.\"}"
+ },
+ "frame:121|single": {
+  "truth": "instability",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:121|clip": {
+  "truth": "instability",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth bending of the hyperelastic plate under the blue actuator. The mesh deforms uniformly without signs of inversion, penetration, or instability. All nodes appear to be moving coherently with the applied load, indicating a physically consistent simulation state.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth bending of the hyperelastic plate under the blue actuator. The mesh deforms uniformly without signs of inversion, penetration, or instability. All nodes appear to be moving coherently with the applied load, indicating a physically consistent simulation state.\"}"
+ },
+ "frame:120|single": {
+  "truth": "instability",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth deformation consistent with bending under a point load from the actuator. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The element connectivity remains intact and physically plausible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth deformation consistent with bending under a point load from the actuator. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The element connectivity remains intact and physically plausible.\"\n}"
+ },
+ "frame:120|clip": {
+  "truth": "instability",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions frozen or exhibiting violent motion.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions frozen or exhibiting violent motion.\"}"
+ },
+ "frame:117|single": {
+  "truth": "instability",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:117|clip": {
+  "truth": "instability",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The plate bends uniformly without any localized failure or violation of physical constraints.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The plate bends uniformly without any localized failure or violation of physical constraints.\"}"
+ },
+ "frame:171|single": {
+  "truth": "frozen",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically plausible for the given setup.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically plausible for the given setup.\"\n}"
+ },
+ "frame:171|clip": {
+  "truth": "frozen",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements deform plastically without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a clamped plate being pushed, with no regions frozen or exhibiting violent motion.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements deform plastically without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a clamped plate being pushed, with no regions frozen or exhibiting violent motion.\"}"
+ },
+ "frame:145|single": {
+  "truth": "frozen",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:145|clip": {
+  "truth": "frozen",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate as it bends under the blue actuator. There are no signs of penetration, inversion, instability, or freezing. The mesh elements maintain their connectivity and orientation without any visual indication of numerical failure or physical violation of contact.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate as it bends under the blue actuator. There are no signs of penetration, inversion, instability, or freezing. The mesh elements maintain their connectivity and orientation without any visual indication of numerical failure or physical violation of contact.\"}"
+ },
+ "frame:169|single": {
+  "truth": "frozen",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under clamping and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible; the deformation appears physically consistent with the applied load.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under clamping and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible; the deformation appears physically consistent with the applied load.\"\n}"
+ },
+ "frame:169|clip": {
+  "truth": "frozen",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.\"}"
+ },
+ "frame:164|single": {
+  "truth": "frozen",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:164|clip": {
+  "truth": "frozen",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 1.0,\n  \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.\"\n}"
+ },
+ "frame:176|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:176|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.\"}"
+ },
+ "frame:185|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain reasonable and connectivity is preserved.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain reasonable and connectivity is preserved.\"\n}"
+ },
+ "frame:185|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms gradually and physically plausibly from the actuator contact point, matching the expected behavior for a bending plate.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 1.0,\n  \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms gradually and physically plausibly from the actuator contact point, matching the expected behavior for a bending plate.\"\n}"
+ },
+ "frame:198|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented, indicating physical consistency.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth deformation consistent with bending under a point load, with no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. Element shapes remain intact and oriented, indicating physical consistency.\"\n}"
+ },
+ "frame:198|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator load, with no signs of penetration, inversion, instability, or freezing. The mesh remains well-formed and the deformation appears physically plausible across the entire domain.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator load, with no signs of penetration, inversion, instability, or freezing. The mesh remains well-formed and the deformation appears physically plausible across the entire domain.\"}"
+ },
+ "frame:186|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth bending consistent with hyperelastic behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "frame:186|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth bending deformation of the hyperelastic plate under the blue actuator. There are no signs of penetration, inversion, instability, or freezing. The mesh deforms uniformly without any localized anomalies or violations of physical contact or material behavior.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth bending deformation of the hyperelastic plate under the blue actuator. There are no signs of penetration, inversion, instability, or freezing. The mesh deforms uniformly without any localized anomalies or violations of physical contact or material behavior.\"}"
+ },
+ "frame:181|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth, continuous deformation consistent with bending under a point load from the actuator. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible for a hyperelastic plate under clamped boundary conditions.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth, continuous deformation consistent with bending under a point load from the actuator. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible for a hyperelastic plate under clamped boundary conditions.\"\n}"
+ },
+ "frame:181|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions exhibiting abnormal behavior.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 1.0,\n  \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions exhibiting abnormal behavior.\"\n}"
+ },
+ "pair:8:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate deformation under actuator pressure. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The mesh deformation appears physically plausible for the given loading condition.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate deformation under actuator pressure. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The mesh deformation appears physically plausible for the given loading condition.\"\n}"
+ },
+ "pair:8:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh exhibits expected bending behavior without any signs of penetration, inversion, instability, or freezing. Nodes are moving coherently with the applied load, and the mesh quality appears preserved.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh exhibits expected bending behavior without any signs of penetration, inversion, instability, or freezing. Nodes are moving coherently with the applied load, and the mesh quality appears preserved.\"}"
+ },
+ "pair:8:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth deformation consistent with a hyperelastic plate bending under a clamped edge and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible; all elements maintain their orientation and connectivity without violation or erratic motion.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth deformation consistent with a hyperelastic plate bending under a clamped edge and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible; all elements maintain their orientation and connectivity without violation or erratic motion.\"\n}"
+ },
+ "pair:8:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a clamped plate being pushed, with no regions frozen or exhibiting violent motion.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a clamped plate being pushed, with no regions frozen or exhibiting violent motion.\"}"
+ },
+ "pair:9:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth bending consistent with hyperelastic behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied load.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth bending consistent with hyperelastic behavior under clamping and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied load.\"\n}"
+ },
+ "pair:9:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The motion appears physically consistent with the applied load, with no region frozen or exhibiting violent behavior.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The motion appears physically consistent with the applied load, with no region frozen or exhibiting violent behavior.\"}"
+ },
+ "pair:9:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the blue actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. Element shapes remain intact and deformation is physically consistent with expected behavior.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the blue actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. Element shapes remain intact and deformation is physically consistent with expected behavior.\"\n}"
+ },
+ "pair:9:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a hyperelastic plate bending under a blue actuator, with deformation consistent with expected physics. The mesh is continuous, with no signs of inversion, penetration, or instability. The deformation is smooth and progressive, matching the simulation's behavior.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a hyperelastic plate bending under a blue actuator, with deformation consistent with expected physics. The mesh is continuous, with no signs of inversion, penetration, or instability. The deformation is smooth and progressive, matching the simulation's behavior.\"}"
+ },
+ "pair:10:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact area appears physically plausible with no node penetration or element inversion.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact area appears physically plausible with no node penetration or element inversion.\"\n}"
+ },
+ "pair:10:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-right\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.\"}"
+ },
+ "pair:10:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact area appears physically plausible with no node penetration or element inversion.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-right\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic behavior under actuator load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The blue actuator contact area appears physically plausible with no node penetration or element inversion.\"\n}"
+ },
+ "pair:10:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-right\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.\"}"
+ },
+ "pair:11:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The deformation pattern is physically plausible for a plate being pushed by an actuator.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition. There are no signs of hourglass distortion, penetration, inversion, instability, or frozen regions. The deformation pattern is physically plausible for a plate being pushed by an actuator.\"\n}"
+ },
+ "pair:11:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The deformation appears physically consistent with the applied load, with no regions frozen or exhibiting violent motion.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The deformation appears physically consistent with the applied load, with no regions frozen or exhibiting violent motion.\"}"
+ },
+ "pair:11:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible and numerically stable.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition. There are no signs of hourglass patterns, penetration, inversion, instability, or frozen regions. The deformation appears physically plausible and numerically stable.\"\n}"
+ },
+ "pair:11:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The motion appears physically consistent with the applied load, with no region frozen or exhibiting violent behavior.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the deformation, showing no signs of inversion, penetration, or instability. The motion appears physically consistent with the applied load, with no region frozen or exhibiting violent behavior.\"}"
+ },
+ "pair:12:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "pair:12:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed, with no signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating a stable simulation.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed, with no signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating a stable simulation.\"}"
+ },
+ "pair:12:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied load and boundary conditions.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic plate behavior under actuator pressure. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The mesh deformation appears physically consistent with the applied load and boundary conditions.\"\n}"
+ },
+ "pair:12:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed, with no signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating a stable simulation state.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed, with no signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating a stable simulation state.\"}"
+ },
+ "pair:13:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "pair:13:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh is continuous without any signs of inversion, penetration, or instability. The deformation appears physically plausible and progressive, matching the expected bending behavior.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh is continuous without any signs of inversion, penetration, or instability. The deformation appears physically plausible and progressive, matching the expected bending behavior.\"}"
+ },
+ "pair:13:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "pair:13:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-defined without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions exhibiting abnormal behavior.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-defined without signs of inversion, penetration, or instability. The deformation pattern is physically plausible for a bending plate, with no regions exhibiting abnormal behavior.\"}"
+ },
+ "pair:14:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "pair:14:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh exhibits expected bending behavior without any signs of penetration, inversion, instability, or freezing. Nodes are moving coherently with the applied load, and the mesh quality appears preserved.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh exhibits expected bending behavior without any signs of penetration, inversion, instability, or freezing. Nodes are moving coherently with the applied load, and the mesh quality appears preserved.\"}"
+ },
+ "pair:14:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. Element shapes remain intact and deformation is physically consistent with expected bending behavior.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending of the hyperelastic plate under the actuator, with no signs of hourglass distortion, penetration, inversion, instability, or freezing. Element shapes remain intact and deformation is physically consistent with expected bending behavior.\"\n}"
+ },
+ "pair:14:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the bending, and there are no signs of penetration, inversion, instability, or freezing. The deformation appears physically plausible and continuous with the earlier frames.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the bending, and there are no signs of penetration, inversion, instability, or freezing. The deformation appears physically plausible and continuous with the earlier frames.\"}"
+ },
+ "pair:15:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "pair:15:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh exhibits expected bending behavior without any signs of penetration, inversion, instability, or freezing. All nodes appear to be moving coherently with the applied load, indicating a physically consistent simulation state.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh exhibits expected bending behavior without any signs of penetration, inversion, instability, or freezing. All nodes appear to be moving coherently with the applied load, indicating a physically consistent simulation state.\"}"
+ },
+ "pair:15:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The deformed mesh shows smooth, continuous bending consistent with hyperelastic material behavior under clamped boundary conditions and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "pair:15:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the expected curvature, and there are no signs of penetration, inversion, instability, or freezing. The deformation appears physically plausible and continuous with the earlier frames.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are oriented with the expected curvature, and there are no signs of penetration, inversion, instability, or freezing. The deformation appears physically plausible and continuous with the earlier frames.\"}"
+ },
+ "pair:16:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The deformation pattern is physically plausible for a clamped plate under actuation.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a point load. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The deformation pattern is physically plausible for a clamped plate under actuation.\"\n}"
+ },
+ "pair:16:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.\"}"
+ },
+ "pair:16:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth deformation consistent with bending under a point load from the actuator. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The element connectivity remains intact and physically plausible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth deformation consistent with bending under a point load from the actuator. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible. The element connectivity remains intact and physically plausible.\"\n}"
+ },
+ "pair:16:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under the blue actuator. The mesh elements are well-formed without signs of inversion, penetration, or instability. The deformation appears physically plausible and continuous with the earlier frames, indicating no anomaly.\"}"
+ },
+ "pair:17:A|single": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "pair:17:A|clip": {
+  "truth": "none",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms uniformly from the clamped edge toward the actuator, matching expected behavior for a bending simulation.",
+  "raw": "{\"anomaly_type\": \"none\", \"location\": \"middle-center\", \"confidence\": 0.98, \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms uniformly from the clamped edge toward the actuator, matching expected behavior for a bending simulation.\"}"
+ },
+ "pair:17:B|single": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 0.98,\n  \"explanation\": \"The mesh shows smooth, continuous deformation consistent with hyperelastic bending under a clamped boundary condition and actuator push. No signs of hourglass distortion, penetration, inversion, instability, or frozen regions are visible.\"\n}"
+ },
+ "pair:17:B|clip": {
+  "truth": "hourglass",
+  "pred": "none",
+  "valid": true,
+  "explanation": "The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms gradually and physically plausibly from the actuator contact point, matching the expected bending behavior.",
+  "raw": "{\n  \"anomaly_type\": \"none\",\n  \"location\": \"middle-center\",\n  \"confidence\": 1.0,\n  \"explanation\": \"The frame shows a consistent, smooth deformation of the hyperelastic plate under actuator pressure, with no signs of penetration, inversion, instability, or freezing. The mesh deforms gradually and physically plausibly from the actuator contact point, matching the expected bending behavior.\"\n}"
+ }
+}
