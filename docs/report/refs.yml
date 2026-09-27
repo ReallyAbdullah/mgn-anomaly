@@ -1,0 +1,131 @@
+pfaff:
+  type: article
+  title: Learning Mesh-Based Simulation with Graph Networks
+  author: ["Pfaff, Tobias", "Fortunato, Meire", "Sanchez-Gonzalez, Alvaro", "Battaglia, Peter W."]
+  date: 2021
+  parent:
+    type: proceedings
+    title: International Conference on Learning Representations (ICLR)
+mcgreivy:
+  type: article
+  title: Weak baselines and reporting biases lead to overoptimism in machine learning for fluid-related partial differential equations
+  author: ["McGreivy, Nick", "Hakim, Ammar"]
+  date: 2024
+  parent:
+    type: periodical
+    title: Nature Machine Intelligence
+    volume: 6
+  page-range: 1256-1269
+sarfraz:
+  type: article
+  title: "Position: Quo Vadis, Unsupervised Time Series Anomaly Detection?"
+  author: ["Sarfraz, M. Saquib"]
+  date: 2024
+  parent:
+    type: proceedings
+    title: International Conference on Machine Learning (ICML)
+wukeogh:
+  type: article
+  title: Current Time Series Anomaly Detection Benchmarks are Flawed and are Creating the Illusion of Progress
+  author: ["Wu, Renjie", "Keogh, Eamonn"]
+  date: 2023
+  parent:
+    type: periodical
+    title: IEEE Transactions on Knowledge and Data Engineering
+kracker:
+  type: article
+  title: Method for automated detection of outliers in crash simulations
+  author: ["Kracker, Dominik", "Dhanasekaran, Revan", "Schumacher, Axel", "Garcke, Jochen"]
+  date: 2023
+  parent:
+    type: periodical
+    title: International Journal of Crashworthiness
+    volume: 28
+    issue: 1
+bickel:
+  type: article
+  title: Detection of Plausibility and Error Reasons in Finite Element Simulations with Deep Learning Networks
+  author: ["Bickel, Sebastian", "Goetz, Stefan", "Wartzack, Sandro"]
+  date: 2023
+  parent:
+    type: periodical
+    title: Algorithms
+    volume: 16
+    issue: 4
+spruegel:
+  type: article
+  title: Generic approach to plausibility checks for structural mechanics with deep learning
+  author: ["Spruegel, Tobias C."]
+  parent:
+    type: proceedings
+    title: Proceedings of the Design Society
+  url: https://www.designsociety.org/publication/39529
+winclip:
+  type: article
+  title: "WinCLIP: Zero-/Few-Shot Anomaly Classification and Segmentation"
+  author: ["Jeong, Jongheon"]
+  date: 2023
+  parent:
+    type: proceedings
+    title: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
+patchcore:
+  type: article
+  title: Towards Total Recall in Industrial Anomaly Detection
+  author: ["Roth, Karsten"]
+  date: 2022
+  parent:
+    type: proceedings
+    title: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
+clip:
+  type: article
+  title: Learning Transferable Visual Models From Natural Language Supervision
+  author: ["Radford, Alec"]
+  date: 2021
+  parent:
+    type: proceedings
+    title: International Conference on Machine Learning (ICML)
+dinov2:
+  type: article
+  title: "DINOv2: Learning Robust Visual Features without Supervision"
+  author: ["Oquab, Maxime"]
+  date: 2024
+  parent:
+    type: periodical
+    title: Transactions on Machine Learning Research
+siglip2:
+  type: article
+  title: "SigLIP 2: Multilingual Vision-Language Encoders with Improved Semantic Understanding, Localization, and Dense Features"
+  author: ["Tschannen, Michael"]
+  date: 2025
+  parent:
+    type: periodical
+    title: arXiv preprint arXiv:2502.14786
+qwen3vl:
+  type: report
+  title: Qwen3-VL Technical Report
+  author: Qwen Team
+  date: 2025
+mmad:
+  type: article
+  title: "MMAD: A Comprehensive Benchmark for Multimodal Large Language Models in Industrial Anomaly Detection"
+  author: ["Jiang, Xi"]
+  date: 2025
+  parent:
+    type: proceedings
+    title: International Conference on Learning Representations (ICLR)
+ezemba:
+  type: article
+  title: "Simulation vs. Hallucination: Assessing Vision-Language Model Question Answering Capabilities in Engineering Simulations"
+  author: ["Ezemba, Jessica", "McComb, Christopher", "Tucker, Conrad"]
+  date: 2025
+  parent:
+    type: proceedings
+    title: Workshop on Design Automation for CPS and IoT (DESTION)
+mathieu:
+  type: article
+  title: "Enhancing numerical simulation analysis with the use of explainable artificial intelligence and large language models: a case study on vehicle side crash optimization"
+  author: ["Mathieu"]
+  date: 2025
+  parent:
+    type: proceedings
+    title: Proceedings of the Design Society

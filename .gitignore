@@ -12,3 +12,4 @@ results/render_*.png
 results/counterfactual/
 results/after_training.log
 .env
+docs/report/page-*.png
