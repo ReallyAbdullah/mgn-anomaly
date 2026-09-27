@@ -39,3 +39,8 @@ After the Qwen3.8-27B result, the same 25 frames and 10 pairs, prompts and setti
 failure to name the failure persist across model families? The same table is reported next to the 27B and 8B, and the
 original decision rule is applied unchanged. Output goes to `results/vlm_pilot_inkling/`. The free tier allows 50
 requests/day, so this runs when the daily quota resets.
+
+**Amendment (2026-09-27, before any output was seen).** `thinkingmachines/inkling:free` rejects plain API calls
+(HTTP 403: free access only through approved agent apps), so the different-family run uses
+`google/gemma-4-31b-it:free` instead, with identical items, prompts, settings and decision rule. Output:
+`results/vlm_pilot_gemma/`.

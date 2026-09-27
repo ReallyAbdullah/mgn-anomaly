@@ -272,3 +272,7 @@ uv run pytest
   free-text explanations; a larger or unquantised VLM; longer training and multi-scale or transformer processors (e.g. MGN-Transformer) for global
   consistency, solver-generated failures (e.g. reduced-integration runs that really hourglass), and a VLM fine-tuned
   on the diagnostics.
+
+## License
+
+Code: MIT (see [LICENSE](LICENSE)). The `deforming_plate` data belongs to DeepMind and is not redistributed here.

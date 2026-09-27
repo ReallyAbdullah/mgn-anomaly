@@ -13,3 +13,5 @@ results/counterfactual/
 results/after_training.log
 .env
 docs/report/page-*.png
+results/*.log
+results/vlm_video/imgs/
