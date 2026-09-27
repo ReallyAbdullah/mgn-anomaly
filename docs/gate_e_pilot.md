@@ -31,3 +31,11 @@ No prompt changes, and no re-runs to fish for a better result.
 - pair discrimination
 - invalid-JSON rate
 - the raw responses
+
+## Addendum (2026-09-27, before any Inkling output was seen): model-family variation
+
+After the Qwen3.8-27B result, the same 25 frames and 10 pairs, prompts and settings are run with
+`thinkingmachines/inkling:free` (OpenRouter), a different model family. The question is descriptive: does the
+failure to name the failure persist across model families? The same table is reported next to the 27B and 8B, and the
+original decision rule is applied unchanged. Output goes to `results/vlm_pilot_inkling/`. The free tier allows 50
+requests/day, so this runs when the daily quota resets.
